@@ -47,7 +47,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
             required
           >
             {projects.map((project) => (
-              <MenuItem key={project.id} value={project.id}>
+              <MenuItem key={project.projectId} value={project.projectId}>
                 {project.name}
               </MenuItem>
             ))}

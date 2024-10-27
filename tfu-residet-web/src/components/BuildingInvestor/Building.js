@@ -93,7 +93,7 @@ const Building = () => {
 
   const handleCreateBuilding = async (newBuilding) => {
     try {
-      const response = await fetch("http://localhost:5045/api/building/", {
+      const response = await fetch("http://localhost:5045/api/building/Create", {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${Cookies.get("accessToken")}`,

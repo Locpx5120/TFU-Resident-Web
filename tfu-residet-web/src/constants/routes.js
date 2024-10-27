@@ -1,7 +1,9 @@
+// investors
 import Dashboard from "../components/Dashboard";
-import Project from "../components/Project";
-import Building from "../components/Building";
+import Project from "../components/ProjectInvestor/Project";
+import Building from "../components/BuildingInvestor/Building";
 import History from "../components/History";
+// icons
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import BusinessIcon from "@mui/icons-material/Business";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -10,6 +12,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 export const routeArray = [
   {
@@ -31,28 +34,10 @@ export const routeArray = [
     icon: <ApartmentIcon />,
   },
   {
-    route: "/phong-ban",
-    routeName: "Phòng ban",
-    component: <>Chua Co</>,
-    icon: <BusinessCenterIcon />,
-  },
-  {
     route: "/thanh-vien",
     routeName: "Thành viên",
     component: <>Chua Co</>,
     icon: <PersonIcon />,
-  },
-  {
-    route: "/nhom-quyen",
-    routeName: "Nhóm quyền",
-    component: <>Chua Co</>,
-    icon: <AdminPanelSettingsIcon />,
-  },
-  {
-    route: "/tai-lieu",
-    routeName: "Tài liệu",
-    component: <>Chua Co</>,
-    icon: <DescriptionIcon />,
   },
   {
     route: "/lich-su",
