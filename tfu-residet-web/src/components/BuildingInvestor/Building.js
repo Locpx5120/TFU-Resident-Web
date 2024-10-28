@@ -68,7 +68,7 @@ const Building = () => {
             'content-type': 'application/json',
           },
           body: JSON.stringify({
-            name: "Splendora Ankhanh",
+            name: "",
           })
         });
         const data = await response.json();
@@ -140,7 +140,7 @@ const Building = () => {
     }
   };
   return (
-    <section className="content project">
+    <section className="content building">
         <AddBuilding
           open={isOpenCreate}
           onClose={() => setIsOpenCreate(false)}

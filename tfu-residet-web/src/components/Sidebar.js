@@ -43,7 +43,7 @@ const StyledLi = styled.li`
   }
 `;
 
-const Sidebar = () => {
+const Sidebar = ({routes}) => {
   const location = useLocation();
 
   return (
@@ -57,7 +57,7 @@ const Sidebar = () => {
       </div>
       <nav style={{marginBottom: 40}}>
         <StyledUl>
-          {routeArray.map((item, i) => (
+          {routes.map((item, i) => (
             <StyledLi
               key={i}
               className={location.pathname === item.route ? "active" : ""}

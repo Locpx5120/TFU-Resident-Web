@@ -11,7 +11,7 @@ import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import OTPInput from './pages/OTPInput';
 import ChangePassword from './pages/ChangePassword';
-import { routeArray } from "./constants/routes";
+import { routeArray, routeResident } from "./constants/routes";
 
 function App() {
   // Giả sử bạn có một hàm hoặc hook để lấy vai trò của người dùng
@@ -21,6 +21,8 @@ function App() {
     switch (role) {
       case 'Building Staff':
         return [];
+      case 'Resident':
+        return routeResident;
       default:
         return routeArray;
     }
