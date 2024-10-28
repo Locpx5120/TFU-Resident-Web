@@ -1,0 +1,19 @@
+.dashboard {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.dashboard-card {
+    flex: 1;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.dashboard-card p {
+    font-size: 22px;
+    color: #666;
+    padding-top: 15px;
+}

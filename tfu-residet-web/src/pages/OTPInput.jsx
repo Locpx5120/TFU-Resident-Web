@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-import axiosInstance from "../config/axiosConfig";
+import { useParams, useNavigate } from "react-router-dom";
+// import axiosInstance from "../config/axiosConfig";
 
 const OTPInput = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
-    const inputsRef = useRef([]);
-    const { id } = useParams();
+  const inputsRef = useRef([]);
+  const { id } = useParams();
+  const navigator = useNavigate();
 
   // Hàm xử lý thay đổi khi người dùng nhập mã OTP
   const handleChange = (element, index) => {
@@ -31,16 +32,26 @@ const OTPInput = () => {
   // Hàm xử lý khi người dùng submit mã OTP
   const handleSubmit = async (e) => {
     e.preventDefault();
-      // alert(`Mã OTP của bạn là: ${otp.join("")}`);
-      const payload = {
-          userId: id,
-          typeOtp: "string",
-          otp: otp.join(""),
-      };
-      const res = await axiosInstance.post(`/auth/confirm-otp`, JSON.stringify(payload));
-      if (res.status === 200) {
-          alert("Xác thực mã OTP thành công");
-      }
+    // alert(`Mã OTP của bạn là: ${otp.join("")}`);
+    const payload = {
+      userId: id,
+      typeOtp: "reset_password",
+      otp: otp.join(""),
+    };
+    const res = await fetch('http://localhost:5045/api/auth/confirm-otp', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if (result.code === 200) {
+      localStorage.setItem("isNew", JSON.stringify(true));
+      navigator('/login');
+    }
+    console.log(result);
+    console.log(typeof otp.join(""));
   };
 
   return (
@@ -55,9 +66,9 @@ const OTPInput = () => {
       }}
     >
       <h2>Nhập mã OTP</h2>
-          <div style={{
-              display: 'flex',
-              justifyContent: "center",
+      <div style={{
+        display: 'flex',
+        justifyContent: "center",
       }}>
         {otp.map((data, index) => (
           <input
@@ -80,14 +91,14 @@ const OTPInput = () => {
           />
         ))}
       </div>
-          <button style={{
-              background: '#2ca8a2',
-              padding: '10px 40px',
-              border: 'none',
-              outline: 'none',
-              appearance: 'none',
-              borderRadius: 5, color: '#fff',
-              cursor: 'pointer',
+      <button style={{
+        background: '#2ca8a2',
+        padding: '10px 40px',
+        border: 'none',
+        outline: 'none',
+        appearance: 'none',
+        borderRadius: 5, color: '#fff',
+        cursor: 'pointer',
       }} type="submit">Xác nhận</button>
     </form>
   );

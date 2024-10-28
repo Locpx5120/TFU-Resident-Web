@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/Header.css';
+import LogoutButton from "../components/LogoutButton";
 
 const Header = () => {
   return (
@@ -7,6 +8,7 @@ const Header = () => {
       <div className="user-info">
         <h2>JSX Computer</h2>
         {/* <img src="vietnam-flag.png" alt="Vietnam Flag" className="flag" /> */}
+        <LogoutButton />
       </div>
     </header>
   );
