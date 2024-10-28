@@ -17,7 +17,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
   const [newBuilding, setNewBuilding] = useState({
     projectId: '',
     name: '',
-    permalink: '',
+    // permalink: '',
   });
 
   const handleInputChange = (e) => {
@@ -26,12 +26,12 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
   };
 
   const handleSubmit = () => {
-    if (!newBuilding.projectId || !newBuilding.name || !newBuilding.permalink) {
+    if (!newBuilding.projectId || !newBuilding.name) {
       Swal.fire('Lỗi', 'Vui lòng điền đầy đủ thông tin', 'error');
       return;
     }
     onSubmit(newBuilding);
-    setNewBuilding({ projectId: '', name: '', permalink: '' }); // Reset form
+    setNewBuilding({ projectId: '', name: '' }); // Reset form
   };
 
   return (
@@ -47,7 +47,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
             required
           >
             {projects.map((project) => (
-              <MenuItem key={project.projectId} value={project.projectId}>
+              <MenuItem key={project.id} value={project.id}>
                 {project.name}
               </MenuItem>
             ))}
@@ -62,7 +62,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
           onChange={handleInputChange}
           required
         />
-        <TextField
+        {/* <TextField
           fullWidth
           margin="normal"
           label="Permalink"
@@ -70,7 +70,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
           value={newBuilding.permalink}
           onChange={handleInputChange}
           required
-        />
+        /> */}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Hủy</Button>

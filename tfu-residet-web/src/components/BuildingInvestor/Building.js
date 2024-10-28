@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+// import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import TableCustom from '../Table';
@@ -19,18 +19,80 @@ const Building = () => {
   const [sortDirection, setSortDirection] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+
+  // const header = {
+  //   headers: {
+  //     method: 'GET',
+  //     Authorization: `Bearer ${Cookies.get("accessToken")}`,
+  //     'content-type': 'application/json',
+  //   }
+  // };
+
+  const headerPOST = {
+    method: 'POST',
+    headers: {
+      method: 'POST',
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: "projects",
+    })
+  };
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch("http://localhost:5045/api/project/viewManager", headerPOST);
+        const data = await response.json();
+        setProjects(data.data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    const fetchBuildings = async () => {
+      try {
+        const response = await fetch("http://localhost:5045/api/building/GetBuildings", {
+          method: 'POST',
+          headers: {
+            method: 'POST',
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: "Splendora Ankhanh",
+          })
+        });
+        const data = await response.json();
+        
+        setBuildings(data.data);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchBuildings();
+  }, []);
 
   const sortedRows = useMemo(() => {
-    if (!sortColumn) return fakeRows;
+    if (!sortColumn) return buildings;
 
-    return [...fakeRows].sort((a, b) => {
+    return [...buildings].sort((a, b) => {
       if (a[sortColumn] < b[sortColumn])
         return sortDirection === "asc" ? -1 : 1;
       if (a[sortColumn] > b[sortColumn])
         return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [fakeRows, sortColumn, sortDirection]);
+  }, [buildings, sortColumn, sortDirection]);
 
   const paginatedRows = useMemo(() => {
     const startIndex = page * rowsPerPage;
@@ -50,45 +112,6 @@ const Building = () => {
     const isAsc = sortColumn === column && sortDirection === "asc";
     setSortDirection(isAsc ? "desc" : "asc");
     setSortColumn(column);
-  };
-
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const [projects, setProjects] = useState([]);
-
-  const header = {
-    headers: {
-      method: 'GET',
-      Authorization: `Bearer ${Cookies.get("accessToken")}`,
-      'content-type': 'application/json',
-    }
-  };
-
-  const headerPOST = {
-    method: 'POST',
-    headers: {
-      method: 'POST',
-      Authorization: `Bearer ${Cookies.get("accessToken")}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: "",
-    })
-  };
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      const response = await fetch("http://localhost:5045/api/building/GetBuildings", headerPOST);
-      const data = await response.json();
-      console.log(data);
-      
-      setProjects(data.data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
   };
 
   const handleCreateBuilding = async (newBuilding) => {
@@ -171,7 +194,7 @@ const Building = () => {
         />
         <TablePagination
           component="div"
-          count={fakeRows.length}
+          count={buildings.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
@@ -186,11 +209,9 @@ const Building = () => {
 const columnData = [
     { name: "Mã tòa nhà", align: "left", esName: "id", sortable: true },
     { name: "Tên tòa nhà", align: "left", esName: "name", sortable: true },
-    { name: "Căn hộ", align: "left", esName: "maxNumberApartments" },
-    { name: "Cư dân", align: "left", esName: "maxNumberResidents" },
+    // { name: "Căn hộ", align: "left", esName: "maxNumberApartments" },
+    // { name: "Cư dân", align: "left", esName: "maxNumberResidents" },
     { name: "Thao tác", align: "left", esName: "thaoTac" },
   ];
-  
-  const fakeRows = [];
 
 export default Building;
