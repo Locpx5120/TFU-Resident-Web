@@ -37,6 +37,7 @@ function TableCustom({
   sortColumn,
   sortDirection,
   onSort,
+  onRowClick
 }) {
   const { light } = colors;
   const { size, fontWeightBold } = typography;
@@ -134,6 +135,7 @@ function TableCustom({
           <TableCell
             key={esName}
             align={align}
+            onClick={() => onRowClick(row)}
             style={{
               borderBottom: `${borderWidth[1]} solid ${light.main}`,
             }}
@@ -276,6 +278,7 @@ TableCustom.propTypes = {
   sortColumn: PropTypes.string,
   sortDirection: PropTypes.oneOf(["asc", "desc"]),
   onSort: PropTypes.func,
+  onRowClick: PropTypes.func,
 };
 
 export default TableCustom;

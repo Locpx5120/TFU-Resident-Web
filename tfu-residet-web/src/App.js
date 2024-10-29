@@ -11,7 +11,8 @@ import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import OTPInput from './pages/OTPInput';
 import ChangePassword from './pages/ChangePassword';
-import { routeArray, routeResident } from "./constants/routes";
+import { routeArray, routeResident, routeDirector } from "./constants/routes";
+import LoginBuilding from "./pages/LoginBuilding";
 
 function App() {
   // Giả sử bạn có một hàm hoặc hook để lấy vai trò của người dùng
@@ -23,12 +24,14 @@ function App() {
         return [];
       case 'Resident':
         return routeResident;
+      case 'Building Director':
+          return routeDirector;
       default:
         return routeArray;
     }
   };
 
-  const routes = getRoutesByRole('');
+  const routes = getRoutesByRole('Building Director');
 
   const renderRoutes = (routeList, parentPath = '') => {
     return routeList.map((item) => {
@@ -70,6 +73,7 @@ function App() {
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/login-building/:buildingId" element={<LoginBuilding />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/otp/:id" element={<OTPInput />} />
