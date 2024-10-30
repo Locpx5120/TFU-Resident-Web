@@ -1,0 +1,16 @@
+.ant-picker-dropdown {
+    z-index: 9999 !important;
+}
+
+.ant-picker {
+    border-radius: 4px !important;
+    padding: 15px 14px !important;
+  }
+  
+  .ant-picker:hover, .ant-picker-focused {
+    border-color: #1976d2 !important;
+  }
+  
+  .ant-picker-input > input {
+    font-size: 1rem !important;
+  }

@@ -128,8 +128,8 @@ const Building = () => {
       const result = await response.json();
 
       if (result.code === 200) {
-        Swal.fire('Thành công', 'Đã thêm tòa nhà mới', 'success');
         setIsOpenCreate(false);
+        Swal.fire('Thành công', 'Đã thêm tòa nhà mới', 'success');
         // Refresh building list here
       } else {
         Swal.fire('Lỗi', result.message || 'Không thể tạo tòa nhà', 'error');

@@ -76,8 +76,8 @@ const Project = () => {
 
   const handleDeleteProject = async (projectId) => {
     try {
-      const res = await fetch(`http://localhost:5045/api/project/delete`, {
-        method: "DELETE",
+      const res = await fetch('http://localhost:5045/api/project/delete', {
+        method: "POST",
         headers: header,
         body: JSON.stringify({ id: projectId }),
       });
@@ -96,8 +96,8 @@ const Project = () => {
 
   const handleEditProject = async (projectData) => {
     try {
-      const res = await fetch(`http://localhost:5045/api/project/update`, {
-        method: "PUT",
+      const res = await fetch('http://localhost:5045/api/project/update', {
+        method: "POST",
         headers: header,
         body: JSON.stringify(projectData),
       });
