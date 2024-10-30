@@ -4,7 +4,7 @@ import Project from "../components/ProjectInvestor/Project";
 import Building from "../components/BuildingInvestor/Building";
 //residents
 import ServiceManage from '../pages/resident/serviceManage';
-import ServicDetail from '../pages/resident/serviceManage/serviceDetail';
+import ServiceDetail from '../pages/resident/serviceManage/serviceDetail';
 import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
@@ -148,7 +148,7 @@ export const routeResident = [
   {
     route: "/quan-ly-dich-vu/:id",
     routeName: "Quản lý dịch vụ",
-    component: <ServicDetail />,
+    component: <ServiceDetail />,
     icon: <SettingsIcon />,
     hidden: true,
   },
