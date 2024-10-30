@@ -116,8 +116,11 @@ const DetailHouseHold = () => {
           residentId: member.id
         })
       });
-      await response.json();
-      Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
+      if (data.error) {
+        Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+      } else {
+        Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
+      }
     } catch (error) {
       Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
     }
