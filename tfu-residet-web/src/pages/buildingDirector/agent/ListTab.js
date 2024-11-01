@@ -262,7 +262,7 @@ const ListTab = () => {
           columns={columnData} 
           rows={rows} 
           onEdit={handleEditAgent}
-          onRowClick={(record) => setSelectedEmployee(record)}
+          onRowClick={() => {}}
         />
         <TablePagination
           component="div"

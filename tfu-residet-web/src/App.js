@@ -31,7 +31,7 @@ function App() {
     }
   };
 
-  const routes = getRoutesByRole('Building Director');
+  const routes = getRoutesByRole('');
 
   const renderRoutes = (routeList, parentPath = '') => {
     return routeList.map((item) => {
