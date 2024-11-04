@@ -9,6 +9,8 @@ import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
 import SendRequest from "../pages/resident/sendRequest";
+import HouseHoldResident from "../pages/resident/householdManagement";
+import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -32,6 +34,9 @@ import HouseHold from "../pages/buildingDirector/householdManagement";
 import DetailHouseHold from "../pages/buildingDirector/householdManagement/DetailHouseHold";
 import PaymentHistory from "../pages/buildingDirector/paymentHistory";
 import Notification from "../pages/buildingDirector/notification";
+import ViewRequests from "../pages/resident/viewRequests";
+import RequestDetail from "../pages/resident/viewRequests/RequestDetail";
+
 
 export const routeArray = [
   {
@@ -107,10 +112,16 @@ export const routeResident = [
     icon: <SettingsIcon />,
   },
   {
-    route: "/quan-ly-thanh-vien",
-    routeName: "Quản lý thành viên",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
+    route: "/cu-dan",
+    routeName: "Quản lý cư dân",
+    component: <HouseHoldResident />,
+    icon: <PersonIcon />,
+  },
+  {
+    route: "/cu-dan/:id",
+    routeName: "Chi tiết cư dân",
+    component: <DetailHouseHoldResident />,
+    hidden: true,
   },
   {
     route: "/thanh-toan-dich-vu",
@@ -126,9 +137,9 @@ export const routeResident = [
     hidden: true,
   },
   {
-    route: "/thanh-toan-dich-vu/:id",
+    route: "/thanh-toan-dich-vu-hoa-don/:id",
     routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsDetail />,
+    component: <ServicePaymentsBill />,
     icon: <SettingsIcon />,
     hidden: true,
   },
@@ -161,8 +172,15 @@ export const routeResident = [
   {
     route: "/xem-don",
     routeName: "Xem đơn",
-    component: <>Chua Co</>,
+    component: <ViewRequests />,
     icon: <SettingsIcon />,
+  },
+  {
+  route: "/xem-chi-tiet-don/:id",
+  routeName: "Xem đơn",
+  component: <RequestDetail />,
+  icon: <SettingsIcon />,
+  hidden: true,
   },
   {
     route: "/gui-don",
