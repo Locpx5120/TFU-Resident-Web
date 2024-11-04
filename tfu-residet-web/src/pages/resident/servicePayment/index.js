@@ -63,6 +63,10 @@ const ServicePayments = () => {
     const handleDetailClick = (id) => {
         navigate(`/thanh-toan-dich-vu/${id}`);
     };
+
+    const handlePaymenNow = (id) => {
+        navigate(`/thanh-toan-dich-vu-hoa-don/${id}`);
+    }
     return (
         <Box className="content">
             <Typography variant="h6">Danh sách thanh toán dịch vụ</Typography>
@@ -81,6 +85,7 @@ const ServicePayments = () => {
                         <TableCell>Tổng dịch vụ</TableCell>
                         <TableCell>Tháng</TableCell>
                         <TableCell>Trạng thái</TableCell>
+                        <TableCell>Tùy chọn</TableCell>
                         <TableCell>Xem chi tiết</TableCell>
                     </TableRow>
                 </TableHead>
@@ -99,7 +104,10 @@ const ServicePayments = () => {
                             <TableCell>{service.month}</TableCell>
                             <TableCell>{service.status}</TableCell>
                             <TableCell>
-                                <Button variant="contained" color="primary" onClick={() => handleDetailClick(service.id)}>Xem chi tiết</Button>
+                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" size='medium' color="success" onClick={() => handlePaymenNow(service.id)}>Thanh toán ngay</Button>
+                            </TableCell>
+                            <TableCell>
+                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" color="primary" onClick={() => handleDetailClick(service.id)}>Xem chi tiết</Button>
                             </TableCell>
                         </TableRow>
                     ))}

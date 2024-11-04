@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import TableCustom from '../../../components/Table';
 import { useParams } from 'react-router-dom';
 
-const ServiceDetail = () => {
+const ManageService = () => {
     const { id } = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -78,7 +78,6 @@ const ServiceDetail = () => {
                 <TableCustom
                     columns={columnData}
                     rows={paginatedRows}
-                    onRowClick={()=>{}}
                 />
                 <TablePagination
                     component="div"
@@ -104,4 +103,4 @@ const columnData = [
     { name: "Ngày kết thúc", align: "left", esName: "ngayKetThuc" },
 ];
 
-export default ServiceDetail;
+export default ManageService;
