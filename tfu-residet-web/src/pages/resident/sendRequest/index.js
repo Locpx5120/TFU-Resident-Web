@@ -12,17 +12,28 @@ import {
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { set } from 'lodash';
+import { DatePicker } from 'antd';
+import moment from 'moment/moment';
 
 const SendRequest = () => {
-    const [requests, setRequests] = useState([{
+    const themThanhVien = 'ab700748-25bf-454a-80c5-ed211d90458d';
+    const [serviceTypes, setServiceTypes] = useState('');
+    const initalRequet = serviceTypes === themThanhVien ? {
+        serviceId: '',
+        note: '',
+        nameMember: '',
+        phoneNumber: '',
+        email: '',
+        birthday: '',
+    } : {
         serviceId: '',
         vehicleType: '',
         licensePlate: '',
         packageServiceId: '',
         note: '',
         apartmentId: '',
-    }]);
-    const [serviceTypes, setServiceTypes] = useState('');
+    };
+    const [requests, setRequests] = useState([initalRequet]);
     const [serviceTypesArr, setServiceTypesArr] = useState([]);
     const [packageArr, setPackagesArr] = useState([]);
     const [serviceNameArr, setServiceNameArr] = useState([]);
@@ -34,19 +45,19 @@ const SendRequest = () => {
                 const response = await fetch(`https://localhost:7082/api/apartment/resident/${residentId}`, {
                     method: 'GET',
                     headers: {
-                      Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                      'content-type': 'application/json',
-                      'buildingPermalink':  Cookies.get("buildingID"),
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                        'buildingPermalink': Cookies.get("buildingID"),
                     },
-                  });
-                  const data = await response.json();
-                  setBuildings(data.data);
+                });
+                const data = await response.json();
+                setBuildings(data.data);
                 const packageNameRes = await fetch('https://localhost:7082/api/package/get-all', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${Cookies.get("accessToken")}`,
                         'content-type': 'application/json',
-                        'buildingPermalink':  Cookies.get("buildingID"),
+                        'buildingPermalink': Cookies.get("buildingID"),
                     },
                 });
                 const packages = await packageNameRes.json();
@@ -57,27 +68,27 @@ const SendRequest = () => {
                     headers: {
                         Authorization: `Bearer ${Cookies.get("accessToken")}`,
                         'content-type': 'application/json',
-                        'buildingPermalink':  Cookies.get("buildingID"),
+                        'buildingPermalink': Cookies.get("buildingID"),
                     },
                 });
                 const resServiceTypes = await serviceTypesRes.json();
                 setServiceTypesArr(resServiceTypes.data);
-                
+
                 if (!serviceTypes) return;
-                
+
                 const serviceNames = await fetch(`https://localhost:7082/api/apartment-services/GetByCategory/${serviceTypes}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${Cookies.get("accessToken")}`,
                         'content-type': 'application/json',
-                        'buildingPermalink':  Cookies.get("buildingID"),
+                        'buildingPermalink': Cookies.get("buildingID"),
                     },
                 });
 
                 const resServiceName = await serviceNames.json();
                 setServiceNameArr(resServiceName.data);
             } catch (error) {
-                
+
             }
         }
 
@@ -135,7 +146,7 @@ const SendRequest = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if(!serviceTypes) {
+        if (!serviceTypes) {
             Swal.fire({
                 icon: 'error',
                 title: '',
@@ -151,15 +162,15 @@ const SendRequest = () => {
             const response = await fetch("https://localhost:7082/api/service-contract/add-vehicle-service", {
                 method: 'POST',
                 headers: {
-                  Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                  'content-type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
                 },
-                body: JSON.stringify({services}),
-              });
-              const data = await response.json();
-              if (data.code !== 200) {
+                body: JSON.stringify({ services }),
+            });
+            const data = await response.json();
+            if (data.code !== 200) {
                 Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
-              } else {
+            } else {
                 Swal.fire('Thành công', 'Đã gửi đơn thành công!', 'success');
                 setRequests([{
                     serviceId: '',
@@ -168,7 +179,7 @@ const SendRequest = () => {
                     packageServiceId: '',
                     note: ''
                 }]);
-              }
+            }
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -177,6 +188,9 @@ const SendRequest = () => {
             });
         }
     };
+
+    console.log(residentId);
+
 
     return (
         <Box sx={{ padding: '20px' }} className="content">
@@ -196,6 +210,35 @@ const SendRequest = () => {
                     ))}
                 </Select>
             </FormControl>
+            {serviceTypes === themThanhVien &&
+                (<>
+                    <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
+                        <InputLabel id="service-type-label">Tòa nhà</InputLabel>
+                        <Select
+                            labelId="service-type-label"
+                            value={serviceTypes}
+                            onChange={(e) => setServiceTypes(e.target.value)}
+                            required
+                        >
+                            {optionServiceTypes.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
+                        <InputLabel id="service-type-label">Căn hộ</InputLabel>
+                        <Select
+                            labelId="service-type-label"
+                            value={serviceTypes}
+                            onChange={(e) => setServiceTypes(e.target.value)}
+                            required
+                        >
+                            {optionServiceTypes.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </>)}
             <form onSubmit={handleSubmit}>
                 {requests.map((request, index) => (
                     <Box key={index} sx={{ marginBottom: '20px' }}>
@@ -214,8 +257,51 @@ const SendRequest = () => {
                                     ))}
                                 </Select>
                             </FormControl>
+                            {serviceTypes === themThanhVien &&
+                                (<>
+                                    <TextField
+                                        fullWidth
+                                        margin="normal"
+                                        label="Tên thành viên"
+                                        type="text"
+                                        value={request.nameMember}
+                                        onChange={(e) => handleChange(index, 'nameMember', e.target.value)}
+                                        required
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
+                                    />
 
-                            <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
+                                    <TextField
+                                        fullWidth
+                                        margin="normal"
+                                        label="Số điện thoại"
+                                        type="text"
+                                        value={request.phoneNumber}
+                                        onChange={(e) => handleChange(index, 'phoneNumber', e.target.value)}
+                                        required
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        margin="normal"
+                                        label="email"
+                                        type="text"
+                                        value={request.email}
+                                        onChange={(e) => handleChange(index, 'email', e.target.value)}
+                                        required
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
+                                    />
+                                    <DatePicker
+                                        fullWidth
+                                        placeholder="Ngày sinh"
+                                        value={request.birthday ? moment(request.birthday) : null}
+                                        onChange={(date, dateString) => handleChange(index, 'birthday', dateString)}
+                                        required
+                                        style={{ width: '100%', marginRight: '10px', flex: '1 1 0' }}
+                                    />
+                                </>)
+                            }
+
+                            {serviceTypes !== themThanhVien && (<><FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
                                 <InputLabel id={`apartment-label-${index}`}>Căn hộ cần gửi đơn</InputLabel>
                                 <Select
                                     labelId={`apartment-label-${index}`}
@@ -229,41 +315,41 @@ const SendRequest = () => {
                                 </Select>
                             </FormControl>
 
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                label="Loại xe"
-                                type="text"
-                                value={request.vehicleType}
-                                onChange={(e) => handleChange(index, 'vehicleType', e.target.value)}
-                                required
-                                sx={{ marginRight: '10px', flex: '1 1 0' }}
-                            />
-
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                label="Biển số xe"
-                                type="text"
-                                value={request.licensePlate}
-                                onChange={(e) => handleChange(index, 'licensePlate', e.target.value)}
-                                required
-                                sx={{ marginRight: '10px', flex: '1 1 0' }}
-                            />
-
-                            <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
-                                <InputLabel id={`package-duration-label-${index}`}>Gói</InputLabel>
-                                <Select
-                                    labelId={`package-duration-label-${index}`}
-                                    value={request.packageServiceId}
-                                    onChange={(e) => handleChange(index, 'packageServiceId', e.target.value)}
+                                <TextField
+                                    fullWidth
+                                    margin="normal"
+                                    label="Loại xe"
+                                    type="text"
+                                    value={request.vehicleType}
+                                    onChange={(e) => handleChange(index, 'vehicleType', e.target.value)}
                                     required
-                                >
-                                    {optionPackageName?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                    sx={{ marginRight: '10px', flex: '1 1 0' }}
+                                />
+
+                                <TextField
+                                    fullWidth
+                                    margin="normal"
+                                    label="Biển số xe"
+                                    type="text"
+                                    value={request.licensePlate}
+                                    onChange={(e) => handleChange(index, 'licensePlate', e.target.value)}
+                                    required
+                                    sx={{ marginRight: '10px', flex: '1 1 0' }}
+                                />
+
+                                <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
+                                    <InputLabel id={`package-duration-label-${index}`}>Gói</InputLabel>
+                                    <Select
+                                        labelId={`package-duration-label-${index}`}
+                                        value={request.packageServiceId}
+                                        onChange={(e) => handleChange(index, 'packageServiceId', e.target.value)}
+                                        required
+                                    >
+                                        {optionPackageName?.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl></>)}
                             {index === 0 && <Button
                                 variant="outlined"
                                 color="success"
@@ -285,7 +371,7 @@ const SendRequest = () => {
                         <TextField
                             fullWidth
                             margin="normal"
-                            label="Lý do"
+                            label="Ghi chú"
                             multiline
                             rows={1}
                             value={request.note}

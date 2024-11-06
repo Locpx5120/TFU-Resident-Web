@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     Box,
     Button,
@@ -12,23 +12,36 @@ import {
     Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 const ServicePayments = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [selected, setSelected] = useState([]);
-    const [services, setServices] = useState([
-        { id: 1, roomNumber: '101', totalService: '1.500.000 VNĐ', month: '06/2024', status: 'Đã thanh toán' },
-        { id: 2, roomNumber: '102', totalService: '2.000.000 VNĐ', month: '06/2024', status: 'Chưa thanh toán' },
-        { id: 3, roomNumber: '103', totalService: '1.800.000 VNĐ', month: '06/2024', status: 'Đã thanh toán' },
-        { id: 4, roomNumber: '104', totalService: '1.200.000 VNĐ', month: '06/2024', status: 'Chưa thanh toán' },
-        { id: 5, roomNumber: '105', totalService: '2.500.000 VNĐ', month: '06/2024', status: 'Đã thanh toán' },
-    ]);
+    const [services, setServices] = useState([]);
+    const [reload, setReload] = useState(false);
+
+    useEffect(() => {
+        const fetchRooms = async () => {
+            const res = await fetch(`https://localhost:7082/api/apartment-services/unpaid-summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`,{
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink':  Cookies.get("buildingID"),
+                },
+            });
+            const data = await res.json();
+            setServices(data);
+        }
+        fetchRooms();
+    }, [page, rowsPerPage, reload]);
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
-            const newSelecteds = services.map((n) => n.id);
+            const newSelecteds = services?.data.map((n) => n.apartmentId);
             setSelected(newSelecteds);
             return;
         }
@@ -56,8 +69,8 @@ const ServicePayments = () => {
     };
 
     const paginatedRows = useMemo(() => {
-        const startIndex = page * rowsPerPage;
-        return services.slice(startIndex, startIndex + rowsPerPage);
+        if(!services?.data) return [];
+        return services.data;
     }, [page, rowsPerPage, services]);
 
     const handleDetailClick = (id) => {
@@ -76,8 +89,8 @@ const ServicePayments = () => {
                             <TableCell>STT</TableCell>
                         <TableCell align='left'>
                             <Checkbox
-                                indeterminate={selected.length > 0 && selected.length < services.length}
-                                checked={services.length > 0 && selected.length === services.length}
+                                indeterminate={selected.length > 0 && selected.length < services?.data?.length}
+                                checked={services?.data?.length > 0 && selected.length === services?.data?.length}
                                 onChange={handleSelectAll}
                             /> Tất cả
                         </TableCell>
@@ -85,29 +98,25 @@ const ServicePayments = () => {
                         <TableCell>Tổng dịch vụ</TableCell>
                         <TableCell>Tháng</TableCell>
                         <TableCell>Trạng thái</TableCell>
-                        <TableCell>Tùy chọn</TableCell>
                         <TableCell>Xem chi tiết</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {paginatedRows.map((service, index) => (
-                        <TableRow key={service.id}>
+                        <TableRow key={service.apartmentId}>
                             <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                             <TableCell>
                                 <Checkbox
-                                    checked={selected.indexOf(service.id) !== -1}
-                                    onChange={() => handleSelect(service.id)}
+                                    checked={selected.indexOf(service.apartmentId) !== -1}
+                                    onChange={() => handleSelect(service.apartmentId)}
                                 />
                             </TableCell>
                             <TableCell>{service.roomNumber}</TableCell>
-                            <TableCell>{service.totalService}</TableCell>
+                            <TableCell>{service.totalServices}</TableCell>
                             <TableCell>{service.month}</TableCell>
-                            <TableCell>{service.status}</TableCell>
+                            <TableCell>{service.paymentStatus}</TableCell>
                             <TableCell>
-                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" size='medium' color="success" onClick={() => handlePaymenNow(service.id)}>Thanh toán ngay</Button>
-                            </TableCell>
-                            <TableCell>
-                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" color="primary" onClick={() => handleDetailClick(service.id)}>Xem chi tiết</Button>
+                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" color="primary" onClick={() => handleDetailClick(service.apartmentId)}>Xem chi tiết</Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -115,7 +124,7 @@ const ServicePayments = () => {
             </Table>
             <TablePagination
                 component="div"
-                count={services.length}
+                count={services.totalRecords}
                 page={page}
                 onPageChange={(event, newPage) => setPage(newPage)}
                 rowsPerPage={rowsPerPage}

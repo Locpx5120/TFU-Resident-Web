@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Card, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
 import { Button } from 'react-bootstrap';
 import QRCodeModal from '../../../common/ModalQRCode';
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 const ServicePaymentsBill = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [payments, setPayments] = useState([]);
+    const [reload, setReload] = useState(false);
+    const [roomsData, setRoomsData] = useState([])
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
+    const buildingID = Cookies.get("buildingID");
 
-    const roomsData = [
-        {
-            roomNumber: '101',
-            services: [
-                { tenDichVu: "Gửi xe ô tô", tongTien: "3.000.000 VNĐ" },
-                { tenDichVu: "Gửi xe máy", tongTien: "1.500.000 VNĐ" },
-            ],
-        },
-        {
-            roomNumber: '102',
-            services: [
-                { tenDichVu: "Dịch vụ B", tongTien: "2.000.000 VNĐ" },
-                { tenDichVu: "Dịch vụ A", tongTien: "1.000.000 VNĐ" },
-            ],
-        },
-    ];
+    useEffect(() => {
+        const fetchRooms = async () => {
+            const res = await fetch(`https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1`,)
+        }
+        fetchRooms();
+    }, [])
+
+    useEffect(() => {
+        const fetchPayments = async () => {
+            try {
+                const response = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink':  buildingID,
+                  },
+                });
+                const data = await response.json();
+                setPayments(data);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            }
+        };
+        fetchPayments();
+    }, []);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
