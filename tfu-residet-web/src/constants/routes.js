@@ -29,6 +29,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
 import DirectorPage from "../pages/buildingDirector/dashboard";
+import DirectorHomepage from "../pages/buildingDirector/homepage";
 import SalaryListPage from "../pages/buildingDirector/agent";
 import HouseHold from "../pages/buildingDirector/householdManagement";
 import DetailHouseHold from "../pages/buildingDirector/householdManagement/DetailHouseHold";
@@ -36,6 +37,8 @@ import PaymentHistory from "../pages/buildingDirector/paymentHistory";
 import Notification from "../pages/buildingDirector/notification";
 import ViewRequests from "../pages/resident/viewRequests";
 import RequestDetail from "../pages/resident/viewRequests/RequestDetail";
+import Receptionist from "../pages/receptionist";
+import HistoryPay from "../pages/receptionist/historyPay";
 
 
 export const routeArray = [
@@ -188,12 +191,30 @@ export const routeResident = [
     component: <SendRequest />,
     icon: <SettingsIcon />,
   },
+  {
+    route: "/lich-su-gui-don",
+    routeName: "Lịch sử gửi đơn",
+    component: <Receptionist />,
+    icon: <SettingsIcon />,
+  },
+  {
+    route: "/lich-su-thanh-toan-2",
+    routeName: "Lịch sử thanh toán 2",
+    component: <HistoryPay />,
+    icon: <SettingsIcon />,
+  },
 ];
 
 export const routeDirector = [
   {
     route: "/",
     routeName: "Trang chính",
+    component: <DirectorHomepage />,
+    icon: <WidgetsIcon />,
+  },
+  {
+    route: "/",
+    routeName: "Dashboard",
     component: <DirectorPage />,
     icon: <WidgetsIcon />,
   },

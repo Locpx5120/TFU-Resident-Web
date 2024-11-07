@@ -21,8 +21,8 @@ const SendRequest = () => {
     const initalRequet = serviceTypes === themThanhVien ? {
         serviceId: '',
         note: '',
-        nameMember: '',
-        phoneNumber: '',
+        name: '',
+        phone: '',
         email: '',
         birthday: '',
     } : {
@@ -38,7 +38,15 @@ const SendRequest = () => {
     const [packageArr, setPackagesArr] = useState([]);
     const [serviceNameArr, setServiceNameArr] = useState([]);
     const [buildings, setBuildings] = useState([]);
+    const [apartment, setApartment] = useState('');
     const residentId = Cookies.get("residentId");
+
+    console.log(apartment)
+
+    const handleChangeApartment = (event) => {
+        setApartment(event.target.value);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -150,37 +158,80 @@ const SendRequest = () => {
             Swal.fire({
                 icon: 'error',
                 title: '',
-                text: 'Vui lý chọn loại dịch vụ',
+                text: 'Vui lòng chọn loại dịch vụ',
             });
             return;
         }
         try {
-            const services = requests.map((request) => ({
-                residentId: residentId,
-                ...request,
-            }))
-            const response = await fetch("https://localhost:7082/api/service-contract/add-vehicle-service", {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({ services }),
-            });
-            const data = await response.json();
-            if (data.code !== 200) {
-                Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
-            } else {
-                Swal.fire('Thành công', 'Đã gửi đơn thành công!', 'success');
-                setRequests([{
-                    serviceId: '',
-                    vehicleType: '',
-                    licensePlate: '',
-                    packageServiceId: '',
-                    note: ''
-                }]);
+            if (serviceTypes == themThanhVien) {
+                const services = {
+                    apartmentId: apartment,
+                    serviceId: requests.serviceId,
+                    members: requests.map((request) => ({
+                        name: request.name,
+                        email: request.email,
+                        birthday: request.birthday,
+                        phone: request.phone,
+                        note: request.note
+                    }))
+                }
+
+                const response = await fetch("https://localhost:7082/api/ceo/add-members", {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify(services),
+                });
+                const data = await response.json();
+                if (data.code !== 200) {
+                    Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
+                } else {
+                    Swal.fire('Thành công', 'Đã gửi đơn thành công!', 'success');
+                    setRequests([{
+                        serviceId: '',
+                        note: '',
+                        name: '',
+                        phone: '',
+                        email: '',
+                        birthday: '',
+                    }]);
+                }
             }
-        } catch (error) {
+            else if (!serviceTypes) {
+                const services = requests.map((request) => ({
+                    residentId: residentId,
+                    ...request,
+                }))
+                const response = await fetch("https://localhost:7082/api/service-contract/add-vehicle-service", {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({ services }),
+                });
+                const data = await response.json();
+                if (data.code !== 200) {
+                    Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
+                } else {
+                    Swal.fire('Thành công', 'Đã gửi đơn thành công!', 'success');
+                    setRequests([{
+                        serviceId: '',
+                        vehicleType: '',
+                        licensePlate: '',
+                        packageServiceId: '',
+                        note: ''
+                    }]);
+                }
+            }
+
+
+        }
+
+
+        catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
@@ -189,7 +240,10 @@ const SendRequest = () => {
         }
     };
 
-    console.log(residentId);
+    console.log('serviceTypesArr', serviceTypesArr)
+    console.log('packageArr', packageArr)
+    console.log('serviceNameArr', serviceNameArr)
+    console.log('buildings', buildings)
 
 
     return (
@@ -213,27 +267,14 @@ const SendRequest = () => {
             {serviceTypes === themThanhVien &&
                 (<>
                     <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
-                        <InputLabel id="service-type-label">Tòa nhà</InputLabel>
+                        <InputLabel id={`apartment-label`}>Căn hộ cần gửi đơn</InputLabel>
                         <Select
-                            labelId="service-type-label"
-                            value={serviceTypes}
-                            onChange={(e) => setServiceTypes(e.target.value)}
+                            labelId={`apartment-label`}
+                            value={apartment}
+                            onChange={(e) => handleChangeApartment(e)}
                             required
                         >
-                            {optionServiceTypes.map((option) => (
-                                <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
-                        <InputLabel id="service-type-label">Căn hộ</InputLabel>
-                        <Select
-                            labelId="service-type-label"
-                            value={serviceTypes}
-                            onChange={(e) => setServiceTypes(e.target.value)}
-                            required
-                        >
-                            {optionServiceTypes.map((option) => (
+                            {optionBuildings?.map((option) => (
                                 <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                             ))}
                         </Select>
@@ -243,20 +284,6 @@ const SendRequest = () => {
                 {requests.map((request, index) => (
                     <Box key={index} sx={{ marginBottom: '20px' }}>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', marginBottom: '10px' }}>
-                            <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
-                                <InputLabel id={`service-name-label-${index}`}>Tên dịch vụ</InputLabel>
-                                <Select
-                                    labelId={`service-name-label-${index}`}
-                                    value={request.serviceId}
-                                    onChange={(e) => handleChange(index, 'serviceId', e.target.value)}
-                                    required
-                                >
-                                    <MenuItem value="">Chọn dịch vụ</MenuItem>
-                                    {optionServiceName?.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
                             {serviceTypes === themThanhVien &&
                                 (<>
                                     <TextField
@@ -264,8 +291,8 @@ const SendRequest = () => {
                                         margin="normal"
                                         label="Tên thành viên"
                                         type="text"
-                                        value={request.nameMember}
-                                        onChange={(e) => handleChange(index, 'nameMember', e.target.value)}
+                                        value={request.name}
+                                        onChange={(e) => handleChange(index, 'name', e.target.value)}
                                         required
                                         sx={{ marginRight: '10px', flex: '1 1 0' }}
                                     />
@@ -275,8 +302,8 @@ const SendRequest = () => {
                                         margin="normal"
                                         label="Số điện thoại"
                                         type="text"
-                                        value={request.phoneNumber}
-                                        onChange={(e) => handleChange(index, 'phoneNumber', e.target.value)}
+                                        value={request.phone}
+                                        onChange={(e) => handleChange(index, 'phone', e.target.value)}
                                         required
                                         sx={{ marginRight: '10px', flex: '1 1 0' }}
                                     />

@@ -6,11 +6,13 @@ import {
     Select,
     MenuItem,
     Typography,
+    Button,
 } from '@mui/material';
 import TableCustom from '../../../components/Table';
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { Link, useParams } from 'react-router-dom';
+import QRCodeModal from '../../../common/ModalQRCode';
 
 const ServicePaymentsDetail = () => {
     const { id } = useParams();
@@ -18,28 +20,32 @@ const ServicePaymentsDetail = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [payments, setPayments] = useState([]);
     const [roomsData, setRoomsData] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const buildingID = Cookies.get("buildingID");
+
+    const openModal = () => setModalIsOpen(true);
+    const closeModal = () => setModalIsOpen(false);
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
                 const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
-                  method: 'POST',
-                  headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink': Cookies.get('buildingID'),
-                  },
-                  body: JSON.stringify({
-                    apartmentId: id,
-                    serviceType: "",
-                  })
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                        'buildingPermalink': Cookies.get('buildingID'),
+                    },
+                    body: JSON.stringify({
+                        apartmentId: id,
+                        serviceType: "",
+                    })
                 });
                 const data = await response.json();
                 setRoomsData(data);
-              } catch (error) {
+            } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-              }
+            }
         }
         fetchRooms();
     }, [])
@@ -53,13 +59,14 @@ const ServicePaymentsDetail = () => {
         setPage(0);
     };
     console.log(roomsData);
-    
+
     const paginatedRows = useMemo(() => {
         return roomsData.services;
     }, [page, rowsPerPage, roomsData,]);
 
     return (
         <section className="content service">
+            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} />
             <Box>
                 <Typography variant="h6">Chi tiết thanh toán dịch vụ phòng</Typography>
             </Box>
@@ -67,7 +74,7 @@ const ServicePaymentsDetail = () => {
                 <TableCustom
                     columns={columnData}
                     rows={paginatedRows}
-                    onRowClick={() => {}}
+                    onRowClick={() => { }}
                 />
                 <TablePagination
                     component="div"
@@ -78,9 +85,9 @@ const ServicePaymentsDetail = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                     rowsPerPageOptions={[5, 10, 25]}
                 />
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-                <h1>Tổng tiền cần thanh toán:  {roomsData?.totalAmount}</h1> 
-                <Link to='/thanh-toan-dich-vu-hoa-don' style={{padding: '5px 20px', background: 'green', color: '#fff', borderRadius: '10px', textDecoration: 'none'}}>Thanh toán</Link>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+                    <h1>Tổng tiền cần thanh toán:  {roomsData?.totalAmount}</h1>
+                    <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>
                 </div>
             </Card>
         </section>
