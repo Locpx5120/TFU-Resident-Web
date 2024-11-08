@@ -74,11 +74,11 @@ const paymentManage = () => {
     }, [page, rowsPerPage, services]);
 
     const handleDetailClick = (id) => {
-        navigate(`/thanh-toan-dich-vu/${id}`);
+        navigate(`/xem-dich-vu/${id}`);
     };
 
     const handlePaymenNow = (id) => {
-        navigate(`/thanh-toan-dich-vu-hoa-don/${id}`);
+        navigate(`/xem-dich-vu-hoa-don/${id}`);
     }
     return (
         <Box className="content">
@@ -134,7 +134,6 @@ const paymentManage = () => {
                 }}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh toán</Button>
         </Box>
     );
 };

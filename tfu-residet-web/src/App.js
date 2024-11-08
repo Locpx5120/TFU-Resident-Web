@@ -11,7 +11,7 @@ import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import OTPInput from './pages/OTPInput';
 import ChangePassword from './pages/ChangePassword';
-import { routeArray, routeResident, routeDirector } from "./constants/routes";
+import { routeArray, routeResident, routeDirector, routeReceptionist, routeAccountant, routeAdmin } from "./constants/routes";
 import LoginBuilding from "./pages/LoginBuilding";
 
 function App() {
@@ -25,7 +25,13 @@ function App() {
       case 'Resident':
         return routeResident;
       case 'Building Director':
-          return routeDirector;
+        return routeDirector;
+      case 'Receptionist':
+        return routeReceptionist;
+      case 'Accountant':
+        return routeAccountant;
+      case 'Administrator':
+        return routeAdmin;
       default:
         return routeArray;
     }

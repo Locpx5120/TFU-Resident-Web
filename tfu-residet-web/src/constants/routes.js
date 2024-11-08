@@ -37,8 +37,12 @@ import PaymentHistory from "../pages/buildingDirector/paymentHistory";
 import Notification from "../pages/buildingDirector/notification";
 import ViewRequests from "../pages/resident/viewRequests";
 import RequestDetail from "../pages/resident/viewRequests/RequestDetail";
+
+//receptionist
 import Receptionist from "../pages/receptionist";
 import HistoryPay from "../pages/receptionist/historyPay";
+import AccountantPage from "../pages/accountant/AccountantPage";
+import Adminitrative from "../pages/administrative";
 
 
 export const routeArray = [
@@ -191,18 +195,6 @@ export const routeResident = [
     component: <SendRequest />,
     icon: <SettingsIcon />,
   },
-  {
-    route: "/lich-su-gui-don",
-    routeName: "Lịch sử gửi đơn",
-    component: <Receptionist />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/lich-su-thanh-toan-2",
-    routeName: "Lịch sử thanh toán 2",
-    component: <HistoryPay />,
-    icon: <SettingsIcon />,
-  },
 ];
 
 export const routeDirector = [
@@ -247,5 +239,38 @@ export const routeDirector = [
     routeName: "Lịch sử thanh toán",
     component: <PaymentHistory />,
     icon: <HistoryIcon />,
+  },
+];
+
+export const routeReceptionist = [
+  {
+    route: "/lich-su-gui-don",
+    routeName: "Lịch sử gửi đơn",
+    component: <Receptionist />,
+    icon: <SettingsIcon />,
+  },
+  {
+    route: "/lich-su-thanh-toan-2",
+    routeName: "Lịch sử thanh toán 2",
+    component: <HistoryPay />,
+    icon: <SettingsIcon />,
+  },
+];
+
+export const routeAccountant = [
+  {
+    route: "/xem-thanh-toan",
+    routeName: "Xem thanh toán",
+    component: <AccountantPage />,
+    icon: <HistoryIcon />,
+  },
+];
+
+export const routeAdmin = [
+  {
+    route: "/xu-ly-don-them-dich-vu",
+    routeName: "Xử lý đơn thêm dịch vụ",
+    component: <Adminitrative />,
+    icon: <SettingsIcon />,
   },
 ];

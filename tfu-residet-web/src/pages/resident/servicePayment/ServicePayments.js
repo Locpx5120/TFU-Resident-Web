@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
 import { Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import QRCodeModal from '../../../common/ModalQRCode';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
@@ -16,10 +17,28 @@ const ServicePaymentsBill = () => {
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
     const buildingID = Cookies.get("buildingID");
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchRooms = async () => {
-            const res = await fetch(`https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1`,)
+            try {
+                const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                        'buildingPermalink': Cookies.get('buildingID'),
+                    },
+                    body: JSON.stringify({
+                        apartmentId: id,
+                        serviceType: "",                    
+                    })
+                });
+                const data = await response.json();
+                setRoomsData(data);
+            } catch (error) {
+                Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+            }
         }
         fetchRooms();
     }, [])
@@ -27,13 +46,16 @@ const ServicePaymentsBill = () => {
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink':  buildingID,
-                  },
+                const response = await fetch('https://localhost:7082/api/apartment-services/unpaid-details/', {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                        'buildingPermalink': buildingID,
+                    },
+                    body: JSON.stringify({
+                        serviceContractId: id,
+                    })
                 });
                 const data = await response.json();
                 setPayments(data);
@@ -57,7 +79,7 @@ const ServicePaymentsBill = () => {
         <Box className="content">
             <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} />
             <Typography variant="h6">Danh sách thanh toán dịch vụ</Typography>
-            {roomsData.map((room, index) => (
+            {(Array.isArray(roomsData) ? roomsData : []).map((room, index) => (
                 <Card key={index} sx={{ margin: '20px 0', padding: '20px' }}>
                     <Typography variant="h6">Phòng: {room.roomNumber}</Typography>
                     <TableContainer>
@@ -66,7 +88,8 @@ const ServicePaymentsBill = () => {
                                 <TableRow>
                                     <TableCell>Tên dịch vụ</TableCell>
                                     <TableCell>Tổng tiền</TableCell>
-                                </TableRow>
+            
+                    </TableRow>
                             </TableHead>
                             <TableBody>
                                 {room.services.map((service, idx) => (
@@ -90,7 +113,7 @@ const ServicePaymentsBill = () => {
             ))}
             <TablePagination
                 component="div"
-                count={roomsData.length}
+                count={Array.isArray(roomsData) ? roomsData.length : 0}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
