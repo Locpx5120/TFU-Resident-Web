@@ -19,29 +19,29 @@ const ServicePaymentsBill = () => {
     const buildingID = Cookies.get("buildingID");
     const { id } = useParams();
 
-    useEffect(() => {
-        const fetchRooms = async () => {
-            try {
-                const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get('buildingID'),
-                    },
-                    body: JSON.stringify({
-                        apartmentId: id,
-                        serviceType: "",                    
-                    })
-                });
-                const data = await response.json();
-                setRoomsData(data);
-            } catch (error) {
-                Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-            }
-        }
-        fetchRooms();
-    }, [])
+    // useEffect(() => {
+    //     const fetchRooms = async () => {
+    //         try {
+    //             const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
+    //                     'content-type': 'application/json',
+    //                     'buildingPermalink': Cookies.get('buildingID'),
+    //                 },
+    //                 body: JSON.stringify({
+    //                     apartmentId: id,
+    //                     serviceType: "",                    
+    //                 })
+    //             });
+    //             const data = await response.json();
+    //             setRoomsData(data);
+    //         } catch (error) {
+    //             Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+    //         }
+    //     }
+    //     fetchRooms();
+    // }, [])
 
     useEffect(() => {
         const fetchPayments = async () => {

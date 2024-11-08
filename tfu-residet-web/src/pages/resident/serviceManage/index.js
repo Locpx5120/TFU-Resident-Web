@@ -74,7 +74,8 @@ const ServiceManage = () => {
         if(!services?.data) return [];
         return services.data.map((item, index) => ({
             STT: index + 1,
-            soPhong: item.roomNumber,
+            toaNha: item.buildingName,
+            canHo: item.roomNumber,
             tongDichVu: item.totalServices,
             chiTiet: <Button variant="contained" onClick={() => navigate(`/quan-ly-dich-vu/${item.apartmentId}`)}>Chi tiết</Button>
         }));
@@ -158,7 +159,8 @@ const ServiceManage = () => {
 
 const columnData = [
     { name: "STT", align: "left", esName: "STT", sortable: true },
-    { name: "Số phòng", align: "left", esName: "soPhong", sortable: true },
+    { name: "Tòa nhà", align: "left", esName: "toaNha", sortable: true },
+    { name: "Căn hộ", align: "left", esName: "canHo", sortable: true },
     { name: "Tổng dịch vụ", align: "left", esName: "tongDichVu" },
     { name: "Chi tiết", align: "left", esName: "chiTiet" },
   ];

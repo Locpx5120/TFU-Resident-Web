@@ -120,7 +120,7 @@ export const routeResident = [
   },
   {
     route: "/cu-dan",
-    routeName: "Quản lý cư dân",
+    routeName: "Quản lý thành viên",
     component: <HouseHoldResident />,
     icon: <PersonIcon />,
   },

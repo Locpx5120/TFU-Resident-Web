@@ -77,7 +77,7 @@ const ServicePayments = () => {
         navigate(`/thanh-toan-dich-vu/${id}`);
     };
 
-    const handlePaymenNow = (id) => {
+    const handlePaymentNow = (id) => {
         navigate(`/thanh-toan-dich-vu-hoa-don/${id}`);
     }
     return (
