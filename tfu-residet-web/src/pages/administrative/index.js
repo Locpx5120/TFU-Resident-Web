@@ -1,12 +1,42 @@
 import { Box, Button, Card, FormControl, InputLabel, MenuItem, Select, TablePagination, TextField, Typography } from "@mui/material"
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import TableCustom from "../../components/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalAdministrative from "./modalAdministrative";
+import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 const Adminitrative = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [modalOpen, setModalOpen] = useState(true);
+    const [roomsData, setRoomsData] = useState([]);
+    const { id } = useParams();
+
+    useEffect(() => {
+        const fetchRooms = async () => {
+            try {
+                const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        'content-type': 'application/json',
+                        'buildingPermalink': Cookies.get('buildingID'),
+                    },
+                    body: JSON.stringify({
+                        apartmentId: id,
+                        serviceType: "",                    
+                    })
+                });
+                const data = await response.json();
+                setRoomsData(data);
+            } catch (error) {
+                Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+            }
+        }
+        fetchRooms();
+    }, [])
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
