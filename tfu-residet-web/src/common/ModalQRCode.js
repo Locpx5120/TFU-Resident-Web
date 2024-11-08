@@ -11,8 +11,6 @@ const QRCodeModal = ({ isOpen, onRequestClose }) => {
         Tên tài khoản: Nguyễn Văn A,
         Số tài khoản: 14124565754534,
         Ngân hàng: TP Bank,
-        Số tiền: 300.000.000,
-        Nội dung *: abcxyz
     `;
 
     const qrData = `ABCXYZ|14124565754534|300000000`;
@@ -42,7 +40,7 @@ const customStyles = {
         right: 'auto',
         bottom: 'auto',
         transform: 'translate(-50%, -50%)',
-        width: '400px',
+        width: '300px',
         padding: '20px',
     },
 };

@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
-const ServicePayments = () => {
+const paymentManage = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -74,11 +74,11 @@ const ServicePayments = () => {
     }, [page, rowsPerPage, services]);
 
     const handleDetailClick = (id) => {
-        navigate(`/thanh-toan-dich-vu/${id}`);
+        navigate(`/xem-dich-vu/${id}`);
     };
 
-    const handlePaymentNow = (id) => {
-        navigate(`/thanh-toan-dich-vu-hoa-don/${id}`);
+    const handlePaymenNow = (id) => {
+        navigate(`/xem-dich-vu-hoa-don/${id}`);
     }
     return (
         <Box className="content">
@@ -134,9 +134,8 @@ const ServicePayments = () => {
                 }}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh toán</Button>
         </Box>
     );
 };
 
-export default ServicePayments;
+export default paymentManage;

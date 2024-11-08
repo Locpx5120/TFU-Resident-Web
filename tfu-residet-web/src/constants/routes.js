@@ -9,6 +9,8 @@ import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
 import SendRequest from "../pages/resident/sendRequest";
+import HouseHoldResident from "../pages/resident/householdManagement";
+import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -27,11 +29,21 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
 import DirectorPage from "../pages/buildingDirector/dashboard";
+import DirectorHomepage from "../pages/buildingDirector/homepage";
 import SalaryListPage from "../pages/buildingDirector/agent";
 import HouseHold from "../pages/buildingDirector/householdManagement";
 import DetailHouseHold from "../pages/buildingDirector/householdManagement/DetailHouseHold";
 import PaymentHistory from "../pages/buildingDirector/paymentHistory";
 import Notification from "../pages/buildingDirector/notification";
+import ViewRequests from "../pages/resident/viewRequests";
+import RequestDetail from "../pages/resident/viewRequests/RequestDetail";
+
+//receptionist
+import Receptionist from "../pages/receptionist";
+import HistoryPay from "../pages/receptionist/historyPay";
+import AccountantPage from "../pages/accountant/AccountantPage";
+import Adminitrative from "../pages/administrative";
+
 
 export const routeArray = [
   {
@@ -107,10 +119,16 @@ export const routeResident = [
     icon: <SettingsIcon />,
   },
   {
-    route: "/quan-ly-thanh-vien",
+    route: "/cu-dan",
     routeName: "Quản lý thành viên",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
+    component: <HouseHoldResident />,
+    icon: <PersonIcon />,
+  },
+  {
+    route: "/cu-dan/:id",
+    routeName: "Chi tiết cư dân",
+    component: <DetailHouseHoldResident />,
+    hidden: true,
   },
   {
     route: "/thanh-toan-dich-vu",
@@ -126,9 +144,9 @@ export const routeResident = [
     hidden: true,
   },
   {
-    route: "/thanh-toan-dich-vu/:id",
+    route: "/thanh-toan-dich-vu-hoa-don/:id",
     routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsDetail />,
+    component: <ServicePaymentsBill />,
     icon: <SettingsIcon />,
     hidden: true,
   },
@@ -161,8 +179,15 @@ export const routeResident = [
   {
     route: "/xem-don",
     routeName: "Xem đơn",
-    component: <>Chua Co</>,
+    component: <ViewRequests />,
     icon: <SettingsIcon />,
+  },
+  {
+  route: "/xem-chi-tiet-don/:id",
+  routeName: "Xem đơn",
+  component: <RequestDetail />,
+  icon: <SettingsIcon />,
+  hidden: true,
   },
   {
     route: "/gui-don",
@@ -176,6 +201,12 @@ export const routeDirector = [
   {
     route: "/",
     routeName: "Trang chính",
+    component: <DirectorHomepage />,
+    icon: <WidgetsIcon />,
+  },
+  {
+    route: "/",
+    routeName: "Dashboard",
     component: <DirectorPage />,
     icon: <WidgetsIcon />,
   },
@@ -208,5 +239,38 @@ export const routeDirector = [
     routeName: "Lịch sử thanh toán",
     component: <PaymentHistory />,
     icon: <HistoryIcon />,
+  },
+];
+
+export const routeReceptionist = [
+  {
+    route: "/lich-su-gui-don",
+    routeName: "Lịch sử gửi đơn",
+    component: <Receptionist />,
+    icon: <SettingsIcon />,
+  },
+  {
+    route: "/lich-su-thanh-toan-2",
+    routeName: "Lịch sử thanh toán 2",
+    component: <HistoryPay />,
+    icon: <SettingsIcon />,
+  },
+];
+
+export const routeAccountant = [
+  {
+    route: "/xem-thanh-toan",
+    routeName: "Xem thanh toán",
+    component: <AccountantPage />,
+    icon: <HistoryIcon />,
+  },
+];
+
+export const routeAdmin = [
+  {
+    route: "/xu-ly-don-them-dich-vu",
+    routeName: "Xử lý đơn thêm dịch vụ",
+    component: <Adminitrative />,
+    icon: <SettingsIcon />,
   },
 ];

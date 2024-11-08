@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
 import { Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import QRCodeModal from '../../../common/ModalQRCode';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 
-const ServicePaymentsBill = () => {
+const AccountantPage = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -17,45 +15,24 @@ const ServicePaymentsBill = () => {
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
     const buildingID = Cookies.get("buildingID");
-    const { id } = useParams();
 
-    // useEffect(() => {
-    //     const fetchRooms = async () => {
-    //         try {
-    //             const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
-    //                     'content-type': 'application/json',
-    //                     'buildingPermalink': Cookies.get('buildingID'),
-    //                 },
-    //                 body: JSON.stringify({
-    //                     apartmentId: id,
-    //                     serviceType: "",                    
-    //                 })
-    //             });
-    //             const data = await response.json();
-    //             setRoomsData(data);
-    //         } catch (error) {
-    //             Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-    //         }
-    //     }
-    //     fetchRooms();
-    // }, [])
+    useEffect(() => {
+        const fetchRooms = async () => {
+            const res = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1',)
+        }
+        fetchRooms();
+    }, [])
 
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await fetch('https://localhost:7082/api/apartment-services/unpaid-details/', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': buildingID,
-                    },
-                    body: JSON.stringify({
-                        serviceContractId: id,
-                    })
+                const response = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink':  buildingID,
+                  },
                 });
                 const data = await response.json();
                 setPayments(data);
@@ -77,9 +54,8 @@ const ServicePaymentsBill = () => {
 
     return (
         <Box className="content">
-            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} />
             <Typography variant="h6">Danh sách thanh toán dịch vụ</Typography>
-            {(Array.isArray(roomsData) ? roomsData : []).map((room, index) => (
+            {roomsData.map((room, index) => (
                 <Card key={index} sx={{ margin: '20px 0', padding: '20px' }}>
                     <Typography variant="h6">Phòng: {room.roomNumber}</Typography>
                     <TableContainer>
@@ -88,8 +64,7 @@ const ServicePaymentsBill = () => {
                                 <TableRow>
                                     <TableCell>Tên dịch vụ</TableCell>
                                     <TableCell>Tổng tiền</TableCell>
-            
-                    </TableRow>
+                                </TableRow>
                             </TableHead>
                             <TableBody>
                                 {room.services.map((service, idx) => (
@@ -113,16 +88,15 @@ const ServicePaymentsBill = () => {
             ))}
             <TablePagination
                 component="div"
-                count={Array.isArray(roomsData) ? roomsData.length : 0}
+                count={roomsData.length}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>
         </Box>
     );
 };
 
-export default ServicePaymentsBill;
+export default AccountantPage

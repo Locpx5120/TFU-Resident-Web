@@ -12,9 +12,8 @@ import TableCustom from '../../../components/Table';
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { Link, useParams } from 'react-router-dom';
-import QRCodeModal from '../../../common/ModalQRCode';
 
-const ServicePaymentsDetail = () => {
+const AccountantPageDetail = () => {
     const { id } = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -101,4 +100,4 @@ const columnData = [
     { name: "Tổng tiền", align: "left", esName: "totalPrice" },
 ];
 
-export default ServicePaymentsDetail;
+export default AccountantPageDetail;

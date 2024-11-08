@@ -135,7 +135,7 @@ function TableCustom({
           <TableCell
             key={esName}
             align={align}
-            onClick={() => onRowClick(row)}
+            onClick={() => onRowClick && onRowClick(row)}
             style={{
               borderBottom: `${borderWidth[1]} solid ${light.main}`,
             }}

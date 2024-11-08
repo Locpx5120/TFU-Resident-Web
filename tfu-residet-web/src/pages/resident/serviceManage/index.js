@@ -42,32 +42,21 @@ const ServiceManage = () => {
     ]);
     const [isOpenCreate, setIsOpenCreate] = useState(false);
 
-
-    const headerPOST = {
-        method: 'POST',
-        headers: {
-            method: 'POST',
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-            name: "services",
-        })
-    };
-
     useEffect(() => {
-        const fetchServices = async () => {
-            try {
-                const response = await fetch("http://localhost:7082/api/apartment-service/", headerPOST);
-                const data = await response.json();
-                setServices(data.data);
-            } catch (error) {
-                console.error('Error fetching projects:', error);
-            }
-        };
-
-        fetchServices();
-    }, []);
+        const fetchRooms = async () => {
+            const res = await fetch(`https://localhost:7082/api/apartment-services/summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`,{
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink':  Cookies.get("buildingID"),
+                },
+            });
+            const data = await res.json();
+            setServices(data.data);
+        }
+        fetchRooms();
+    }, [page, rowsPerPage]);
 
     const sortedRows = useMemo(() => {
         if (!sortColumn) return buildings;
@@ -82,9 +71,15 @@ const ServiceManage = () => {
     }, [services, sortColumn, sortDirection]);
 
     const paginatedRows = useMemo(() => {
-        const startIndex = page * rowsPerPage;
-        return sortedRows.slice(startIndex, startIndex + rowsPerPage);
-    }, [sortedRows, page, rowsPerPage]);
+        if(!services?.data) return [];
+        return services.data.map((item, index) => ({
+            STT: index + 1,
+            toaNha: item.buildingName,
+            canHo: item.roomNumber,
+            tongDichVu: item.totalServices,
+            chiTiet: <Button variant="contained" onClick={() => navigate(`/quan-ly-dich-vu/${item.apartmentId}`)}>Chi tiết</Button>
+        }));
+    }, [page, rowsPerPage, services]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -164,7 +159,8 @@ const ServiceManage = () => {
 
 const columnData = [
     { name: "STT", align: "left", esName: "STT", sortable: true },
-    { name: "Số phòng", align: "left", esName: "soPhong", sortable: true },
+    { name: "Tòa nhà", align: "left", esName: "toaNha", sortable: true },
+    { name: "Căn hộ", align: "left", esName: "canHo", sortable: true },
     { name: "Tổng dịch vụ", align: "left", esName: "tongDichVu" },
     { name: "Chi tiết", align: "left", esName: "chiTiet" },
   ];

@@ -1,13 +1,17 @@
 import React, { useContext, useState } from "react";
 import { Container, Row, Col, Form, FormGroup, Button } from "react-bootstrap";
 import '../styles/login.css';
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { authService } from "../services/authService";
 import Cookies from "js-cookie";
 
 const LoginBuilding = () => {
-    const { buildingId } = useParams(); 
+    const location = useLocation();
+    const currentPath = location.pathname.split('/')[2]?.split('&');
+    const buildingId = currentPath[0];
+    const residentId = currentPath[1]?.slice(11, currentPath[1].length) || '';
+
     const [credentials, setCredentials] = useState({
         email: '',
         password: '',
@@ -42,6 +46,7 @@ const LoginBuilding = () => {
             if (result.data && result.data.token) {
                 Cookies.set('accessToken', result.data.token, { expires: 1 });
                 Cookies.set('buildingID', buildingId, { expires: 1 });
+                Cookies.set('residentId', residentId, { expires: 1 });
                 dispatch({ type: "LOGIN_SUCCESS", payload: result.data.user });
 
                 Swal.fire({
