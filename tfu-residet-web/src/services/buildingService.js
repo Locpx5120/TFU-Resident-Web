@@ -13,8 +13,8 @@ export const GetBuildings = async () => {
 }
 export const CreateBuildings = async (newBuilding) => {
     return await postData('/building/Create', newBuilding).json();
-
+}
 export const updateBuildings = async (newBuilding) => {
-    return await postData('/building/Create', newBuilding).json();
-}}
+    return await postData('/building/update', newBuilding).json();
+}
 
