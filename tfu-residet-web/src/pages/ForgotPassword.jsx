@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Container, Row, Col, Form, FormGroup, Button} from 'react-bootstrap';
 import '../styles/ForgotPass.css';
 import {useNavigate} from 'react-router-dom';
-import {postData} from "../services/api";
+import {forgotPasswordApi} from "../services/authService";
 
 const ForgotPassword = () => {
     const [formData, setFormData] = useState({
@@ -19,8 +19,7 @@ const ForgotPassword = () => {
     const handleSubmit = async e => {
         e.preventDefault();
         try {
-            const response = await postData('/auth/forgot', formData)
-            const result = await response.json();
+            const result = await forgotPasswordApi(formData).json();
             if (response.ok) {
                 setMessage(result.message);
                 navigate(`/otp/${result.data.userId}`);

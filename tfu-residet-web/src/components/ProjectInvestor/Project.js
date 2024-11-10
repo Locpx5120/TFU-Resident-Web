@@ -7,7 +7,8 @@ import Cookies from "js-cookie";
 import AddProject from "./AddProject";
 import Swal from "sweetalert2";
 import EditProject from "./EditProject";
-import {postData} from "../../services/api";
+import {viewManager} from "../../services/buildingService";
+import {createManager, deleteManager, updateManager} from "../../services/projectService";
 
 const Project = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -25,12 +26,7 @@ const Project = () => {
     };
     useEffect(() => {
         const fetchData = async () => {
-            const response = await postData('/project/viewManager', {
-                name: "projects",
-            })
-            console.log(response);
-
-            const data = await response.json();
+            const data = await viewManager("projects").json();
             setData(data.data);
         };
         fetchData();
@@ -75,11 +71,8 @@ const Project = () => {
 
     const handleDeleteProject = async (projectId) => {
         try {
-            const res = await postData('/project/delete', {
-                id: projectId
-            })
 
-            const result = await res.json();
+            const result = await deleteManager(projectId).json();
             if (result.code === 200) {
                 Swal.fire("Đã xóa!", "Dự án đã được xóa thành công.", "success");
             } else {
@@ -93,8 +86,7 @@ const Project = () => {
 
     const handleEditProject = async (projectData) => {
         try {
-            const res = await postData('/project/update', projectData)
-            const result = await res.json();
+            const result = await updateManager(projectData).json();
             if (result?.code === 200) {
                 Swal.fire({
                     icon: "success",
@@ -128,8 +120,7 @@ const Project = () => {
 
     const handleCreateProject = async (projectData) => {
         try {
-            const res = await postData('/project/create', projectData)
-            const result = await res.json();
+            const result = await createManager(projectData).json();
             if (result.code === 200) {
                 Swal.fire({
                     icon: "success",

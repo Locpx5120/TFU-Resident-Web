@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {deleteData, postData, putData} from "../../../services/api";
+import {createUser, deleteUser, updateUser, viewUserManager} from "../../../services/userService";
 
 const Agent = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -29,11 +29,7 @@ const Agent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await postData('/user/viewManager', {
-                    name: "",
-                    roleId: ""
-                })
-                const result = await res.json();
+                const result = await viewUserManager().json();
                 if (result.code === 200) {
                     setData(result.data);
                 } else {
@@ -48,8 +44,7 @@ const Agent = () => {
     }, [reload]);
 
     const handleCreate = async (payload) => {
-        const res = await postData('/user/create', payload)
-        const result = await res.json();
+        const result = await createUser(payload).json();
         if (result.code === 200) {
             Swal.fire({
                 icon: 'success',
@@ -73,8 +68,7 @@ const Agent = () => {
     };
 
     const handleUpdate = async (payload) => {
-        const res = await putData('/user/update', payload)
-        const result = await res.json();
+        const result = await updateUser(payload).json();
         if (result.code === 200) {
             Swal.fire({
                 icon: 'success',
@@ -161,8 +155,7 @@ const Agent = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const res = await deleteData('/user/delete', {id})
-                    const result = await res.json();
+                    const result = await deleteUser(id).json();
                     if (result.code === 200) {
                         Swal.fire(
                             'Đã xóa!',

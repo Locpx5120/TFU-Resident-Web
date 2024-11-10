@@ -1,6 +1,6 @@
 import React, {useState, useRef} from "react";
 import {useParams, useNavigate} from "react-router-dom";
-import {postData} from "../services/api";
+import {confirmApi} from "../services/authService";
 // import axiosInstance from "../config/axiosConfig";
 
 const OTPInput = () => {
@@ -39,8 +39,7 @@ const OTPInput = () => {
             typeOtp: "reset_password",
             otp: otp.join(""),
         };
-        const res = await postData('/auth/confirm', payload)
-        const result = await res.json();
+        const result = await confirmApi(payload).json();
         if (result.code === 200) {
             localStorage.setItem("isNew", JSON.stringify(true));
             navigator('/login');

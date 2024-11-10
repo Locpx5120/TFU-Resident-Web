@@ -1,7 +1,10 @@
 // src/services/api.js
 
-import type {endpointUrl} from "./endpoint";
 import Cookies from "js-cookie";
+export const endpointUrl = {
+    RESIDENT_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
+    BUILDING_URL: 'https://localhost:7082/',
+}
 // Hàm GET
 export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL) => {
     try {
@@ -20,14 +23,17 @@ const defaultHeader = {
     Authorization: `Bearer ${Cookies.get("accessToken")}`,
     'content-type': 'application/json',
 }
-export const postData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header) => {
+export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
-            method: 'POST',
-            headers: header || defaultHeader,
-            body: JSON.stringify(data)
+            method: "POST",
+            headers: header,
+            body: JSON.stringify(data),
         });
+
+        // Nếu response không thành công, ném lỗi để vào catch
         if (!response.ok) throw new Error("Network response was not ok");
+
         return await response.json();
     } catch (error) {
         console.error("Error posting data:", error);

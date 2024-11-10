@@ -13,7 +13,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
-import {postData} from "../services/api";
+import {changePasswordApi} from "../services/authService";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState('');
@@ -28,8 +28,7 @@ const ChangePassword = () => {
           password: newPassword,
           newPassword: confirmPassword,
       };
-      const res = await postData('/auth/changePassword', payload)
-      const result = await res.json();
+      const result = await changePasswordApi(payload).json();
       if (result.code === 200) {
         Swal.fire({
             icon: 'success',

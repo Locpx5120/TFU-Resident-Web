@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import TableCustom from '../Table';
 import AddBuilding from './AddBuilding';
-import {postData} from "../../services/api";
+import {CreateBuildings, GetBuildings, viewManager} from "../../services/buildingService";
 
 const Building = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -47,10 +47,7 @@ const Building = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await postData('/project/viewManager', {
-                    name: "projects",
-                })
-                const data = await response.json();
+                const data = await viewManager("project");
                 setProjects(data.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);
@@ -63,11 +60,7 @@ const Building = () => {
     useEffect(() => {
         const fetchBuildings = async () => {
             try {
-                const response = await postData('/building/GetBuildings', {
-                    name: "",
-                })
-                const data = await response.json();
-
+                const data = await GetBuildings();
                 setBuildings(data.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);
@@ -111,8 +104,7 @@ const Building = () => {
 
     const handleCreateBuilding = async (newBuilding) => {
         try {
-            const response = await postData('/building/Create', newBuilding)
-            const result = await response.json();
+            const result = await CreateBuildings(newBuilding);
             if (result?.code === 200) {
                 setIsOpenCreate(false);
                 Swal.fire('Thành công', 'Đã thêm tòa nhà mới', 'success');

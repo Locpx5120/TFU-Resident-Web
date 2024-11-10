@@ -2,9 +2,8 @@ import React, {useState, useContext} from 'react';
 import {Container, Row, Col, Form, FormGroup, Button} from 'react-bootstrap';
 import '../styles/register.css';
 import {Link, useNavigate} from 'react-router-dom';
-import {authService} from '../services/authService';
+import {authService, registerApi} from '../services/authService';
 import Swal from "sweetalert2";
-import {postData} from "../services/api";
 
 const Register = () => {
     const [credentials, setCredentials] = useState({
@@ -48,9 +47,8 @@ const Register = () => {
         }
 
         try {
-            const res = await postData('/auth/register', credentials)
-            const result = await res.json();
-            if (!res.ok) {
+            const result = await registerApi(credentials).json();
+            if (!result.ok) {
                 alert(result.message);
             } else {
                 dispatch({type: 'REGISTER_SUCCESS'});
