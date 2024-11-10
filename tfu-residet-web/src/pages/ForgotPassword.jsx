@@ -20,7 +20,7 @@ const ForgotPassword = () => {
         e.preventDefault();
         try {
             const result = await forgotPasswordApi(formData).json();
-            if (response.ok) {
+            if (result.ok) {
                 setMessage(result.message);
                 navigate(`/otp/${result.data.userId}`);
             } else {
