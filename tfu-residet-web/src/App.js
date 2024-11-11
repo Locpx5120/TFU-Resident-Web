@@ -20,14 +20,10 @@ function App() {
 
   const getRoutesByRole = (role) => {
     switch (role) {
-      case 'Building Staff':
-        return [];
       case 'Resident':
         return routeResident;
       case 'Building Director':
         return routeDirector;
-      case 'Receptionist':
-        return routeReceptionist;
       case 'Accountant':
         return routeAccountant;
       case 'Administrator':

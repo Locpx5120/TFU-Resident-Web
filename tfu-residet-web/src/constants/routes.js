@@ -46,231 +46,231 @@ import Adminitrative from "../pages/administrative";
 
 
 export const routeArray = [
-  {
-    route: "/",
-    routeName: "Trang chính",
-    component: <Dashboard />,
-    icon: <WidgetsIcon />,
-  },
-  {
-    route: "/du-an",
-    routeName: "Dự án",
-    component: <Project />,
-    icon: <BusinessIcon />,
-  },
-  {
-    route: "/toa-nha",
-    routeName: "Tòa nhà",
-    component: <Building />,
-    icon: <ApartmentIcon />,
-  },
-  {
-    route: "/thanh-vien",
-    routeName: "Thành viên",
-    component: <>Chua Co</>,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/cai-dat",
-    routeName: "Cài đặt",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/",
+        routeName: "Trang chính",
+        component: <Dashboard/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/du-an",
+        routeName: "Dự án",
+        component: <Project/>,
+        icon: <BusinessIcon/>,
+    },
+    {
+        route: "/toa-nha",
+        routeName: "Tòa nhà",
+        component: <Building/>,
+        icon: <ApartmentIcon/>,
+    },
+    {
+        route: "/thanh-vien",
+        routeName: "Thành viên",
+        component: <>Chua Co</>,
+        icon: <PersonIcon/>,
+    },
+    {
+        route: "/cai-dat",
+        routeName: "Cài đặt",
+        component: <>Chua Co</>,
+        icon: <SettingsIcon/>,
+    },
 ];
 
 export const routeOwner = [
-  {
-    route: "/",
-    routeName: "Trang chính",
-    component: <DashboardOwner />,
-    icon: <WidgetsIcon />,
-  },
-  {
-    route: "/thanh-vien",
-    routeName: "Thành viên",
-    component: <Agent />,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/bao-cao",
-    routeName: "Báo cáo",
-    component: <ReportInvestor />,
-    icon: <DescriptionIcon />,
-  },
-  {
-    route: "/lich-su",
-    routeName: "Lịch sử",
-    component: <HistoryOnwer />,
-    icon: <HistoryIcon />,
-  },
-  {
-    route: "/cai-dat",
-    routeName: "Cài đặt",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/",
+        routeName: "Trang chính",
+        component: <DashboardOwner/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/thanh-vien",
+        routeName: "Thành viên",
+        component: <Agent/>,
+        icon: <PersonIcon/>,
+    },
+    {
+        route: "/bao-cao",
+        routeName: "Báo cáo",
+        component: <ReportInvestor/>,
+        icon: <DescriptionIcon/>,
+    },
+    {
+        route: "/lich-su",
+        routeName: "Lịch sử",
+        component: <HistoryOnwer/>,
+        icon: <HistoryIcon/>,
+    },
+    {
+        route: "/cai-dat",
+        routeName: "Cài đặt",
+        component: <>Chua Co</>,
+        icon: <SettingsIcon/>,
+    },
 ];
 
 export const routeResident = [
-  {
-    route: "/trang-chu",
-    routeName: "Trang chủ",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/cu-dan",
-    routeName: "Quản lý thành viên",
-    component: <HouseHoldResident />,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/cu-dan/:id",
-    routeName: "Chi tiết cư dân",
-    component: <DetailHouseHoldResident />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePayments />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/thanh-toan-dich-vu/:id",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsDetail />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu-hoa-don/:id",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsBill />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu-hoa-don",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsBill />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/quan-ly-dich-vu",
-    routeName: "Quản lý dịch vụ",
-    component: <ServiceManage />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/quan-ly-dich-vu/:id",
-    routeName: "Quản lý dịch vụ",
-    component: <ServiceDetail />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/lich-su-thanh-toan",
-    routeName: "Lịch sử thanh toán",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/xem-don",
-    routeName: "Xem đơn",
-    component: <ViewRequests />,
-    icon: <SettingsIcon />,
-  },
-  {
-  route: "/xem-chi-tiet-don/:id",
-  routeName: "Xem đơn",
-  component: <RequestDetail />,
-  icon: <SettingsIcon />,
-  hidden: true,
-  },
-  {
-    route: "/gui-don",
-    routeName: "Gửi đơn",
-    component: <SendRequest />,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/trang-chu",
+        routeName: "Trang chủ",
+        component: <>Chua Co</>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/cu-dan",
+        routeName: "Quản lý thành viên",
+        component: <HouseHoldResident/>,
+        icon: <PersonIcon/>,
+    },
+    {
+        route: "/cu-dan/:id",
+        routeName: "Chi tiết cư dân",
+        component: <DetailHouseHoldResident/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePayments/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/thanh-toan-dich-vu/:id",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu-hoa-don/:id",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsBill/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu-hoa-don",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsBill/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/quan-ly-dich-vu",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceManage/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/quan-ly-dich-vu/:id",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/lich-su-thanh-toan",
+        routeName: "Lịch sử thanh toán",
+        component: <>Chua Co</>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/xem-don",
+        routeName: "Xem đơn",
+        component: <ViewRequests/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/xem-chi-tiet-don/:id",
+        routeName: "Xem đơn",
+        component: <RequestDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/gui-don",
+        routeName: "Gửi đơn",
+        component: <SendRequest/>,
+        icon: <SettingsIcon/>,
+    },
 ];
 
 export const routeDirector = [
-  {
-    route: "/",
-    routeName: "Trang chính",
-    component: <DirectorHomepage />,
-    icon: <WidgetsIcon />,
-  },
-  {
-    route: "/",
-    routeName: "Dashboard",
-    component: <DirectorPage />,
-    icon: <WidgetsIcon />,
-  },
-  {
-    route: "/thanh-vien",
-    routeName: "Quản lý thành viên",
-    component: <SalaryListPage />,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/cu-dan",
-    routeName: "Quản lý cư dân",
-    component: <HouseHold />,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/cu-dan/:id",
-    routeName: "Chi tiết cư dân",
-    component: <DetailHouseHold />,
-    hidden: true,
-  },
-  {
-    route: "/thong-bao",
-    routeName: "Thông báo",
-    component: <Notification />,
-    icon: <NotificationsIcon />,
-  },
-  {
-    route: "/lich-su-thanh-toan",
-    routeName: "Lịch sử thanh toán",
-    component: <PaymentHistory />,
-    icon: <HistoryIcon />,
-  },
+    {
+        route: "/",
+        routeName: "Trang chính",
+        component: <DirectorHomepage/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/",
+        routeName: "Dashboard",
+        component: <DirectorPage/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/thanh-vien",
+        routeName: "Quản lý thành viên",
+        component: <SalaryListPage/>,
+        icon: <PersonIcon/>,
+    },
+    {
+        route: "/cu-dan",
+        routeName: "Quản lý cư dân",
+        component: <HouseHold/>,
+        icon: <PersonIcon/>,
+    },
+    {
+        route: "/cu-dan/:id",
+        routeName: "Chi tiết cư dân",
+        component: <DetailHouseHold/>,
+        hidden: true,
+    },
+    {
+        route: "/thong-bao",
+        routeName: "Thông báo",
+        component: <Notification/>,
+        icon: <NotificationsIcon/>,
+    },
+    {
+        route: "/lich-su-thanh-toan",
+        routeName: "Lịch sử thanh toán",
+        component: <PaymentHistory/>,
+        icon: <HistoryIcon/>,
+    },
 ];
 
 export const routeReceptionist = [
-  {
-    route: "/lich-su-gui-don",
-    routeName: "Lịch sử gửi đơn",
-    component: <Receptionist />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/lich-su-thanh-toan-2",
-    routeName: "Lịch sử thanh toán 2",
-    component: <HistoryPay />,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/lich-su-gui-don",
+        routeName: "Lịch sử gửi đơn",
+        component: <Receptionist/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/lich-su-thanh-toan-2",
+        routeName: "Lịch sử thanh toán 2",
+        component: <HistoryPay/>,
+        icon: <SettingsIcon/>,
+    },
 ];
 
 export const routeAccountant = [
-  {
-    route: "/xem-thanh-toan",
-    routeName: "Xem thanh toán",
-    component: <AccountantPage />,
-    icon: <HistoryIcon />,
-  },
+    {
+        route: "/xem-thanh-toan",
+        routeName: "Xem thanh toán",
+        component: <AccountantPage/>,
+        icon: <HistoryIcon/>,
+    },
 ];
 
 export const routeAdmin = [
-  {
-    route: "/xu-ly-don-them-dich-vu",
-    routeName: "Xử lý đơn thêm dịch vụ",
-    component: <Adminitrative />,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/xu-ly-don-them-dich-vu",
+        routeName: "Xử lý đơn thêm dịch vụ",
+        component: <Adminitrative/>,
+        icon: <SettingsIcon/>,
+    },
 ];

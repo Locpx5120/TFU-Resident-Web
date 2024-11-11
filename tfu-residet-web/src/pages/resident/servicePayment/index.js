@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
     Box,
     Button,
@@ -11,9 +11,10 @@ import {
     Checkbox,
     Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import {getUnpaidSummary} from "../../../services/roomService";
 
 const ServicePayments = () => {
     const navigate = useNavigate();
@@ -25,16 +26,18 @@ const ServicePayments = () => {
 
     useEffect(() => {
         const fetchRooms = async () => {
-            const res = await fetch(`https://localhost:7082/api/apartment-services/unpaid-summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`,{
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink':  Cookies.get("buildingID"),
-                },
-            });
-            const data = await res.json();
-            setServices(data);
+            try {
+                const data = await getUnpaidSummary(rowsPerPage, page);
+                setServices(data);
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Có lỗi xảy ra',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            }
         }
         fetchRooms();
     }, [page, rowsPerPage, reload]);
@@ -69,7 +72,7 @@ const ServicePayments = () => {
     };
 
     const paginatedRows = useMemo(() => {
-        if(!services?.data) return [];
+        if (!services?.data) return [];
         return services.data;
     }, [page, rowsPerPage, services]);
 
@@ -86,7 +89,7 @@ const ServicePayments = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                            <TableCell>STT</TableCell>
+                        <TableCell>STT</TableCell>
                         <TableCell align='left'>
                             <Checkbox
                                 indeterminate={selected.length > 0 && selected.length < services?.data?.length}
@@ -116,7 +119,9 @@ const ServicePayments = () => {
                             <TableCell>{service.month}</TableCell>
                             <TableCell>{service.paymentStatus}</TableCell>
                             <TableCell>
-                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" color="primary" onClick={() => handleDetailClick(service.apartmentId)}>Xem chi tiết</Button>
+                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained"
+                                        color="primary" onClick={() => handleDetailClick(service.apartmentId)}>Xem chi
+                                    tiết</Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -134,7 +139,8 @@ const ServicePayments = () => {
                 }}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh toán</Button>
+            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh
+                toán</Button>
         </Box>
     );
 };

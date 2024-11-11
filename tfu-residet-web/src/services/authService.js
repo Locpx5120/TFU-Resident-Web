@@ -1,6 +1,6 @@
 //API Liên quan đến XÁC THỰC (LOGIN, REGISTER,...)
 import {createContext, useEffect, useReducer, useState} from 'react';
-import {postData} from "./api";
+import {endpointUrl, postData} from "./api";
 
 const initial_state = {
     user: null,
@@ -92,6 +92,14 @@ export const loginApi = async (credentials) => {
         'content-type': 'application/json',
     })
 }
+
+export const loginBuildingApi = async (credentials, buildingId) => {
+    const header: Headers = new Headers();
+    header.set('Content-Type', 'application/json');
+    header.set('BuildingPermalink', buildingId)
+    return await postData('/auth/token', credentials,header, endpointUrl.BUILDING_URL)
+}
+
 export const forgotPasswordApi = async (credentials) => {
     return await postData('/auth/forgot', credentials, {
         method: 'POST',

@@ -1,0 +1,29 @@
+import {endpointUrl, getData, postData, putData} from "./api";
+import Cookies from "js-cookie";
+
+export const getBuilding = async (residentId, buildingId) => {
+   return await getData(`/apartment/resident/${residentId}`, endpointUrl.BUILDING_URL, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            'content-type': 'application/json',
+            'buildingPermalink':  buildingId,
+          },
+        });
+}
+export const saveBuilding = async (body) => {
+    return await postData(`/apartment/resident`, body, undefined, endpointUrl.BUILDING_URL)
+}
+export const updateOwnerShip = async (body) => {
+    return await putData(`/ceo/UpdateOwnerShip`, body, endpointUrl.BUILDING_URL)
+}
+
+export const deleteResident = async (data) => {
+   return await postData(`/ceo/deleteResident`, data , endpointUrl.BUILDING_URL);
+}
+export const addResident  = async (data) => {
+   return await postData(`/ceo/addResident`, data , endpointUrl.BUILDING_URL);
+}
+export const updateResident  = async (data) => {
+   return await putData(`/ceo/updateResident`, data , endpointUrl.BUILDING_URL);
+}

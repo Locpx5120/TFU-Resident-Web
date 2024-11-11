@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import {getUnpaidSummary} from "../../services/roomService";
 
 const paymentManage = () => {
     const navigate = useNavigate();
@@ -25,15 +26,7 @@ const paymentManage = () => {
 
     useEffect(() => {
         const fetchRooms = async () => {
-            const res = await fetch(`https://localhost:7082/api/apartment-services/unpaid-summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`,{
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink':  Cookies.get("buildingID"),
-                },
-            });
-            const data = await res.json();
+            const data = await getUnpaidSummary(rowsPerPage, page);
             setServices(data);
         }
         fetchRooms();

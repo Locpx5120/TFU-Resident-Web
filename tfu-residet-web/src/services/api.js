@@ -2,13 +2,13 @@
 
 import Cookies from "js-cookie";
 export const endpointUrl = {
-    RESIDENT_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
-    BUILDING_URL: 'https://localhost:7082/',
+    RESIDENT_URL: 'https://nice-sutherland.202-92-7-204.plesk.page/api',
+    BUILDING_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
 }
 // Hàm GET
-export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL) => {
+export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header?) => {
     try {
-        const response = await fetch(`${baseURL}${endpoint}`);
+        const response = await fetch(`${baseURL}${endpoint}`, header);
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) {
@@ -42,15 +42,11 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
 };
 
 // Tương tự cho PUT và DELETE
-export const putData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL) => {
+export const putData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'PUT',
-            headers: {
-                method: 'PUT',
-                Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                'content-type': 'application/json',
-            },
+            headers: header,
             body: JSON.stringify(data)
         });
         if (!response.ok) throw new Error("Network response was not ok");
@@ -61,15 +57,11 @@ export const putData = async (endpoint, data, baseURL: endpointUrl = endpointUrl
     }
 };
 
-export const deleteData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL) => {
+export const deleteData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'DELETE',
-            headers: {
-                method: 'DELETE',
-                Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                'content-type': 'application/json',
-            },
+            headers: header,
             body: JSON.stringify(data)
         });
         if (!response.ok) throw new Error("Network response was not ok");

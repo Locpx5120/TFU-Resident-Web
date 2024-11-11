@@ -3,7 +3,7 @@ import { Card, TablePagination, Typography, Button } from '@mui/material';
 import TableCustom from '../../../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import {getDetailVehicle} from "../../../services/vehicleService";
 
 const ViewRequests = () => {
     const navigate = useNavigate();
@@ -15,18 +15,9 @@ const ViewRequests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await fetch(`https://localhost:7082/api/apartment-services/unpaid-details/vehicle-service-details/`, {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get('buildingID'),
-                    },
-                    body: JSON.stringify({
-                        serviceContractId: id,                   
-                    })
-                });
-                const data = await response.json();
+                const data = await getDetailVehicle({
+                        serviceContractId: id,
+                    });
                 setRequests(data);
             } catch (error) {
                 console.error(error);

@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 import TableCustom from '../../../components/Table';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import {detailApartment} from "../../../services/apartmentService";
 
 const ServiceDetail = () => {
     const { id } = useParams();
@@ -33,19 +34,10 @@ const ServiceDetail = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch("https://localhost:7082/api/apartment-services/details", {
-                  method: 'POST',
-                  headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink': Cookies.get('buildingID'),
-                  },
-                  body: JSON.stringify({
+                const data = await detailApartment({
                     apartmentId: id,
                     serviceType: "",
-                  })
-                });
-                const data = await response.json();
+                  });
                 setRoomsData(data);
               } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');

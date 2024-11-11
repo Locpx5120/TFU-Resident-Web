@@ -6,6 +6,7 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import {addOwner, listOwner, updateOwner} from "../../../services/ceoService";
 
 const HouseHold = () => {
   const [page, setPage] = useState(0);
@@ -24,19 +25,11 @@ const HouseHold = () => {
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
-        const response = await fetch("https://localhost:7082/api/ceo/getOwnerShips", {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await listOwner({
             name: searchCriteria,
             pageSize: rowsPerPage,
             pageNumber: page + 1,
-          })
-        });
-        const data = await response.json();
+          });
         setBuildings(data.data);
       } catch (error) {
         console.log(error);
@@ -91,15 +84,7 @@ const HouseHold = () => {
   const handleSaveHouseHold = async (houseHoldData) => {
     if (modalMode.mode === 'add') {
       try {
-        const response = await fetch("https://localhost:7082/api/ceo/addOwnerShip", {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify(houseHoldData)
-        });
-        const data = await response.json();
+        const data = await addOwner(houseHoldData);
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
@@ -111,18 +96,10 @@ const HouseHold = () => {
       }
     } else {
       try {
-        const response = await fetch("https://localhost:7082/api/ceo/UpdateOwnerShip", {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await updateOwner({
             ...houseHoldData,
-            id: selectedHouseHold.id  
-          })
-        });
-        const data = await response.json();
+            id: selectedHouseHold.id
+          });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {

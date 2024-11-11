@@ -14,6 +14,10 @@ import Swal from "sweetalert2";
 import { set } from 'lodash';
 import { DatePicker } from 'antd';
 import moment from 'moment/moment';
+import {getBuilding} from "../../../services/residentService";
+import {getCateGory, getServiceName} from "../../../services/apartmentService";
+import {listAllPackage} from "../../../services/PackageService";
+import {addVehicle, listApartment} from "../../../services/vehicleService";
 
 const SendRequest = () => {
     const themThanhVien = 'ab700748-25bf-454a-80c5-ed211d90458d';
@@ -50,50 +54,14 @@ const SendRequest = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://localhost:7082/api/apartment/resident/${residentId}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get("buildingID"),
-                    },
-                });
-                const data = await response.json();
+                const data = await getBuilding(residentId);
                 setBuildings(data.data);
-                const packageNameRes = await fetch('https://localhost:7082/api/package/get-all', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get("buildingID"),
-                    },
-                });
-                const packages = await packageNameRes.json();
-                setPackagesArr(packages.data);
-
-                const serviceTypesRes = await fetch('https://localhost:7082/api/servicecategory/GetAll', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get("buildingID"),
-                    },
-                });
-                const resServiceTypes = await serviceTypesRes.json();
+                const packages = await listAllPackage();
+                setPackagesArr(packages.data)
+                const resServiceTypes = await listCategory();
                 setServiceTypesArr(resServiceTypes.data);
-
                 if (!serviceTypes) return;
-
-                const serviceNames = await fetch(`https://localhost:7082/api/apartment-services/GetByCategory/${serviceTypes}`, {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get("buildingID"),
-                    },
-                });
-
-                const resServiceName = await serviceNames.json();
+                const resServiceName = await getServiceName(serviceTypes);
                 setServiceNameArr(resServiceName.data);
             } catch (error) {
 
@@ -204,15 +172,7 @@ const SendRequest = () => {
                     residentId: residentId,
                     ...request,
                 }))
-                const response = await fetch("https://localhost:7082/api/service-contract/add-vehicle-service", {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({ services }),
-                });
-                const data = await response.json();
+                const data = await addVehicle({ services });
                 if (data.code !== 200) {
                     Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
                 } else {

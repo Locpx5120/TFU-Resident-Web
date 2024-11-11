@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
-import { Container, Row, Col, Form, FormGroup, Button } from "react-bootstrap";
+import React, {useContext, useState} from "react";
+import {Container, Row, Col, Form, FormGroup, Button} from "react-bootstrap";
 import '../styles/login.css';
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import Swal from "sweetalert2";
-import { authService } from "../services/authService";
+import {authService, loginBuildingApi} from "../services/authService";
 import Cookies from "js-cookie";
 
 const LoginBuilding = () => {
@@ -18,36 +18,27 @@ const LoginBuilding = () => {
         buildingId
     });
 
-    const { dispatch } = useContext(authService);
+    const {dispatch} = useContext(authService);
     const navigate = useNavigate();
 
     // Hàm thay đổi giá trị input
     const handleChange = e => {
-        setCredentials(prev => ({ ...prev, [e.target.id]: e.target.value }));
+        setCredentials(prev => ({...prev, [e.target.id]: e.target.value}));
     };
 
     // Hàm xử lý đăng nhập
     const handleClick = async e => {
         e.preventDefault();
-        dispatch({ type: 'LOGIN_START' });
+        dispatch({type: 'LOGIN_START'});
 
         try {
-            const res = await fetch('https://localhost:7082/api/auth/token', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                    'buildingPermalink': buildingId,
-                },
-                body: JSON.stringify(credentials)
-            })
-
-            const result = await res.json();
-            if (!res.ok) alert(result.message)
+            const result = await loginBuildingApi(credentials, buildingId);
+            if (!result.success) alert(result.message)
             if (result.data && result.data.token) {
-                Cookies.set('accessToken', result.data.token, { expires: 1 });
-                Cookies.set('buildingID', buildingId, { expires: 1 });
-                Cookies.set('residentId', residentId, { expires: 1 });
-                dispatch({ type: "LOGIN_SUCCESS", payload: result.data.user });
+                Cookies.set('accessToken', result.data.token, {expires: 1});
+                Cookies.set('buildingID', buildingId, {expires: 1});
+                Cookies.set('residentId', residentId, {expires: 1});
+                dispatch({type: "LOGIN_SUCCESS", payload: result.data.user});
 
                 Swal.fire({
                     icon: 'success',
@@ -61,7 +52,7 @@ const LoginBuilding = () => {
                 navigate('/');
             }
         } catch (error) {
-            dispatch({ type: "LOGIN_FAILURE", payload: error.response?.data?.message || error.message });
+            dispatch({type: "LOGIN_FAILURE", payload: error.response?.data?.message || error.message});
 
             Swal.fire({
                 icon: 'error',
@@ -85,10 +76,12 @@ const LoginBuilding = () => {
 
                                 <Form onSubmit={handleClick}>
                                     <FormGroup>
-                                        <input type="email" placeholder='Email' id='email' onChange={handleChange} required />
+                                        <input type="email" placeholder='Email' id='email' onChange={handleChange}
+                                               required/>
                                     </FormGroup>
                                     <FormGroup>
-                                        <input type="password" placeholder='Mật khẩu' id='password' onChange={handleChange} required />
+                                        <input type="password" placeholder='Mật khẩu' id='password'
+                                               onChange={handleChange} required/>
                                     </FormGroup>
                                     <Button className='btn primary-btn' type='submit'>Đăng nhập</Button>
                                 </Form>
