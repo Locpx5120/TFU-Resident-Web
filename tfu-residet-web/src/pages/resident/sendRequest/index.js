@@ -15,9 +15,9 @@ import { set } from 'lodash';
 import { DatePicker } from 'antd';
 import moment from 'moment/moment';
 import {getBuilding} from "../../../services/residentService";
-import {getCateGory, getServiceName} from "../../../services/apartmentService";
+import {getServiceName} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
-import {addVehicle, listApartment} from "../../../services/vehicleService";
+import {addVehicle, listCategory} from "../../../services/vehicleService";
 
 const SendRequest = () => {
     const themThanhVien = 'ab700748-25bf-454a-80c5-ed211d90458d';
