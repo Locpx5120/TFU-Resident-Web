@@ -33,6 +33,8 @@ const defaultHeader = {
 }
 export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
     try {
+        const buildingID = Cookies.get('buildingID');
+        if(buildingID) header['buildingPermalink'] = buildingID;
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: "POST",
             headers: header,
@@ -50,7 +52,7 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
 };
 
 // Tương tự cho PUT và DELETE
-export const putData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
+export const putData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'PUT',
@@ -65,7 +67,7 @@ export const putData = async (endpoint, data, baseURL: endpointUrl = endpointUrl
     }
 };
 
-export const deleteData = async (endpoint, data, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
+export const deleteData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'DELETE',

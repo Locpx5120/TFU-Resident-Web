@@ -10,7 +10,7 @@ import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePayme
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
 import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement";
-import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
+// import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -124,12 +124,12 @@ export const routeResident = [
         component: <HouseHoldResident/>,
         icon: <PersonIcon/>,
     },
-    {
-        route: "/cu-dan/:id",
-        routeName: "Chi tiết cư dân",
-        component: <DetailHouseHoldResident/>,
-        hidden: true,
-    },
+    // {
+    //     route: "/cu-dan/:id",
+    //     routeName: "Chi tiết cư dân",
+    //     component: <DetailHouseHoldResident/>,
+    //     hidden: true,
+    // },
     {
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",
