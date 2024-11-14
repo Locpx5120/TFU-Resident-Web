@@ -3,13 +3,10 @@ import Cookies from "js-cookie";
 
 export const getBuilding = async (residentId, buildingId) => {
    return await getData(`/apartment/resident/${residentId}`, endpointUrl.BUILDING_URL, {
-          method: 'GET',
-          headers: {
             Authorization: `Bearer ${Cookies.get("accessToken")}`,
             'content-type': 'application/json',
             'buildingPermalink':  buildingId,
-          },
-        });
+          },);
 }
 export const saveBuilding = async (body) => {
     return await postData(`/apartment/resident`, body, undefined, endpointUrl.BUILDING_URL)

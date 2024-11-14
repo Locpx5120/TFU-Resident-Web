@@ -15,10 +15,9 @@ const ViewRequests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const data = await getDetailVehicle({
-                        serviceContractId: id,
-                    });
-                setRequests(data);
+                const response = await getDetailVehicle(id);
+                if (response  && response.data) setRequests(response.data);
+
             } catch (error) {
                 console.error(error);
             }

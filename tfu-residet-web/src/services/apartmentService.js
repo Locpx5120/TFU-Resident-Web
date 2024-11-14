@@ -22,3 +22,10 @@ export const getServiceName  =  async (serviceTypes) => {
                     'buildingPermalink': Cookies.get("buildingID"),
                   })
 }
+export const addMember = async (body) => {
+    return await postData(`/service-contract/add-vehicle-service`, body, {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink': Cookies.get("buildingID"),
+                  }, endpointUrl.BUILDING_URL)
+}
