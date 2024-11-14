@@ -6,9 +6,17 @@ export const endpointUrl = {
     BUILDING_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
 }
 // Hàm GET
-export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header?) => {
+const defaultGetHeader = {
+       Authorization: `Bearer ${Cookies.get("accessToken")}`,
+    'content-type': 'application/json',
+}
+
+export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultGetHeader) => {
     try {
-        const response = await fetch(`${baseURL}${endpoint}`, header);
+        const response = await fetch(`${baseURL}${endpoint}`, {
+        method: 'GET',
+        headers: header,
+    });
         if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) {
