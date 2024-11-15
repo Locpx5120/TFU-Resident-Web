@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate, useParams} from 'react-router-dom';
+import {updateVehicle, vehicleServiceDetail} from "../../../services/vehicleService";
 
 const RequestDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const params = useParams();
     const { request } = location.state || {};
 
     const [serviceName, setServiceName] = useState(request?.serviceName || '');
     const [quantity, setQuantity] = useState('1');
-    const [room] = useState(request?.room || '');
+    const [room, setRoom] = useState(request?.room || '');
     const [status, setStatus] = useState(request?.status || '');
     const [purpose, setPurpose] = useState('');
     const [notes, setNotes] = useState('');
@@ -24,9 +26,41 @@ const RequestDetail = () => {
             purpose,
             notes,
         });
-        navigate('/xem-don');
+        const body = {
+            serviceContractId:  params.id,
+            status,
+            notes
+        }
+        callUpdate(body);
+        // navigate('/xem-don');
     };
+    useEffect( () => {
+        console.log(params)
+        const fetchRequest = async () => {
+                try {
+                    const response = await vehicleServiceDetail(params.id);
+                    const data = response.data;
+                    setServiceName(data?.serviceName);
+                    setRoom(data?.room)
+                    setQuantity(data?.quantity);
+                    setStatus(data?.status);
+                    setPurpose(data?.purpose);
+                    setNotes(data?.note)
+                }catch (error) {
+                    console.log(error)
+                }
+        }
+        fetchRequest()
+    }, []);
 
+    const callUpdate = async (body) => {
+        try {
+            const res = await updateVehicle(body);
+            console.log(res)
+        }
+        catch (e) {
+        }
+    }
     return (
         <Box className="content" sx={{ padding: '20px' }}>
             <Typography variant="h5" gutterBottom>
