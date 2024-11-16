@@ -7,7 +7,7 @@ import ServiceManage from '../pages/resident/serviceManage';
 import ServiceDetail from '../pages/resident/serviceManage/serviceDetail';
 import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
-import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
+import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePaymentsBill';
 import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement";
 // import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
@@ -170,12 +170,12 @@ export const routeResident = [
         icon: <SettingsIcon/>,
         hidden: true,
     },
-    {
-        route: "/lich-su-thanh-toan",
-        routeName: "Lịch sử thanh toán",
-        component: <>Chua Co</>,
-        icon: <SettingsIcon/>,
-    },
+    // {
+    //     route: "/lich-su-thanh-toan",
+    //     routeName: "Lịch sử thanh toán",
+    //     component: <>Chua Co</>,
+    //     icon: <SettingsIcon/>,
+    // },
     {
         route: "/xem-don",
         routeName: "Xem đơn",

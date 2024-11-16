@@ -12,9 +12,9 @@ import {
     Typography,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
+import {paymentSummary} from '../../../services/apartmentService';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
-import {getUnpaidSummary} from "../../../services/roomService";
 
 const ServicePayments = () => {
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ServicePayments = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const data = await getUnpaidSummary(rowsPerPage, page);
+                const data = await paymentSummary(rowsPerPage, page);
                 setServices(data);
             } catch (error) {
                 Swal.fire({
@@ -44,7 +44,9 @@ const ServicePayments = () => {
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
-            const newSelecteds = services?.data.map((n) => n.apartmentId);
+            const newSelecteds = services?.data
+                .filter((n) => n.paymentStatus !== "Đã thanh toán")
+                .map((n) => n.apartmentId);
             setSelected(newSelecteds);
             return;
         }
@@ -80,9 +82,6 @@ const ServicePayments = () => {
         navigate(`/thanh-toan-dich-vu/${id}`);
     };
 
-    const handlePaymentNow = (id) => {
-        navigate(`/thanh-toan-dich-vu-hoa-don/${id}`);
-    }
     return (
         <Box className="content">
             <Typography variant="h6">Danh sách thanh toán dịch vụ</Typography>
@@ -92,8 +91,16 @@ const ServicePayments = () => {
                         <TableCell>STT</TableCell>
                         <TableCell align='left'>
                             <Checkbox
-                                indeterminate={selected.length > 0 && selected.length < services?.data?.length}
-                                checked={services?.data?.length > 0 && selected.length === services?.data?.length}
+                                indeterminate={
+                                    selected.length > 0 &&
+                                    selected.length <
+                                    services?.data?.filter((n) => n.paymentStatus !== "Đã thanh toán").length
+                                }
+                                checked={
+                                    services?.data?.filter((n) => n.paymentStatus !== "Đã thanh toán").length > 0 &&
+                                    selected.length ===
+                                    services?.data?.filter((n) => n.paymentStatus !== "Đã thanh toán").length
+                                }
                                 onChange={handleSelectAll}
                             /> Tất cả
                         </TableCell>
@@ -109,10 +116,12 @@ const ServicePayments = () => {
                         <TableRow key={service.apartmentId}>
                             <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
                             <TableCell>
-                                <Checkbox
-                                    checked={selected.indexOf(service.apartmentId) !== -1}
-                                    onChange={() => handleSelect(service.apartmentId)}
-                                />
+                                {service.paymentStatus !== "Đã thanh toán" && (
+                                    <Checkbox
+                                        checked={selected.indexOf(service.apartmentId) !== -1}
+                                        onChange={() => handleSelect(service.apartmentId)}
+                                    />
+                                )}
                             </TableCell>
                             <TableCell>{service.roomNumber}</TableCell>
                             <TableCell>{service.totalServices}</TableCell>

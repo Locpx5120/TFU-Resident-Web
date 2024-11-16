@@ -11,7 +11,7 @@ const defaultGetHeader = {
     'content-type': 'application/json',
 }
 
-export const getData = async (endpoint, baseURL: endpointUrl = endpointUrl.RESIDENT_URL, header = defaultGetHeader) => {
+export const getData = async (endpoint, baseURL = endpointUrl.RESIDENT_URL, header = defaultGetHeader) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
         method: 'GET',
@@ -30,11 +30,10 @@ const defaultHeader = {
     method: 'POST',
     Authorization: `Bearer ${Cookies.get("accessToken")}`,
     'content-type': 'application/json',
+    'buildingPermalink': Cookies.get('buildingID'),
 }
 export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
     try {
-        const buildingID = Cookies.get('buildingID');
-        if(buildingID) header['buildingPermalink'] = buildingID;
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: "POST",
             headers: header,

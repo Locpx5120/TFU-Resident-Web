@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { Link, useParams } from 'react-router-dom';
 import QRCodeModal from '../../../common/ModalQRCode';
+import { getDetailServiceUnpaids } from '../../../services/apartmentService';
 
 const ServicePaymentsDetail = () => {
     const { id } = useParams();
@@ -29,20 +30,11 @@ const ServicePaymentsDetail = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get('buildingID'),
-                    },
-                    body: JSON.stringify({
+                const response = await getDetailServiceUnpaids({
                         apartmentId: id,
                         serviceType: "",
-                    })
-                });
-                const data = await response.json();
-                setRoomsData(data);
+                    });
+                setRoomsData(response);
             } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
             }
@@ -58,15 +50,23 @@ const ServicePaymentsDetail = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    console.log(roomsData);
 
     const paginatedRows = useMemo(() => {
         return roomsData.services;
     }, [page, rowsPerPage, roomsData,]);
 
+    const transferData = {
+        data: paginatedRows,
+        bankAccountName: "Nguyễn Văn A",
+        bankAccountNumber: "14124565754534",
+        bankName: "TP Bank",
+        amount: roomsData?.totalAmount || 0,
+        transactionContent: "Thanh toán dịch vụ"
+    };
+
     return (
         <section className="content service">
-            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} transferData={transferData} />
             <Box>
                 <Typography variant="h6">Chi tiết thanh toán dịch vụ phòng</Typography>
             </Box>

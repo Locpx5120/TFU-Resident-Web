@@ -1,50 +1,45 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     Box,
-    Button,
     Card,
     TablePagination,
     Select,
     MenuItem,
     Typography,
 } from "@mui/material";
-import Cookies from 'js-cookie';
-import TableCustom from '../../../components/Table';
 import { useParams } from 'react-router-dom';
+import TableCustom from '../../../components/Table';
+import { detailApartment, getServices } from "../../../services/apartmentService";
 import Swal from 'sweetalert2';
-import {detailApartment} from "../../../services/apartmentService";
 
 const ServiceDetail = () => {
     const { id } = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [selectedService, setSelectedService] = useState('initial');
-    const [payments, setPayments] = useState([]);
+    const [selectedService, setSelectedService] = useState({
+        id: 0,
+        name: 'initial',
+    });
+    const [typeData, setTypeData] = useState([]);
     const [roomsData, setRoomsData] = useState([]);
-    const buildingID = Cookies.get("buildingID");
-
-    const serviceAData = [
-        { tenDichVu: "Gửi xe ô tô", moTa: "Bắt động gửi xe ô tô", soLuong: "x2", giaTien: "1.500.000 VNĐ", tongTien: "3.000.000 VNĐ" },
-    ];
-
-    const serviceBData = [
-        { tenDichVu: "Dịch vụ B", moTa: "Mô tả dịch vụ B", soLuong: "x1", giaTien: "2.000.000 VNĐ", tongTien: "2.000.000 VNĐ" },
-    ];
 
     useEffect(() => {
-        const fetchRooms = async () => {
+        const fetchData = async () => {
             try {
-                const data = await detailApartment({
+                const roomDetails = await detailApartment({
                     apartmentId: id,
-                    serviceType: "",
-                  });
-                setRoomsData(data);
-              } catch (error) {
-                Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-              }
-        }
-        fetchRooms();
-    }, [])
+                    serviceType: selectedService.name === 'initial' ? "" : selectedService.name,
+                });
+                const serviceTypes = await getServices();
+
+                setRoomsData(roomDetails?.data || []);
+                setTypeData(serviceTypes?.data || []);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, [id, selectedService]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -56,37 +51,46 @@ const ServiceDetail = () => {
     };
 
     const handleServiceChange = (event) => {
-        setSelectedService(event.target.value);
+        setSelectedService((prev) => ({
+            ...prev,
+            name: event.target.value,
+        }));
         setPage(0);
     };
 
+    const handleServiceSelect = (service) => {
+        setSelectedService((prev) => ({
+            ...prev,
+            id: service.id,
+        }));
+    };
+
     const paginatedRows = useMemo(() => {
-        let dataToDisplay;
-
-        if (selectedService === 'initial') {
-            dataToDisplay = roomsData.data;
-        } else if (selectedService === 'A') {
-            dataToDisplay = serviceAData;
-        } else if (selectedService === 'B') {
-            dataToDisplay = serviceBData;
-        }
-
-        return dataToDisplay;
-    }, [page, rowsPerPage, selectedService, roomsData, serviceAData, serviceBData]);
+        const startIndex = page * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        return roomsData.data.slice(startIndex, endIndex);
+    }, [page, rowsPerPage, roomsData]);
 
     return (
         <section className="content service">
             <Box>
                 <Typography variant="h6">Chi tiết thanh toán dịch vụ phòng</Typography>
                 <Select
-                    value={selectedService}
+                    value={selectedService.name}
                     onChange={handleServiceChange}
                     displayEmpty
                     sx={{ margin: "20px 0" }}
                 >
-                    <MenuItem value="initial">Bảng dịch vụ</MenuItem>
-                    <MenuItem value="A">Gửi xe A</MenuItem>
-                    <MenuItem value="B">Dịch vụ B</MenuItem>
+                    <MenuItem value="initial">Tất cả dịch vụ</MenuItem>
+                    {typeData.map((service) => (
+                        <MenuItem
+                            key={service.id}
+                            value={service.serviceName}
+                            onClick={() => handleServiceSelect(service)}
+                        >
+                            {service.serviceName}
+                        </MenuItem>
+                    ))}
                 </Select>
             </Box>
             <Card sx={{ maxHeight: "800px", marginTop: "30px" }}>
@@ -97,7 +101,7 @@ const ServiceDetail = () => {
                 />
                 <TablePagination
                     component="div"
-                    count={paginatedRows?.length}
+                    count={roomsData?.data?.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

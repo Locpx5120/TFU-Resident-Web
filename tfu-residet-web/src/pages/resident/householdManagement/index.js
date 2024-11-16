@@ -12,23 +12,24 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { addMemberInApartment, getBuilding, getMemberInApartment } from "../../../services/residentService";
+import { addMemberInApartment, deleteResident, getBuilding, getMemberInApartment, updateResident } from "../../../services/residentService";
 import { Spin } from "antd";
 
 const DetailHouseHoldResident = () => {
-  // const { id } = useParams();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [reload, setReload] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [buildings, setBuildings] = useState({});
+  const [buildings, setBuildings] = useState([]);
   const [agents, setAgents] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const [modalMode, setModalMode] = useState({
     mode: 'add',
     title: `Thêm thành viên căn hộ: ${buildings?.roomNumber || 0}`,
   });
+  const [selectedHouseHold, setSelectedHouseHold] = useState(null);
+  const residentId = Cookies.get("residentId");
   const [selectedMember, setSelectedMember] = useState(null);
   const buildingID = Cookies.get("buildingID");
   const residentId = Cookies.get("residentId");
@@ -44,6 +45,7 @@ const DetailHouseHoldResident = () => {
     }
     fetchBuildings();
   }, []);
+ 
   useEffect(() => {
     const fetchAgents = async () => {
       try {
@@ -56,6 +58,7 @@ const DetailHouseHoldResident = () => {
     }
     fetchAgents();
   }, [reload, page, rowsPerPage, id, searchCriteria]);
+
   const handleSearchChange = (event) => {
     const { name, value } = event.target;
     setSearchCriteria(value);
@@ -73,7 +76,7 @@ const DetailHouseHoldResident = () => {
   const handleAddMember = () => {
     setModalMode({
         mode: 'add',
-        title: `Thêm thành viên căn hộ: ${buildings.roomNumber}`
+        title: `Thêm thành viên căn hộ`
     });
     setSelectedMember(null);
     setModalOpen(true);
@@ -82,7 +85,7 @@ const DetailHouseHoldResident = () => {
   const handleEditMember = (member) => {
     setModalMode({
         mode: 'edit',
-        title: `Cập nhật thông tin thành viên căn hộ: ${buildings.roomNumber}`
+        title: `Cập nhật thông tin thành viên căn hộ`
     });
     setSelectedMember(member);
     setModalOpen(true);
@@ -90,16 +93,9 @@ const DetailHouseHoldResident = () => {
 
   const handleDeleteMember = async(member) => {
     try {
-      const response = await fetch("https://localhost:7082/api/ceo/deleteResident", {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await deleteResident({
           residentId: member.id
-        })
-      });
+        });
       const data = await response.json();
       if (data.error) {
         Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
@@ -135,38 +131,32 @@ const DetailHouseHoldResident = () => {
         Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
         console.error('Error fetching projects:', error);
       }
-    } else {
-      try {
-        const response = await fetch("https://localhost:7082/api/ceo/updateResident", {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            Phone: memberData.phoneNumber,
-            name: memberData.name,
-            email: memberData.email,
-            id: selectedMember.id
-          })
-        });
-        const data = await response.json();
-        if (data.success) {
-          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-        } else {
-          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        }
-      } catch (error) {
-        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        console.error('Error updating household:', error);
-      }
-    }
+    } 
+    // else {
+    //   try {
+    //     const response = await updateResident({
+    //         Phone: memberData.phoneNumber,
+    //         name: memberData.name,
+    //         email: memberData.email,
+    //         id: selectedMember.id
+    //       });
+    //     if (response.success) {
+    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+    //     } else {
+    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     }
+    //   } catch (error) {
+    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     console.error('Error updating household:', error);
+    //   }
+    // }
+
     setReload(!reload);
     handleCloseModal();
   };
 
   const modalFields = [
-    <TextField fullWidth label="Tên thành viên" name="name" />,
+    <TextField fullWidth label="Tên thành viên" name="memberName" />,
     <TextField fullWidth label="Điện thoại" name="phoneNumber" />,
     <TextField fullWidth label="Email" name="email" />,
   ];

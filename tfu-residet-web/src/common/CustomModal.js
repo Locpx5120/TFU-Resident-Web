@@ -12,12 +12,12 @@ const style = {
   p: 4,
 };
 
-const CustomModal = ({ open, handleClose, employee, handleSave, title, mode, fields }) => {
+const CustomModal = ({ open, handleClose, data, handleSave, title, mode, fields }) => {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    setFormData(employee || {});
-  }, [employee]);
+    setFormData(data || {});
+  }, [data]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
