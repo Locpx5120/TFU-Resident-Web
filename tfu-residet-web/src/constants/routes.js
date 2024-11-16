@@ -7,7 +7,7 @@ import ServiceManage from '../pages/resident/serviceManage';
 import ServiceDetail from '../pages/resident/serviceManage/serviceDetail';
 import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
-import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePayments';
+import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePaymentsBill';
 import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement";
 import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
@@ -112,89 +112,89 @@ export const routeOwner = [
 ];
 
 export const routeResident = [
-  {
-    route: "/trang-chu",
-    routeName: "Trang chủ",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/cu-dan",
-    routeName: "Quản lý thành viên",
-    component: <HouseHoldResident />,
-    icon: <PersonIcon />,
-  },
-  {
-    route: "/cu-dan/:id",
-    routeName: "Chi tiết cư dân",
-    component: <DetailHouseHoldResident />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePayments />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/thanh-toan-dich-vu/:id",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsDetail />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu-hoa-don/:id",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsBill />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/thanh-toan-dich-vu-hoa-don",
-    routeName: "Thanh toán dịch vụ",
-    component: <ServicePaymentsBill />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/quan-ly-dich-vu",
-    routeName: "Quản lý dịch vụ",
-    component: <ServiceManage />,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/quan-ly-dich-vu/:id",
-    routeName: "Quản lý dịch vụ",
-    component: <ServiceDetail />,
-    icon: <SettingsIcon />,
-    hidden: true,
-  },
-  {
-    route: "/lich-su-thanh-toan",
-    routeName: "Lịch sử thanh toán",
-    component: <>Chua Co</>,
-    icon: <SettingsIcon />,
-  },
-  {
-    route: "/xem-don",
-    routeName: "Xem đơn",
-    component: <ViewRequests />,
-    icon: <SettingsIcon />,
-  },
-  {
-  route: "/xem-chi-tiet-don/:id",
-  routeName: "Xem đơn",
-  component: <RequestDetail />,
-  icon: <SettingsIcon />,
-  hidden: true,
-  },
-  {
-    route: "/gui-don",
-    routeName: "Gửi đơn",
-    component: <SendRequest />,
-    icon: <SettingsIcon />,
-  },
+    {
+        route: "/trang-chu",
+        routeName: "Trang chủ",
+        component: <>Chua Co</>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/cu-dan",
+        routeName: "Quản lý thành viên",
+        component: <HouseHoldResident/>,
+        icon: <PersonIcon/>,
+    },
+    // {
+    //     route: "/cu-dan/:id",
+    //     routeName: "Chi tiết cư dân",
+    //     component: <DetailHouseHoldResident/>,
+    //     hidden: true,
+    // },
+    {
+        route: "/thanh-toan-dich-vu",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePayments/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/thanh-toan-dich-vu/:id",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu-hoa-don/:id",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsBill/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu-hoa-don",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsBill/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/quan-ly-dich-vu",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceManage/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/quan-ly-dich-vu/:id",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    // {
+    //     route: "/lich-su-thanh-toan",
+    //     routeName: "Lịch sử thanh toán",
+    //     component: <>Chua Co</>,
+    //     icon: <SettingsIcon/>,
+    // },
+    {
+        route: "/xem-don",
+        routeName: "Xem đơn",
+        component: <ViewRequests/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/xem-chi-tiet-don/:id",
+        routeName: "Xem đơn",
+        component: <RequestDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/gui-don",
+        routeName: "Gửi đơn",
+        component: <SendRequest/>,
+        icon: <SettingsIcon/>,
+    },
 ];
 
 export const routeDirector = [

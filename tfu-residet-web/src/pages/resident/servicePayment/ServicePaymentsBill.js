@@ -5,66 +5,31 @@ import { useParams } from 'react-router-dom';
 import QRCodeModal from '../../../common/ModalQRCode';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { getDetailServiceUnpaids } from '../../../services/apartmentService';
 
 const ServicePaymentsBill = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [payments, setPayments] = useState([]);
-    const [reload, setReload] = useState(false);
-    const [roomsData, setRoomsData] = useState([])
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
     const buildingID = Cookies.get("buildingID");
-    const { id } = useParams();
-
-    // useEffect(() => {
-    //     const fetchRooms = async () => {
-    //         try {
-    //             const response = await fetch("https://localhost:7082/api/apartment-services/unpaid-details", {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
-    //                     'content-type': 'application/json',
-    //                     'buildingPermalink': Cookies.get('buildingID'),
-    //                 },
-    //                 body: JSON.stringify({
-    //                     apartmentId: id,
-    //                     serviceType: "",                    
-    //                 })
-    //             });
-    //             const data = await response.json();
-    //             setRoomsData(data);
-    //         } catch (error) {
-    //             Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-    //         }
-    //     }
-    //     fetchRooms();
-    // }, [])
 
     useEffect(() => {
-        const fetchPayments = async () => {
+        const fetchRooms = async () => {
             try {
-                const response = await fetch('https://localhost:7082/api/apartment-services/unpaid-details/', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': buildingID,
-                    },
-                    body: JSON.stringify({
-                        serviceContractId: id,
-                    })
-                });
-                const data = await response.json();
-                setPayments(data);
+                const response = await getDetailServiceUnpaids({
+                    ServiceType: '',                   
+                    });
+                    setPayments(response);
             } catch (error) {
-                console.error('Error fetching projects:', error);
+                Swal.fire('Thất bại', 'Lấy dữ liệu thất bại!', 'error');
             }
-        };
-        fetchPayments();
-    }, []);
+        }
+        fetchRooms();
+    }, [buildingID]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -75,11 +40,20 @@ const ServicePaymentsBill = () => {
         setPage(0);
     };
 
+    const transferData = {
+        data: payments,
+        bankAccountName: "Nguyễn Văn A",
+        bankAccountNumber: "14124565754534",
+        bankName: "TP Bank",
+        amount: payments?.totalAmount || 0,
+        transactionContent: "Thanh toán dịch vụ"
+    };
+
     return (
         <Box className="content">
-            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} />
+            <QRCodeModal isOpen={modalIsOpen} onRequestClose={closeModal} transferData={transferData} />
             <Typography variant="h6">Danh sách thanh toán dịch vụ</Typography>
-            {(Array.isArray(roomsData) ? roomsData : []).map((room, index) => (
+            {(Array.isArray(payments?.services) ? payments?.services : []).map((room, index) => (
                 <Card key={index} sx={{ margin: '20px 0', padding: '20px' }}>
                     <Typography variant="h6">Phòng: {room.roomNumber}</Typography>
                     <TableContainer>
@@ -88,8 +62,7 @@ const ServicePaymentsBill = () => {
                                 <TableRow>
                                     <TableCell>Tên dịch vụ</TableCell>
                                     <TableCell>Tổng tiền</TableCell>
-            
-                    </TableRow>
+                                </TableRow>
                             </TableHead>
                             <TableBody>
                                 {room.services.map((service, idx) => (
@@ -101,9 +74,7 @@ const ServicePaymentsBill = () => {
                                 <TableRow>
                                     <TableCell><strong>Tổng cộng:</strong></TableCell>
                                     <TableCell>
-                                        {room.services.reduce((total, service) => {
-                                            return total + parseInt(service.tongTien.replace(/\D/g, ''));
-                                        }, 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                                        {payments?.totalAmount?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                                     </TableCell>
                                 </TableRow>
                             </TableBody>
@@ -113,7 +84,7 @@ const ServicePaymentsBill = () => {
             ))}
             <TablePagination
                 component="div"
-                count={Array.isArray(roomsData) ? roomsData.length : 0}
+                count={Array.isArray(payments?.services) ? payments?.services.length : 0}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}

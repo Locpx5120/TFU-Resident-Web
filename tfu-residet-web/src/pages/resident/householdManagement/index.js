@@ -6,6 +6,8 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { addMemberInApartment, deleteResident, getBuilding, getMemberInApartment, updateResident } from "../../../services/residentService";
+import { Spin } from "antd";
 
 const HouseHoldResident = () => {
   const [page, setPage] = useState(0);
@@ -13,13 +15,14 @@ const HouseHoldResident = () => {
   const [reload, setReload] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
   const [buildings, setBuildings] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [modalMode, setModalMode] = useState({
     mode: 'add',
     title: 'Thêm căn hộ',
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
-  const navigate = useNavigate();
   const residentId = Cookies.get("residentId");
   const buildingID = Cookies.get("buildingID");
 
@@ -43,12 +46,23 @@ const HouseHoldResident = () => {
       }
     }
     fetchBuildings();
-  }, [page, rowsPerPage, searchCriteria, reload]);
-
-  const handleRowClick = (record) => {
-    setSelectedHouseHold(record);
-  };
-
+  }, []);
+  // useEffect(() => {
+  //   const fetchAgents = async () => {
+  //     try {
+  //       if(!id) {
+  //         setAgents([]);
+  //         return;
+  //       }
+  //       const response = await getMemberInApartment(id, buildingID);
+  //       const data = response;
+  //       setAgents(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  //   fetchAgents();
+  // }, [reload, page, rowsPerPage, id, searchCriteria]);
   const handleSearchChange = (event) => {
     const { value } = event.target;
     setSearchCriteria(value);
@@ -69,8 +83,8 @@ const HouseHoldResident = () => {
 
   const handleCreateHouseHold = () => {
     setModalMode({
-      mode: 'add',
-      title: 'Thêm căn hộ'
+        mode: 'add',
+        title: `Thêm thành viên căn hộ`
     });
     setSelectedHouseHold(null);
     setModalOpen(true);
@@ -78,10 +92,27 @@ const HouseHoldResident = () => {
   
   const handleEditHouseHold = () => {
     setModalMode({
-      mode: 'edit',
-      title: 'Cập nhật căn hộ'
+        mode: 'edit',
+        title: `Cập nhật thông tin thành viên căn hộ`
     });
     setModalOpen(true);
+  };
+
+  const handleDeleteMember = async(member) => {
+    try {
+      const response = await deleteResident({
+          residentId: member.id
+        });
+      const data = await response.json();
+      if (data.error) {
+        Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+      } else {
+        Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
+      }
+    } catch (error) {
+      Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
+    }
+    setReload(!reload);
   };
 
   const handleCloseModal = () => {
@@ -109,58 +140,33 @@ const HouseHoldResident = () => {
         Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
         console.error('Error fetching projects:', error);
       }
-    } else {
-      try {
-        const response = await fetch("https://localhost:7082/api/ceo/UpdateOwnerShip", {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...houseHoldData,
-            id: selectedHouseHold.id  
-          })
-        });
-        const data = await response.json();
-        if (data.success) {
-          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-        } else {
-          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        }
-      } catch (error) {
-        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        console.error('Error updating household:', error);
-      }
-    }
+    } 
+    // else {
+    //   try {
+    //     const response = await updateResident({
+    //         Phone: memberData.phoneNumber,
+    //         name: memberData.name,
+    //         email: memberData.email,
+    //         id: selectedMember.id
+    //       });
+    //     if (response.success) {
+    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+    //     } else {
+    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     }
+    //   } catch (error) {
+    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     console.error('Error updating household:', error);
+    //   }
+    // }
 
     setReload(!reload);
   };
 
   const modalFields = [
-    <TextField
-      fullWidth
-      label="Số Phòng"
-      name="roomNumber"
-      type="string"
-      required
-      defaultValue={selectedHouseHold?.roomNumber || ''} // Điền dữ liệu vào
-    />,
-    <TextField
-      fullWidth
-      label="Số tầng"
-      name="floorNumber"
-      type="number"
-      required
-      defaultValue={selectedHouseHold?.floorNumber || ''}
-    />,
-    <TextField
-      fullWidth
-      label="Email"
-      name="email"
-      required
-      defaultValue={selectedHouseHold?.email || ''}
-    />,
+    <TextField fullWidth label="Tên thành viên" name="memberName" />,
+    <TextField fullWidth label="Điện thoại" name="phoneNumber" />,
+    <TextField fullWidth label="Email" name="email" />,
   ];
 
   const columnData = [
@@ -230,7 +236,7 @@ const HouseHoldResident = () => {
         <TableCustom
           columns={columnData}
           rows={rows}
-          onRowClick={handleRowClick}
+          onRowClick={() => {}}
         />
         <TablePagination
           component="div"

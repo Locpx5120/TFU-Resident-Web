@@ -170,7 +170,8 @@ function TableCustom({
     <Box>
       <TableContainer
         sx={{
-          overflowX: "auto",
+          overflow: "auto",
+          maxHeight: 700,
           maxWidth: "100%",
           boxShadow: "none",
           "&::-webkit-scrollbar": {
@@ -194,7 +195,7 @@ function TableCustom({
           <JSonBox component="thead">
             <TableRow>{renderColumns}</TableRow>
           </JSonBox>
-          <TableBody>
+          <TableBody style={{maxHeight: 700, overflowY: 'auto'}}>
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length}>
