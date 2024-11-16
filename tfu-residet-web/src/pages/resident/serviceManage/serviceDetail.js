@@ -68,7 +68,7 @@ const ServiceDetail = () => {
     const paginatedRows = useMemo(() => {
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
-        return roomsData.data.slice(startIndex, endIndex);
+        return roomsData?.slice(startIndex, endIndex);
     }, [page, rowsPerPage, roomsData]);
 
     return (
@@ -101,7 +101,7 @@ const ServiceDetail = () => {
                 />
                 <TablePagination
                     component="div"
-                    count={roomsData?.data?.length}
+                    count={roomsData?.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}

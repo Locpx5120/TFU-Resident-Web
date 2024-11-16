@@ -146,14 +146,14 @@ export const routeResident = [
     {
         route: "/thanh-toan-dich-vu-hoa-don/:id",
         routeName: "Thanh toán dịch vụ",
-        component: <ServicePaymentsBill/>,
+        component: <ServicePaymentsBill />,
         icon: <SettingsIcon/>,
         hidden: true,
     },
     {
         route: "/thanh-toan-dich-vu-hoa-don",
         routeName: "Thanh toán dịch vụ",
-        component: <ServicePaymentsBill/>,
+        component: <ServicePaymentsBill />,
         icon: <SettingsIcon/>,
         hidden: true,
     },

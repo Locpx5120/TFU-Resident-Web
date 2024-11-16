@@ -9,11 +9,7 @@ export const listApartment =  async (buildingID) => {
                   })
 }
 export const detailApartment = async (body) => {
-    return await postData(`/apartment-services/details`, body, endpointUrl.BUILDING_URL, {
-        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        'content-type': 'application/json',
-        'buildingPermalink': Cookies.get('buildingID'),
-    })
+    return await postData(`/apartment-services/details`, body, undefined,  endpointUrl.BUILDING_URL,)
 }
 export const getServiceName  =  async (serviceTypes) => {
     return await getData(`/apartment-services/GetByCategory/${serviceTypes}`, endpointUrl.BUILDING_URL, {
@@ -28,4 +24,22 @@ export const addMember = async (body) => {
                     'content-type': 'application/json',
                     'buildingPermalink': Cookies.get("buildingID"),
                   }, endpointUrl.BUILDING_URL)
+}
+export const getServices = async () => {
+    return await getData(`/apartment-services/get-services`, endpointUrl.BUILDING_URL, {
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get("buildingID"),
+      })
+}
+export const getDetailServiceUnpaids = async (body) => {
+    return await postData(`/apartment-services/unpaid-details`, body, {
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get("buildingID"),
+      }, endpointUrl.BUILDING_URL);
+}
+
+export const paymentSummary = async (rowsPerPage, page) => {
+    return await getData(`/apartment-services/payment-summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`, endpointUrl.BUILDING_URL);
 }

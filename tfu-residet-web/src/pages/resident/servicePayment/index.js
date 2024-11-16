@@ -12,9 +12,9 @@ import {
     Typography,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import {paymentSummary} from '../../../services/apartmentService';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { paymentSummary } from '../../../services/roomService';
 
 const ServicePayments = () => {
     const navigate = useNavigate();

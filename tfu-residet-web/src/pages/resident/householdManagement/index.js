@@ -48,6 +48,10 @@ const DetailHouseHoldResident = () => {
   useEffect(() => {
     const fetchAgents = async () => {
       try {
+        if(!id) {
+          setAgents([]);
+          return;
+        }
         const response = await getMemberInApartment(id, buildingID);
         const data = response;
         setAgents(data);
@@ -117,7 +121,7 @@ const DetailHouseHoldResident = () => {
       try {
         const response = await addMemberInApartment({
             phoneNumber: memberData.phoneNumber,
-            memberName: memberData.name,
+            MemberName: memberData.MemberName,
             email: memberData.email,
             apartmentId: id,
           });
@@ -155,7 +159,7 @@ const DetailHouseHoldResident = () => {
   };
 
   const modalFields = [
-    <TextField fullWidth label="Tên thành viên" name="memberName" />,
+    <TextField fullWidth label="Tên thành viên" name="MemberName" />,
     <TextField fullWidth label="Điện thoại" name="phoneNumber" />,
     <TextField fullWidth label="Email" name="email" />,
   ];
