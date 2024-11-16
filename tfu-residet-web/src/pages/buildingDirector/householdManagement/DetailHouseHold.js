@@ -12,6 +12,8 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import {getOwnerShip, getOwnerShipPostMethod} from "../../../services/ceoService";
+import {addResident, addSResident, deleteResident} from "../../../services/residentService";
 
 const DetailHouseHold = () => {
   const { id } = useParams();
@@ -32,14 +34,7 @@ const DetailHouseHold = () => {
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
-        const response = await fetch(`https://localhost:7082/api/ceo/GetOwnerShipById/${id}`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          }
-        });
-        const data = await response.json();
+        const data = await getOwnerShip(id);
         setBuildings(data);
       } catch (error) {
         console.log(error);
@@ -50,20 +45,12 @@ const DetailHouseHold = () => {
   useEffect(() => {
     const fetchAgents = async () => {
       try {
-        const response = await fetch(`https://localhost:7082/api/ceo/GetByOwnershipId`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await getOwnerShipPostMethod({
             ownershipId: id,
-            pageSize: rowsPerPage,  
+            pageSize: rowsPerPage,
             pageNumber: page + 1,
             name: searchCriteria,
-          })
-        });
-        const data = await response.json();
+          });
         setAgents(data.data);
       } catch (error) {
         console.log(error);
@@ -106,16 +93,9 @@ const DetailHouseHold = () => {
   const handleDeleteMember = async(member) => {
     console.log('Deleting member:', member);
     try {
-      const response = await fetch("https://localhost:7082/api/ceo/deleteResident", {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
+      const data = await  deleteResident({
           residentId: member.id
         })
-      });
       if (data.error) {
         Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
       } else {
@@ -136,20 +116,12 @@ const DetailHouseHold = () => {
       console.log(memberData);
       
       try {
-        const response = await fetch("https://localhost:7082/api/ceo/addResident", {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await addResident({
             Phone: memberData.phoneNumber,
             name: memberData.name,
             email: memberData.email,
             ownerShipId: buildings.id,
-          })
-        });
-        const data = await response.json();
+          });
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
@@ -161,20 +133,12 @@ const DetailHouseHold = () => {
       }
     } else {
       try {
-        const response = await fetch("https://localhost:7082/api/ceo/updateResident", {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await addResident({
             Phone: memberData.phoneNumber,
             name: memberData.name,
             email: memberData.email,
             id: selectedMember.id
-          })
-        });
-        const data = await response.json();
+          });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {

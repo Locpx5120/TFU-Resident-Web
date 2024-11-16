@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
     Box,
     Button,
@@ -12,8 +12,9 @@ import {
     Typography,
 } from '@mui/material';
 import {useNavigate} from 'react-router-dom';
-import Swal from 'sweetalert2';
 import {paymentSummary} from '../../../services/apartmentService';
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 const ServicePayments = () => {
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ const ServicePayments = () => {
     };
 
     const paginatedRows = useMemo(() => {
-        if(!services?.data) return [];
+        if (!services?.data) return [];
         return services.data;
     }, [page, rowsPerPage, services]);
 
@@ -87,7 +88,7 @@ const ServicePayments = () => {
             <Table>
                 <TableHead>
                     <TableRow>
-                            <TableCell>STT</TableCell>
+                        <TableCell>STT</TableCell>
                         <TableCell align='left'>
                             <Checkbox
                                 indeterminate={
@@ -127,7 +128,9 @@ const ServicePayments = () => {
                             <TableCell>{service.month}</TableCell>
                             <TableCell>{service.paymentStatus}</TableCell>
                             <TableCell>
-                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained" color="primary" onClick={() => handleDetailClick(service.apartmentId)}>Xem chi tiết</Button>
+                                <Button style={{fontSize: 12, textTransform: 'lowercase'}} variant="contained"
+                                        color="primary" onClick={() => handleDetailClick(service.apartmentId)}>Xem chi
+                                    tiết</Button>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -145,7 +148,8 @@ const ServicePayments = () => {
                 }}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh toán</Button>
+            <Button variant="contained" color="primary" onClick={() => navigate('/thanh-toan-dich-vu-hoa-don')}>Thanh
+                toán</Button>
         </Box>
     );
 };

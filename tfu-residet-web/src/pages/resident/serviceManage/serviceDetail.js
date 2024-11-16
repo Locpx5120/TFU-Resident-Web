@@ -10,6 +10,7 @@ import {
 import { useParams } from 'react-router-dom';
 import TableCustom from '../../../components/Table';
 import { detailApartment, getServices } from "../../../services/apartmentService";
+import Swal from 'sweetalert2';
 
 const ServiceDetail = () => {
     const { id } = useParams();

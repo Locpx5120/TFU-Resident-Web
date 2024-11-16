@@ -6,9 +6,9 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import {addOwner, listOwner, updateOwner} from "../../../services/ceoService";
+import {getBuilding, saveBuilding, updateOwnerShip} from "../../../services/residentService";
 
-const HouseHold = () => {
+const HouseHoldResident = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [reload, setReload] = useState(false);
@@ -17,19 +17,17 @@ const HouseHold = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState({
     mode: 'add',
-    title: 'Thêm chủ căn hộ',
+    title: 'Thêm căn hộ',
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
   const navigate = useNavigate();
+  const residentId = Cookies.get("residentId");
+  const buildingID = Cookies.get("buildingID");
 
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
-        const data = await listOwner({
-            name: searchCriteria,
-            pageSize: rowsPerPage,
-            pageNumber: page + 1,
-          });
+        const data = await getBuilding(residentId , buildingID);
         setBuildings(data.data);
       } catch (error) {
         console.log(error);
@@ -63,7 +61,7 @@ const HouseHold = () => {
   const handleCreateHouseHold = () => {
     setModalMode({
       mode: 'add',
-      title: 'Thêm chủ căn hộ'
+      title: 'Thêm căn hộ'
     });
     setSelectedHouseHold(null);
     setModalOpen(true);
@@ -72,7 +70,7 @@ const HouseHold = () => {
   const handleEditHouseHold = () => {
     setModalMode({
       mode: 'edit',
-      title: 'Cập nhật chủ căn hộ'
+      title: 'Cập nhật căn hộ'
     });
     setModalOpen(true);
   };
@@ -84,7 +82,7 @@ const HouseHold = () => {
   const handleSaveHouseHold = async (houseHoldData) => {
     if (modalMode.mode === 'add') {
       try {
-        const data = await addOwner(houseHoldData);
+        const data = await saveBuilding({...houseHoldData, apartmentId: '1f981774-e0c3-4f2f-9c75-fe7a11b70ae2'}, residentId);
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
@@ -96,7 +94,7 @@ const HouseHold = () => {
       }
     } else {
       try {
-        const data = await updateOwner({
+        const data = await updateOwnerShip({
             ...houseHoldData,
             id: selectedHouseHold.id
           });
@@ -141,7 +139,8 @@ const HouseHold = () => {
   ];
 
   const columnData = [
-    { name: "Tên chủ hộ", align: "left", esName: "fullName" },
+    { name: "STT", align: "left", esName: "stt" },
+    { name: "Chủ căn hộ", align: "left", esName: "ownerName" },
     { name: "Số tầng", align: "left", esName: "floorNumber" },
     { name: "Số Phòng", align: "left", esName: "roomNumber" },
     { name: "Điện thoại", align: "left", esName: "phoneNumber" },
@@ -159,7 +158,7 @@ const HouseHold = () => {
           <Button onClick={() => handleEditHouseHold(building)}>
             <EditIcon />
           </Button>
-          <Button onClick={() => navigate('/cu-dan/' + building.id)}>
+          <Button onClick={() => navigate('/cu-dan/' + building.apartmentId)}>
             Chi tiết
           </Button>
       </>
@@ -179,7 +178,7 @@ const HouseHold = () => {
       >
         <TextField
           size="small"
-          label="Tên chủ hộ"
+          label="Chủ căn hộ"
           variant="outlined"
           value={searchCriteria}
           onChange={handleSearchChange}
@@ -199,7 +198,7 @@ const HouseHold = () => {
           onClick={handleCreateHouseHold}
           sx={{ height: "40px" }}
         >
-          Thêm chủ căn hộ
+          Thêm căn hộ
         </Button>
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
@@ -231,4 +230,4 @@ const HouseHold = () => {
   );
 };
 
-export default HouseHold;
+export default HouseHoldResident;

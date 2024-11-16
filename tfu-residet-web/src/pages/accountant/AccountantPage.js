@@ -3,6 +3,7 @@ import { Box, Card, Typography, Table, TableBody, TableCell, TableContainer, Tab
 import { Button } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import {listApartment} from "../../services/apartmentService";
 
 const AccountantPage = () => {
     const [page, setPage] = React.useState(0);
@@ -18,7 +19,7 @@ const AccountantPage = () => {
 
     useEffect(() => {
         const fetchRooms = async () => {
-            const res = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1',)
+            const res = await listApartment(buildingID);
         }
         fetchRooms();
     }, [])
@@ -26,15 +27,7 @@ const AccountantPage = () => {
     useEffect(() => {
         const fetchPayments = async () => {
             try {
-                const response = await fetch('https://localhost:7082/api/apartment-services/summary?pageSize=10&pageNumber=1', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                    'content-type': 'application/json',
-                    'buildingPermalink':  buildingID,
-                  },
-                });
-                const data = await response.json();
+                const data = await listApartment(buildingID);
                 setPayments(data);
             } catch (error) {
                 console.error('Error fetching projects:', error);

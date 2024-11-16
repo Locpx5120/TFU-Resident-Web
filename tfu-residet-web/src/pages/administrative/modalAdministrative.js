@@ -3,6 +3,7 @@ import { Box, Button, Modal, TextField, Typography } from "@mui/material"
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
+import {updateService} from "../../services/roomService";
 
 const style = {
     position: 'absolute',
@@ -31,19 +32,10 @@ const ModalAdministrative = ({ open, handleClose, title, }) => {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const response = await fetch("https://localhost:7082/api/service-contract/update-service", {
-                    method: 'PUT',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get('buildingID'),
-                    },
-                    body: JSON.stringify({
+                const data = await updateService({
                         apartmentId: id,
                         serviceType: "",
-                    })
-                });
-                const data = await response.json();
+                    });
                 setRoomsData(data);
             } catch (error) {
                 Swal.fire('Thất bại', 'error');

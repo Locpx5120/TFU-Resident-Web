@@ -5,6 +5,8 @@ import CustomModal from "../../../common/CustomModal";import Cookies from "js-co
 import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
+import {getRole} from "../../../services/RoleService";
+import {createStaff, deleteStaff, getStaff, updateStaff} from "../../../services/staffService";
 
 
 const ListTab = () => {
@@ -29,15 +31,7 @@ const ListTab = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch("https://localhost:7082/api/role/getRoles", {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-            'buildingPermalink': Cookies.get("buildingID"),
-          },
-        });
-        const data = await response.json();
+        const data = await getRole();
         setRoles(data.data);
       } catch (error) {
         console.log(error);
@@ -50,15 +44,7 @@ const ListTab = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch("https://localhost:7082/api/staff/listEmployee", {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-            'buildingPermalink': Cookies.get("buildingID"),
-          },
-        });
-        const data = await response.json();
+        const data = await getStaff();
         setEmployees(data.data);
       } catch (error) {
         console.log(error);
@@ -110,18 +96,7 @@ const ListTab = () => {
 
   const handleDelete = async (employee) => {
     try {
-      const response = await fetch("https://localhost:7082/api/staff/listEmployee", {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          'content-type': 'application/json',
-          'buildingPermalink': Cookies.get("buildingID"),
-        },
-        body: JSON.stringify({
-          staffId: employee.id,
-        })
-      });
-      const data = await response.json();
+      const data = await deleteStaff(employee.id);
       if (data.success) {
         setReload(!reload);
         Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
@@ -139,17 +114,8 @@ const ListTab = () => {
 
   const handleSaveEmployee = async (employeeData) => {    
     if (modalMode.mode === 'add') {
-      try {        
-        const response = await fetch("https://localhost:7082/api/staff/listEmployee", {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-            'buildingPermalink': Cookies.get("buildingID"),
-          },
-          body: JSON.stringify(employeeData)
-        });
-        const data = await response.json();
+      try {
+        const data = await createStaff(employeeData);
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
@@ -162,19 +128,10 @@ const ListTab = () => {
       console.log(employeeData, selectedEmployee);
       
       try {
-        const response = await fetch("https://localhost:7082/api/staff/listEmployee", {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-            //'buildingPermalink': Cookies.get("buildingID"),
-          },
-          body: JSON.stringify({
+        const data = await updateStaff({
             staffId: selectedEmployee.id,
             roleId: employeeData.roleId,
-          })
-        });
-        const data = await response.json();
+          });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {

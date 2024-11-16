@@ -3,7 +3,7 @@ import { Card, TablePagination, Typography, Button } from '@mui/material';
 import TableCustom from '../../../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import {getDetailVehicle, getServiceRequest} from "../../../services/vehicleService";
 
 const ViewRequests = () => {
     const navigate = useNavigate();
@@ -15,19 +15,8 @@ const ViewRequests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await fetch(`https://localhost:7082/api/apartment-services/unpaid-details/vehicle-service-details/`, {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                        'content-type': 'application/json',
-                        'buildingPermalink': Cookies.get('buildingID'),
-                    },
-                    body: JSON.stringify({
-                        serviceContractId: id,                   
-                    })
-                });
-                const data = await response.json();
-                setRequests(data);
+                const response = await getServiceRequest();
+                if (response?.data?.items) setRequests(response.data?.items);
             } catch (error) {
                 console.error(error);
             }
@@ -52,17 +41,17 @@ const ViewRequests = () => {
         { esName: 'details', name: 'Chi tiết' },
     ];
 
-    const paginatedRows = requests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((request) => ({
-        serviceName: request.serviceName,
-        submissionDate: new Date(request.submissionDate).toLocaleDateString(),
-        room: request.room,
+    const paginatedRows = requests && requests.length > 0 ? requests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((request) => ({
+        serviceName: request.serviceType,
+        submissionDate: new Date(request.date).toLocaleDateString(),
+        room: request.building,
         status: request.status,
         details: (
-          <Button variant="outlined" onClick={() => navigate(`/xem-chi-tiet-don/${request.room}`, { state: { request } })}>
+          <Button variant="outlined" onClick={() => navigate(`/xem-chi-tiet-don/${request.serviceContractId}`, { state: { request } })}>
               Xem
           </Button>
       ),
-    }));
+    })) : [];
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
