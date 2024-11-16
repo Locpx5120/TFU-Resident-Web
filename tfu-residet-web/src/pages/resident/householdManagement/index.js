@@ -29,7 +29,6 @@ const DetailHouseHoldResident = () => {
     title: `Thêm thành viên căn hộ: ${buildings?.roomNumber || 0}`,
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
-  const residentId = Cookies.get("residentId");
   const [selectedMember, setSelectedMember] = useState(null);
   const buildingID = Cookies.get("buildingID");
   const residentId = Cookies.get("residentId");
