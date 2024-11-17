@@ -49,9 +49,9 @@ const Sidebar = ({routes}) => {
   return (
     <div className="sidebar">
       <div className="profile">
-        <Box className="profile-img">
+        {/* <Box className="profile-img">
           <BadgeAvatars src="https://avatar-ex-swe.nixcdn.com/song/2020/08/06/6/0/8/0/1596682420038.jpg" />
-        </Box>
+        </Box> */}
         <h3>JSX Computer</h3>
         <p>Royal City</p>
       </div>

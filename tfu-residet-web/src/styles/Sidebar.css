@@ -25,6 +25,11 @@
     margin-bottom: 10px;
 }
 
+.MuiAvatar-root {
+    width: 45px !important;
+    height: 45px !important;
+}
+
 nav ul {
     list-style: none;
 }
