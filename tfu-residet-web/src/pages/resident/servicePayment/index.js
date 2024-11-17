@@ -30,13 +30,7 @@ const ServicePayments = () => {
                 const data = await paymentSummary(rowsPerPage, page);
                 setServices(data);
             } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Có lỗi xảy ra',
-                    showConfirmButton: true,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6'
-                });
+               console.error(error);
             }
         }
         fetchRooms();

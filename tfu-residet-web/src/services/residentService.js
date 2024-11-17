@@ -9,7 +9,7 @@ export const getBuilding = async (residentId, buildingId) => {
           },);
 }
 
-export const getMemberInApartment = async (apartmentId, buildingId) => {
+export const getMemberInApartment = async (apartmentId) => {
    return await getData(`/apartment/resident/details/${apartmentId}`, endpointUrl.BUILDING_URL);
 }
 export const addMemberInApartment = async (body) => {

@@ -7,11 +7,15 @@ export const endpointUrl = {
 }
 // Hàm GET
 const defaultGetHeader = {
-       Authorization: `Bearer ${Cookies.get("accessToken")}`,
+    method: 'GET',
+    Authorization: `Bearer ${Cookies.get("accessToken")}`,
     'content-type': 'application/json',
+    'buildingPermalink': Cookies.get('buildingID'),
 }
 
 export const getData = async (endpoint, baseURL = endpointUrl.RESIDENT_URL, header = defaultGetHeader) => {
+    console.log(header);
+    
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
         method: 'GET',

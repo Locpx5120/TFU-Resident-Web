@@ -32,7 +32,11 @@ const DetailHouseHoldResident = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const buildingID = Cookies.get("buildingID");
   const residentId = Cookies.get("residentId");
-  const id = useMemo(() => buildings[0]?.apartmentId,[buildings]);
+  const id = useMemo(() => {
+    if(buildings.length > 0) {
+       return buildings[0]?.apartmentId
+    } 
+  },[buildings]);
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
@@ -52,7 +56,7 @@ const DetailHouseHoldResident = () => {
           setAgents([]);
           return;
         }
-        const response = await getMemberInApartment(id, buildingID);
+        const response = await getMemberInApartment(id);
         const data = response;
         setAgents(data);
       } catch (error) {
@@ -203,7 +207,7 @@ const DetailHouseHoldResident = () => {
   return (
     <section className="content">
       <Typography variant="h5" gutterBottom>
-       <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {buildings.roomNumber}
+       Danh sách thành viên trong căn hộ
       </Typography>
       <Box
         sx={{
@@ -223,14 +227,14 @@ const DetailHouseHoldResident = () => {
           onChange={handleSearchChange}
           sx={{ flexGrow: 1, maxWidth: "200px" }}
         />
-        <Button
+        {/* <Button
           variant="contained"
           color="success"
           onClick={handleAddMember}
           sx={{ height: "40px" }}
         >
           Thêm thành viên
-        </Button>
+        </Button> */}
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom 
