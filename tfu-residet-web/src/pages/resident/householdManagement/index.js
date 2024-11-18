@@ -1,42 +1,27 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { 
-  Box, 
-  Button, 
-  Card, 
-  TextField, 
-  TablePagination, 
-  Typography 
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Card, TextField, TablePagination } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { addMemberInApartment, deleteResident, getBuilding, getMemberInApartment, updateResident } from "../../../services/residentService";
-import { Spin } from "antd";
-
-const DetailHouseHoldResident = () => {
+import {getBuilding, saveBuilding, updateOwnerShip} from "../../../services/residentService";
+const HouseHoldResident = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [reload, setReload] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
   const [buildings, setBuildings] = useState([]);
-  const [agents, setAgents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const navigate = useNavigate();
   const [modalMode, setModalMode] = useState({
     mode: 'add',
-    title: `Thêm thành viên căn hộ: ${buildings?.roomNumber || 0}`,
+    title: 'Thêm căn hộ',
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
-  const [selectedMember, setSelectedMember] = useState(null);
-  const buildingID = Cookies.get("buildingID");
+  const navigate = useNavigate();
   const residentId = Cookies.get("residentId");
-  const id = useMemo(() => {
-    if(buildings.length > 0) {
-       return buildings[0]?.apartmentId
-    } 
-  },[buildings]);
+  const buildingID = Cookies.get("buildingID");
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
@@ -47,89 +32,49 @@ const DetailHouseHoldResident = () => {
       }
     }
     fetchBuildings();
-  }, []);
- 
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        if(!id) {
-          setAgents([]);
-          return;
-        }
-        const response = await getMemberInApartment(id);
-        const data = response;
-        setAgents(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchAgents();
-  }, [reload, page, rowsPerPage, id, searchCriteria]);
-
+  }, [page, rowsPerPage, searchCriteria, reload]);
+  const handleRowClick = (record) => {
+    setSelectedHouseHold(record);
+  };
   const handleSearchChange = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setSearchCriteria(value);
   };
-
+  const handleSearch = async () => {
+    const data = await getBuilding(residentId , buildingID, searchCriteria);
+    setBuildings(data.data);
+  };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const handleAddMember = () => {
+  const handleCreateHouseHold = () => {
     setModalMode({
-        mode: 'add',
-        title: `Thêm thành viên căn hộ`
+      mode: 'add',
+      title: 'Thêm căn hộ'
     });
-    setSelectedMember(null);
+    setSelectedHouseHold(null);
     setModalOpen(true);
   };
-
-  const handleEditMember = (member) => {
+  
+  const handleEditHouseHold = () => {
     setModalMode({
-        mode: 'edit',
-        title: `Cập nhật thông tin thành viên căn hộ`
+      mode: 'edit',
+      title: 'Cập nhật căn hộ'
     });
-    setSelectedMember(member);
     setModalOpen(true);
   };
-
-  const handleDeleteMember = async(member) => {
-    try {
-      const response = await deleteResident({
-          residentId: member.id
-        });
-      const data = await response.json();
-      if (data.error) {
-        Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-      } else {
-        Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
-      }
-    } catch (error) {
-      Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-    }
-    setReload(!reload);
-  };
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
-  const handleSaveMember = async (memberData) => {
+  const handleSaveHouseHold = async (houseHoldData) => {
     if (modalMode.mode === 'add') {
-      
       try {
-        const response = await addMemberInApartment({
-            phoneNumber: memberData.phoneNumber,
-            MemberName: memberData.MemberName,
-            email: memberData.email,
-            apartmentId: id,
-          });
-        if (response.success) {
+        const data = await saveBuilding({...houseHoldData, apartmentId: '1f981774-e0c3-4f2f-9c75-fe7a11b70ae2'}, residentId);
+        if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
           Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
@@ -138,77 +83,77 @@ const DetailHouseHoldResident = () => {
         Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
         console.error('Error fetching projects:', error);
       }
-    } 
-    // else {
-    //   try {
-    //     const response = await updateResident({
-    //         Phone: memberData.phoneNumber,
-    //         name: memberData.name,
-    //         email: memberData.email,
-    //         id: selectedMember.id
-    //       });
-    //     if (response.success) {
-    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-    //     } else {
-    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     }
-    //   } catch (error) {
-    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     console.error('Error updating household:', error);
-    //   }
-    // }
-
+    } else {
+      try {
+        const data = await updateOwnerShip({
+            ...houseHoldData,
+            id: selectedHouseHold.id
+          });
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+        } else {
+          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        console.error('Error updating household:', error);
+      }
+    }
     setReload(!reload);
-    handleCloseModal();
   };
-
   const modalFields = [
-    <TextField fullWidth label="Tên thành viên" name="MemberName" />,
-    <TextField fullWidth label="Điện thoại" name="phoneNumber" />,
-    <TextField fullWidth label="Email" name="email" />,
+    <TextField
+      fullWidth
+      label="Số Phòng"
+      name="roomNumber"
+      type="string"
+      required
+      defaultValue={selectedHouseHold?.roomNumber || ''} // Điền dữ liệu vào
+    />,
+    <TextField
+      fullWidth
+      label="Số tầng"
+      name="floorNumber"
+      type="number"
+      required
+      defaultValue={selectedHouseHold?.floorNumber || ''}
+    />,
+    <TextField
+      fullWidth
+      label="Email"
+      name="email"
+      required
+      defaultValue={selectedHouseHold?.email || ''}
+    />,
   ];
-
   const columnData = [
     { name: "STT", align: "left", esName: "stt" },
-    { name: "Tên thành viên", align: "left", esName: "memberName" },
-    { name: "Quyền", align: "left", esName: "role" },
+    { name: "Chủ căn hộ", align: "left", esName: "ownerName" },
+    { name: "Số tầng", align: "left", esName: "floorNumber" },
+    { name: "Số Phòng", align: "left", esName: "roomNumber" },
     { name: "Điện thoại", align: "left", esName: "phoneNumber" },
     { name: "Email", align: "left", esName: "email" },
-    { name: "Tùy chọn", align: "left", esName: "action" }
+    {
+      name: "Tùy chọn",
+      align: "left",
+      esName: "action",
+    },
   ];
-
-  const data = useMemo(() => agents?.data || [], [agents]);
-
-  const fakeRows = data.map((item) => (
-    { 
-      ...item,
-      action: (
-        <Box>
-          <Button 
-            variant="outlined" 
-            color="primary" 
-            onClick={() => handleEditMember(item)} 
-            sx={{ mr: 1 }}
-          >
-            Sửa
+  const rows = buildings.map((building) => ({
+    ...building,
+    action: (
+      <>
+          {/* <Button onClick={() => handleEditHouseHold(building)}>
+            <EditIcon />
+          </Button> */}
+          <Button onClick={() => navigate('/cu-dan/' + building.apartmentId+`?roomNumber=${building?.roomNumber}`)}>
+            Chi tiết
           </Button>
-          <Button 
-            variant="outlined" 
-            color="error" 
-            onClick={() => handleDeleteMember(item)}
-          >
-            Xóa
-          </Button>
-        </Box>
-      )
-    }
-  ));
-
+      </>
+    ),
+  }));
   return (
     <section className="content">
-      <Typography variant="h5" gutterBottom>
-       Danh sách thành viên trong căn hộ
-      </Typography>
       <Box
         sx={{
           display: "flex",
@@ -218,33 +163,40 @@ const DetailHouseHoldResident = () => {
           mb: 2
         }}
       >
-        <TextField
+        {/* <TextField
           size="small"
-          label="Tên thành viên"
-          name="name"
+          label="Chủ căn hộ"
           variant="outlined"
-          value={searchCriteria.tenThanhVien}
+          value={searchCriteria}
           onChange={handleSearchChange}
           sx={{ flexGrow: 1, maxWidth: "200px" }}
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSearch}
+          sx={{ height: "40px" }}
+        >
+          Tìm kiếm
+        </Button> */}
         {/* <Button
           variant="contained"
           color="success"
-          onClick={handleAddMember}
+          onClick={handleCreateHouseHold}
           sx={{ height: "40px" }}
         >
-          Thêm thành viên
+          Thêm căn hộ
         </Button> */}
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
-        <TableCustom 
-          columns={columnData} 
-          rows={fakeRows}
-          onRowClick={() => {}}
+        <TableCustom
+          columns={columnData}
+          rows={rows}
+          onRowClick={handleRowClick}
         />
         <TablePagination
           component="div"
-          count={fakeRows.length}
+          count={rows.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
@@ -255,8 +207,8 @@ const DetailHouseHoldResident = () => {
       <CustomModal
         open={modalOpen}
         handleClose={handleCloseModal}
-        data={selectedMember}
-        handleSave={handleSaveMember}
+        data={selectedHouseHold}
+        handleSave={handleSaveHouseHold}
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
@@ -264,5 +216,4 @@ const DetailHouseHoldResident = () => {
     </section>
   );
 };
-
-export default DetailHouseHoldResident;
+export default HouseHoldResident;

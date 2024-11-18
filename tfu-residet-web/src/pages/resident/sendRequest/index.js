@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -11,18 +11,21 @@ import {
 } from '@mui/material';
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import {set} from 'lodash';
-import {DatePicker} from 'antd';
+import { set } from 'lodash';
+import { DatePicker } from 'antd';
 import moment from 'moment/moment';
 import {getBuilding} from "../../../services/residentService";
 import {addMember, getServiceName} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
-import {addVehicle, listCategory} from "../../../services/vehicleService";
+import { addVehicle, listCategory} from "../../../services/vehicleService";
+import { useLocation } from 'react-router-dom';
+import { themThanhVien } from '../../../constants';
 
 const SendRequest = () => {
-    const themThanhVien = 'ab700748-25bf-454a-80c5-ed211d90458d';
-    const vehicleService = 'e1445a1d-22b7-4241-8405-3d3198f986b1';
-    const [serviceTypes, setServiceTypes] = useState('');
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const agentType = queryParams.get("agentType");
+    const [serviceTypes, setServiceTypes] = useState(agentType ? agentType : '');
     const initalRequet = serviceTypes === themThanhVien ? {
         serviceId: '',
         note: '',
@@ -46,8 +49,6 @@ const SendRequest = () => {
     const [buildings, setBuildings] = useState([]);
     const [apartment, setApartment] = useState('');
     const residentId = Cookies.get("residentId");
-
-    console.log(apartment)
 
     const handleChangeApartment = (event) => {
         setApartment(event.target.value);
@@ -128,7 +129,6 @@ const SendRequest = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(requests);
         if (!serviceTypes) {
             Swal.fire({
                 icon: 'error',
@@ -203,18 +203,12 @@ const SendRequest = () => {
         }
     };
 
-    console.log('serviceTypesArr', serviceTypesArr)
-    console.log('packageArr', packageArr)
-    console.log('serviceNameArr', serviceNameArr)
-    console.log('buildings', buildings)
-
-
     return (
-        <Box sx={{padding: '20px'}} className="content">
+        <Box sx={{ padding: '20px' }} className="content">
             <Typography variant="h5" gutterBottom>
                 Gửi đơn cho phòng hành chính
             </Typography>
-            <FormControl fullWidth margin="normal" sx={{marginRight: '10px', width: '250px'}}>
+            <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
                 <InputLabel id="service-type-label">Loại dịch vụ</InputLabel>
                 <Select
                     labelId="service-type-label"
@@ -229,7 +223,7 @@ const SendRequest = () => {
             </FormControl>
             {serviceTypes === themThanhVien &&
                 (<>
-                    <FormControl fullWidth margin="normal" sx={{marginRight: '10px', width: '250px'}}>
+                    <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', width: '250px' }}>
                         <InputLabel id={`apartment-label`}>Căn hộ cần gửi đơn</InputLabel>
                         <Select
                             labelId={`apartment-label`}
@@ -245,8 +239,8 @@ const SendRequest = () => {
                 </>)}
             <form onSubmit={handleSubmit}>
                 {requests.map((request, index) => (
-                    <Box key={index} sx={{marginBottom: '20px'}}>
-                        <Box sx={{display: 'flex', flexWrap: 'wrap', marginBottom: '10px'}}>
+                    <Box key={index} sx={{ marginBottom: '20px' }}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', marginBottom: '10px' }}>
                             {serviceTypes === themThanhVien &&
                                 (<>
                                     <TextField
@@ -257,7 +251,7 @@ const SendRequest = () => {
                                         value={request.name}
                                         onChange={(e) => handleChange(index, 'name', e.target.value)}
                                         required
-                                        sx={{marginRight: '10px', flex: '1 1 0'}}
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
                                     />
 
                                     <TextField
@@ -268,7 +262,7 @@ const SendRequest = () => {
                                         value={request.phone}
                                         onChange={(e) => handleChange(index, 'phone', e.target.value)}
                                         required
-                                        sx={{marginRight: '10px', flex: '1 1 0'}}
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
                                     />
                                     <TextField
                                         fullWidth
@@ -278,8 +272,7 @@ const SendRequest = () => {
                                         value={request.email}
                                         onChange={(e) => handleChange(index, 'email', e.target.value)}
                                         required
-
-                                        sx={{marginRight: '10px', flex: '1 1 0'}}
+                                        sx={{ marginRight: '10px', flex: '1 1 0' }}
                                     />
                                     <DatePicker
                                         fullWidth
@@ -287,15 +280,12 @@ const SendRequest = () => {
                                         value={request.birthday ? moment(request.birthday) : null}
                                         onChange={(date, dateString) => handleChange(index, 'birthday', dateString)}
                                         required
-                                        style={{width: '100%', marginRight: '10px', flex: '1 1 0'}}
+                                        style={{ width: '100%', marginRight: '10px', flex: '1 1 0' }}
                                     />
                                 </>)
                             }
 
-                            {serviceTypes !== themThanhVien && (<><FormControl fullWidth margin="normal" sx={{
-                                marginRight: '10px',
-                                flex: '1 1 0'
-                            }}>
+                            {serviceTypes !== themThanhVien && (<><FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
                                 <InputLabel id={`apartment-label-${index}`}>Căn hộ cần gửi đơn</InputLabel>
                                 <Select
                                     labelId={`apartment-label-${index}`}
@@ -317,7 +307,7 @@ const SendRequest = () => {
                                     value={request.vehicleType}
                                     onChange={(e) => handleChange(index, 'vehicleType', e.target.value)}
                                     required
-                                    sx={{marginRight: '10px', flex: '1 1 0'}}
+                                    sx={{ marginRight: '10px', flex: '1 1 0' }}
                                 />
 
                                 <TextField
@@ -328,10 +318,10 @@ const SendRequest = () => {
                                     value={request.licensePlate}
                                     onChange={(e) => handleChange(index, 'licensePlate', e.target.value)}
                                     required
-                                    sx={{marginRight: '10px', flex: '1 1 0'}}
+                                    sx={{ marginRight: '10px', flex: '1 1 0' }}
                                 />
 
-                                <FormControl fullWidth margin="normal" sx={{marginRight: '10px', flex: '1 1 0'}}>
+                                <FormControl fullWidth margin="normal" sx={{ marginRight: '10px', flex: '1 1 0' }}>
                                     <InputLabel id={`package-duration-label-${index}`}>Gói</InputLabel>
                                     <Select
                                         labelId={`package-duration-label-${index}`}
@@ -360,7 +350,7 @@ const SendRequest = () => {
                                 variant="outlined"
                                 color="success"
                                 onClick={handleAddRequest}
-                                sx={{alignSelf: 'center'}}
+                                sx={{ alignSelf: 'center' }}
                             >
                                 +
                             </Button>}
@@ -368,11 +358,12 @@ const SendRequest = () => {
                                 variant="outlined"
                                 color="secondary"
                                 onClick={() => handleRemoveRequest(index)}
-                                sx={{alignSelf: 'center'}}
+                                sx={{ alignSelf: 'center' }}
                             >
                                 -
                             </Button>}
                         </Box>
+
                         <TextField
                             fullWidth
                             margin="normal"
@@ -386,8 +377,8 @@ const SendRequest = () => {
                     </Box>
                 ))}
 
-                <Box sx={{textAlign: 'right', marginTop: '20px'}}>
-                    <Button type="submit" variant="contained" color="primary" sx={{marginLeft: '10px'}}>
+                <Box sx={{ textAlign: 'right', marginTop: '20px' }}>
+                    <Button type="submit" variant="contained" color="primary" sx={{ marginLeft: '10px' }}>
                         Gửi đơn
                     </Button>
                 </Box>
