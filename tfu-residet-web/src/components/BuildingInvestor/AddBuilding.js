@@ -24,7 +24,6 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
     const { name, value } = e.target;
     setNewBuilding(prev => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = () => {
     if (!newBuilding.projectId || !newBuilding.name) {
       Swal.fire('Lỗi', 'Vui lòng điền đầy đủ thông tin', 'error');

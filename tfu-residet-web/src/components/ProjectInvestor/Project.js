@@ -26,7 +26,7 @@ const Project = () => {
     };
     useEffect(() => {
         const fetchData = async () => {
-            const data = await viewManager("projects").json();
+            const data = await viewManager("projects");
             setData(data.data);
         };
         fetchData();
@@ -72,7 +72,7 @@ const Project = () => {
     const handleDeleteProject = async (projectId) => {
         try {
 
-            const result = await deleteManager(projectId).json();
+            const result = await deleteManager(projectId);
             if (result.code === 200) {
                 Swal.fire("Đã xóa!", "Dự án đã được xóa thành công.", "success");
             } else {
@@ -86,7 +86,7 @@ const Project = () => {
 
     const handleEditProject = async (projectData) => {
         try {
-            const result = await updateManager(projectData).json();
+            const result = await updateManager(projectData);
             if (result?.code === 200) {
                 Swal.fire({
                     icon: "success",
@@ -120,7 +120,7 @@ const Project = () => {
 
     const handleCreateProject = async (projectData) => {
         try {
-            const result = await createManager(projectData).json();
+            const result = await createManager(projectData);
             if (result.code === 200) {
                 Swal.fire({
                     icon: "success",
