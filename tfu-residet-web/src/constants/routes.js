@@ -9,8 +9,8 @@ import ServicePayments from '../pages/resident/servicePayment';
 import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePaymentsDetail';
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePaymentsBill';
 import SendRequest from "../pages/resident/sendRequest";
-import HouseHoldResident from "../pages/resident/householdManagement";
-// import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
+import HouseHoldResident from "../pages/resident/householdManagement/index";
+import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -121,15 +121,15 @@ export const routeResident = [
     {
         route: "/cu-dan",
         routeName: "Quản lý thành viên",
-        component: <HouseHoldResident/>,
+        component: <HouseHoldResident />,
         icon: <PersonIcon/>,
     },
-    // {
-    //     route: "/cu-dan/:id",
-    //     routeName: "Chi tiết cư dân",
-    //     component: <DetailHouseHoldResident/>,
-    //     hidden: true,
-    // },
+    {
+        route: "/cu-dan/:id",
+        routeName: "Chi tiết cư dân",
+        component: <DetailHouseHoldResident />,
+        hidden: true,
+    },
     {
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",
@@ -145,13 +145,6 @@ export const routeResident = [
     },
     {
         route: "/thanh-toan-dich-vu-hoa-don/:id",
-        routeName: "Thanh toán dịch vụ",
-        component: <ServicePaymentsBill />,
-        icon: <SettingsIcon/>,
-        hidden: true,
-    },
-    {
-        route: "/thanh-toan-dich-vu-hoa-don",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsBill />,
         icon: <SettingsIcon/>,

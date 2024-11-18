@@ -4,10 +4,12 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Box, Button, Typography, TextField } from '@mui/material';
 import { processPayment } from '../services/roomService';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
 const QRCodeModal = ({ isOpen, onRequestClose, transferData }) => {
+    const navigate = useNavigate();
     const { data, bankAccountName, bankAccountNumber, bankName, amount, transactionContent } = transferData;
     const [transactionInput, setTransactionInput] = useState(transactionContent);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -15,7 +17,6 @@ const QRCodeModal = ({ isOpen, onRequestClose, transferData }) => {
     const handleTransactionContentChange = (event) => {
         setTransactionInput(event.target.value);
     };
-    console.log(data);
     
     const handlePaymentClick = async () => {
         setIsProcessing(true);
@@ -26,6 +27,7 @@ const QRCodeModal = ({ isOpen, onRequestClose, transferData }) => {
                 setIsProcessing(false);
                 Swal.fire('Thành công', 'Thanh toán thành công!', 'success');
                 onRequestClose();
+                navigate('/thanh-toan-dich-vu');
             }
         } catch (error) {
             setIsProcessing(false);
