@@ -19,7 +19,7 @@ import {addMember, getServiceName} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
 import { addVehicle, listCategory} from "../../../services/vehicleService";
 import { useLocation } from 'react-router-dom';
-import { themThanhVien } from '../../../constants';
+import {themThanhVien, vehicleCode, vehicleService} from '../../../constants';
 
 const SendRequest = () => {
     const location = useLocation();
@@ -334,7 +334,7 @@ const SendRequest = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
-                                {serviceTypes === vehicleService && <DatePicker
+                                {serviceTypes === vehicleCode && <DatePicker
                                     fullWidth
                                     placeholder="Ngày gửi xe"
                                     value={request.startDate ? moment(request.startDate) : null}
