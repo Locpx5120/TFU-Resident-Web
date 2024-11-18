@@ -18,10 +18,14 @@ import {getBuilding} from "../../../services/residentService";
 import {addMember, getServiceName} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
 import { addVehicle, listCategory} from "../../../services/vehicleService";
+import { useLocation } from 'react-router-dom';
+import { themThanhVien } from '../../../constants';
 
 const SendRequest = () => {
-    const themThanhVien = 'ab700748-25bf-454a-80c5-ed211d90458d';
-    const [serviceTypes, setServiceTypes] = useState('');
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const agentType = queryParams.get("agentType");
+    const [serviceTypes, setServiceTypes] = useState(agentType ? agentType : '');
     const initalRequet = serviceTypes === themThanhVien ? {
         serviceId: '',
         note: '',
@@ -44,8 +48,6 @@ const SendRequest = () => {
     const [buildings, setBuildings] = useState([]);
     const [apartment, setApartment] = useState('');
     const residentId = Cookies.get("residentId");
-
-    console.log(apartment)
 
     const handleChangeApartment = (event) => {
         setApartment(event.target.value);
@@ -191,12 +193,6 @@ const SendRequest = () => {
             });
         }
     };
-
-    console.log('serviceTypesArr', serviceTypesArr)
-    console.log('packageArr', packageArr)
-    console.log('serviceNameArr', serviceNameArr)
-    console.log('buildings', buildings)
-
 
     return (
         <Box sx={{ padding: '20px' }} className="content">

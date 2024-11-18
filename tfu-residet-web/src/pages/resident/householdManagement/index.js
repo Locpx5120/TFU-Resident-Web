@@ -146,7 +146,7 @@ const HouseHoldResident = () => {
           {/* <Button onClick={() => handleEditHouseHold(building)}>
             <EditIcon />
           </Button> */}
-          <Button onClick={() => navigate('/cu-dan/' + building.apartmentId+`?roomNumber=${selectedHouseHold?.roomNumber}`)}>
+          <Button onClick={() => navigate('/cu-dan/' + building.apartmentId+`?roomNumber=${building?.roomNumber}`)}>
             Chi tiết
           </Button>
       </>
@@ -163,7 +163,7 @@ const HouseHoldResident = () => {
           mb: 2
         }}
       >
-        <TextField
+        {/* <TextField
           size="small"
           label="Chủ căn hộ"
           variant="outlined"
@@ -178,7 +178,7 @@ const HouseHoldResident = () => {
           sx={{ height: "40px" }}
         >
           Tìm kiếm
-        </Button>
+        </Button> */}
         {/* <Button
           variant="contained"
           color="success"

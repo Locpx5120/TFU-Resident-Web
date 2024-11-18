@@ -9,12 +9,14 @@ import {
 } from "@mui/material";
 import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addMemberInApartment, deleteResident, getMemberInApartment } from "../../../services/residentService";
+import { themThanhVien } from "../../../constants";
 
 const DetailHouseHoldResident = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const roomNumber = queryParams.get("roomNumber");
@@ -228,6 +230,14 @@ const DetailHouseHoldResident = () => {
         >
           Thêm thành viên
         </Button> */}
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => navigate('/gui-don?agentType='+themThanhVien)}
+          sx={{ height: "40px" }}
+        >
+          Thêm thành viên
+        </Button>
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom 
