@@ -19,7 +19,7 @@ import {addMember, getServiceName} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
 import { addVehicle, listCategory} from "../../../services/vehicleService";
 import { useLocation } from 'react-router-dom';
-import { themThanhVien } from '../../../constants';
+import {themThanhVien, vehicleCode, vehicleService} from '../../../constants';
 
 const SendRequest = () => {
     const location = useLocation();
@@ -40,6 +40,7 @@ const SendRequest = () => {
         packageServiceId: '',
         note: '',
         apartmentId: '',
+        startDate: ''
     };
     const [requests, setRequests] = useState([initalRequet]);
     const [serviceTypesArr, setServiceTypesArr] = useState([]);
@@ -106,6 +107,11 @@ const SendRequest = () => {
         newRequests[index][field] = value;
         setRequests(newRequests);
     };
+    const validateEmail = (email) => {
+        // Regular expression for email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     const handleAddRequest = () => {
         setRequests([...requests, {
@@ -116,7 +122,6 @@ const SendRequest = () => {
             note: ''
         }]);
     };
-
     const handleRemoveRequest = (index) => {
         const newRequests = requests.filter((_, i) => i !== index);
         setRequests(newRequests);
@@ -146,6 +151,14 @@ const SendRequest = () => {
                         note: request.note
                     }))
                 }
+                if (services.members) {
+                    for (let mem of services.members) {
+                        if (!validateEmail(mem.email)) {
+                            Swal.fire('Thất bại', 'Vui lòng kiểm tra lại email ', 'error');
+                            return;
+                        }
+                    }
+                }
                 const data = await addMember(services);
                 if (data.code !== 200) {
                     Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
@@ -160,13 +173,12 @@ const SendRequest = () => {
                         birthday: '',
                     }]);
                 }
-            }
-            else {
+            } else {
                 const services = requests.map((request) => ({
                     residentId: residentId,
                     ...request, serviceId: serviceTypes
                 }))
-                const data = await addVehicle({ services });
+                const data = await addVehicle({services});
                 if (data.code !== 200) {
                     Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
                 } else {
@@ -182,10 +194,7 @@ const SendRequest = () => {
             }
 
 
-        }
-
-
-        catch (error) {
+        } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
@@ -324,7 +333,19 @@ const SendRequest = () => {
                                             <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                                         ))}
                                     </Select>
-                                </FormControl></>)}
+                                </FormControl>
+                                {serviceTypes === vehicleCode && <DatePicker
+                                    fullWidth
+                                    placeholder="Ngày gửi xe"
+                                    value={request.startDate ? moment(request.startDate) : null}
+                                    onChange={(date, dateString) => handleChange(index, 'startDate', dateString)}
+                                    required
+                                    style={{width: '100%', marginRight: '10px', flex: '1 1 0'}}
+                                />}
+
+
+                            </>)}
+
                             {index === 0 && <Button
                                 variant="outlined"
                                 color="success"

@@ -13,7 +13,15 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import TableCustom from '../Table';
 import AddBuilding from './AddBuilding';
-import {CreateBuildings, GetBuildings, viewManager} from "../../services/buildingService";
+import {
+    apiUpdateBuildings,
+    CreateBuildings,
+    DeleteBuildings,
+    GetBuildings,
+    viewManager
+} from "../../services/buildingService";
+import EditBuilding from "./EditBuilding";
+import {result} from "lodash/object";
 
 const Building = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -21,33 +29,21 @@ const Building = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [isOpenCreate, setIsOpenCreate] = useState(false);
+    const [isOpenUpdate, setIsOpenUpdate] = useState(false);
     const [projects, setProjects] = useState([]);
     const [buildings, setBuildings] = useState([]);
-
+    const [selected, setSelected] = useState({})
     // const header = {
     //   headers: {
     //     method: 'GET',
     //     Authorization: `Bearer ${Cookies.get("accessToken")}`,
     //     'content-type': 'application/json',
     //   }
-    // };
-
-    const headerPOST = {
-        method: 'POST',
-        headers: {
-            method: 'POST',
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-            name: "projects",
-        })
-    };
-
+    // };s
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const data = await viewManager("project");
+                let data = await viewManager("project");
                 setProjects(data.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);
@@ -61,6 +57,31 @@ const Building = () => {
         const fetchBuildings = async () => {
             try {
                 const data = await GetBuildings();
+                data.data = data.data.map((item) => (
+                    {
+                        ...item,
+                        action: (
+                            <Box>
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    onClick={() => updateBuilding(item)}
+                                    sx={{mr: 1}}
+                                >
+                                    Sửa
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    onClick={() => handleDeleteBuilding(item.id)}
+                                >
+                                    Xóa
+                                </Button>
+                            </Box>
+                        )
+                    }
+                ));
+                console.log(data.data)
                 setBuildings(data.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);
@@ -69,7 +90,10 @@ const Building = () => {
 
         fetchBuildings();
     }, []);
-
+    const updateBuilding = (buildings) => {
+        setIsOpenUpdate(true);
+        setSelected(buildings)
+    }
     const sortedRows = useMemo(() => {
         if (!sortColumn) return buildings;
 
@@ -117,6 +141,36 @@ const Building = () => {
             Swal.fire('Lỗi', 'Không thể kết nối đến server', 'error');
         }
     };
+    const handleUpdateBuilding = async (newBuilding) => {
+        try {
+            const result = await apiUpdateBuildings(newBuilding);
+            if (result?.code === 200) {
+                setIsOpenCreate(false);
+                Swal.fire('Thành công', 'Cập nhật toà nhà thành công', 'success');
+                // Refresh building list here
+            } else {
+                Swal.fire('Lỗi', result?.message || 'Không thể cập nhật tòa nhà', 'error');
+            }
+        } catch (error) {
+            console.error('Error creating building:', error);
+            Swal.fire('Lỗi', 'Không thể kết nối đến server', 'error');
+        }
+    };
+    const handleDeleteBuilding = async (id) => {
+        try {
+            const result = await DeleteBuildings(id);
+            if (result?.code === 200) {
+                setIsOpenCreate(false);
+                Swal.fire('Thành công', 'Xoá toà nhà thành công', 'success');
+                // Refresh building list here
+            } else {
+                Swal.fire('Lỗi', result?.message || 'Không thể xoá tòa nhà', 'error');
+            }
+        } catch (error) {
+            console.error('Error creating building:', error);
+            Swal.fire('Lỗi', 'Không thể kết nối đến server', 'error');
+        }
+    };
     return (
         <section className="content building">
             <AddBuilding
@@ -124,6 +178,13 @@ const Building = () => {
                 onClose={() => setIsOpenCreate(false)}
                 onSubmit={handleCreateBuilding}
                 projects={projects}
+            />
+            <EditBuilding
+                open={isOpenUpdate}
+                onClose={() => setIsOpenUpdate(false)}
+                onSubmit={handleUpdateBuilding}
+                projects={projects}
+                selectedBuilding={selected}
             />
             <Typography sx={{
                 display: 'flex',
@@ -189,7 +250,7 @@ const columnData = [
     {name: "Tên tòa nhà", align: "left", esName: "name", sortable: true},
     // { name: "Căn hộ", align: "left", esName: "maxNumberApartments" },
     // { name: "Cư dân", align: "left", esName: "maxNumberResidents" },
-    {name: "Thao tác", align: "left", esName: "thaoTac"},
+    {name: "Thao tác", align: "left", esName: "action"},
 ];
 
 export default Building;

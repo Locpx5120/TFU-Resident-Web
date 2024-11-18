@@ -19,7 +19,7 @@ export const getServiceName  =  async (serviceTypes) => {
                   })
 }
 export const addMember = async (body) => {
-    return await postData(`/service-contract/add-vehicle-service`, body, {
+    return await postData(`/apartment/add-apartment-member`, body, {
                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
                     'content-type': 'application/json',
                     'buildingPermalink': Cookies.get("buildingID"),
