@@ -36,6 +36,7 @@ const defaultHeader = {
 }
 export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
     try {
+        console.log(defaultHeader.Authorization)
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: "POST",
             headers: header,

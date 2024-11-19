@@ -1,8 +1,11 @@
 import {postData} from "./api";
-
+import Cookies from "js-cookie";
 export const viewManager = async (name) => {
     return await postData('/project/viewManager', {
         name,
+    },{
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        "content-type": "application/json",
     })
 }
 

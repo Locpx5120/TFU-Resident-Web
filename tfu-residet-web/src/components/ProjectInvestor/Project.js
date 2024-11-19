@@ -26,8 +26,14 @@ const Project = () => {
     };
     useEffect(() => {
         const fetchData = async () => {
-            const data = await viewManager("projects");
-            setData(data.data);
+            try {
+                console.log(header.Authorization)
+                const data = await viewManager("projects");
+                setData(data.data);
+            }catch(e) {
+                console.log(e)
+            }
+
         };
         fetchData();
     }, [page, rowsPerPage, isOpenCreate, isOpenEdit]);
