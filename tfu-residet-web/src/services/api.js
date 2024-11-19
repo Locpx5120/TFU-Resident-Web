@@ -85,3 +85,4 @@ export const deleteData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_
         throw error;
     }
 };
+

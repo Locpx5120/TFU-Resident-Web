@@ -15,7 +15,7 @@ import { set } from 'lodash';
 import { DatePicker } from 'antd';
 import moment from 'moment/moment';
 import {getBuilding} from "../../../services/residentService";
-import {addMember, getServiceName} from "../../../services/apartmentService";
+import {addMember, getServiceName, testApi} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
 import { addVehicle, listCategory} from "../../../services/vehicleService";
 import { useLocation } from 'react-router-dom';
@@ -146,7 +146,7 @@ const SendRequest = () => {
                     members: requests.map((request) => ({
                         name: request.name,
                         email: request.email,
-                        birthday: request.birthday,
+                        birthday: new Date(request.birthday),
                         phone: request.phone,
                         note: request.note
                     }))
