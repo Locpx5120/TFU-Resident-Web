@@ -179,6 +179,10 @@ const SendRequest = () => {
                     ...request, serviceId: serviceTypes
                 }))
                 const data = await addVehicle({services});
+                if (!data.data[0].success) {
+                    Swal.fire('Thất bại', data.data[0].message, 'error');
+                    return;
+                }
                 if (data.code !== 200) {
                     Swal.fire('Thất bại', 'Gửi đơn thất bại!', 'error');
                 } else {

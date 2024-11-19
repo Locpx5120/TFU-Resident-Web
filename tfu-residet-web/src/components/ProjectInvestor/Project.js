@@ -25,19 +25,19 @@ const Project = () => {
         "content-type": "application/json",
     };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                console.log(header.Authorization)
-                const data = await viewManager("projects");
-                setData(data.data);
-            }catch(e) {
-                console.log(e)
-            }
 
-        };
         fetchData();
     }, [page, rowsPerPage, isOpenCreate, isOpenEdit]);
+    const fetchData = async () => {
+        try {
+            console.log(header.Authorization)
+            const data = await viewManager("projects");
+            setData(data.data);
+        } catch (e) {
+            console.log(e)
+        }
 
+    };
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -81,6 +81,7 @@ const Project = () => {
             const result = await deleteManager(projectId);
             if (result.code === 200) {
                 Swal.fire("Đã xóa!", "Dự án đã được xóa thành công.", "success");
+                fetchData()
             } else {
                 Swal.fire("Lỗi!", result.message || "Không thể xóa dự án.", "error");
             }
