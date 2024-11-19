@@ -30,6 +30,7 @@ const AddBuilding = ({ open, onClose, onSubmit, projects }) => {
       return;
     }
     onSubmit(newBuilding);
+    if (!onClose)
     setNewBuilding({ projectId: '', name: '' }); // Reset form
   };
 
