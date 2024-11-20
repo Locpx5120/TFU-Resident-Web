@@ -10,6 +10,7 @@ import ServicePaymentsDetail from '../pages/resident/servicePayment/ServicePayme
 import ServicePaymentsBill from '../pages/resident/servicePayment/ServicePaymentsBill';
 import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement/index";
+import ThirdParty from "../pages/resident/thirdParty";
 import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
@@ -26,6 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { ThirtyFpsOutlined } from "@mui/icons-material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
 import DirectorPage from "../pages/buildingDirector/dashboard";
@@ -187,6 +189,12 @@ export const routeResident = [
         routeName: "Gửi đơn",
         component: <SendRequest/>,
         icon: <SettingsIcon/>,
+    },
+    {
+        route: "/ben-thu-ba",
+        routeName: "Quản lí bên thứ ba",
+        component: <ThirdParty />,
+        icon: <ThirtyFpsOutlined />,
     },
 ];
 

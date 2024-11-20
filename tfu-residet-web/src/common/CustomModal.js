@@ -37,7 +37,7 @@ const CustomModal = ({ open, handleClose, data, handleSave, title, mode, fields 
         {fields.map((field) => (
           React.cloneElement(field, {
             key: field.props.name,
-            value: formData[field.props.name] || '',
+            value: formData[field.props?.name] || '',
             onChange: handleChange,
             fullWidth: true,
             margin: "normal"

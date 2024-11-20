@@ -127,12 +127,12 @@ const HouseHoldResident = () => {
     />,
   ];
   const columnData = [
-    { name: "STT", align: "left", esName: "stt" },
-    { name: "Chủ căn hộ", align: "left", esName: "ownerName" },
-    { name: "Số tầng", align: "left", esName: "floorNumber" },
-    { name: "Số Phòng", align: "left", esName: "roomNumber" },
-    { name: "Điện thoại", align: "left", esName: "phoneNumber" },
-    { name: "Email", align: "left", esName: "email" },
+    { name: "STT", align: "center", esName: "stt" },
+    // { name: "Chủ căn hộ", align: "center", esName: "ownerName" },
+    { name: "Số tầng", align: "center", esName: "floorNumber" },
+    { name: "Số Phòng", align: "center", esName: "roomNumber" },
+    { name: "Điện thoại", align: "center", esName: "phoneNumber" },
+    // { name: "Email", align: "center", esName: "email" },
     {
       name: "Tùy chọn",
       align: "left",
@@ -163,6 +163,7 @@ const HouseHoldResident = () => {
           mb: 2
         }}
       >
+        <h1>Chủ căn hộ {buildings[0]?.ownerName}</h1>
         {/* <TextField
           size="small"
           label="Chủ căn hộ"

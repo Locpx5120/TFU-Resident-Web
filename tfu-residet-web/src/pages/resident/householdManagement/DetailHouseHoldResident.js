@@ -58,6 +58,11 @@ const DetailHouseHoldResident = () => {
     setAgents(data);
   };
 
+  const handleRefresh = async () => {
+    const data = await getMemberInApartment(id);
+    setAgents(data);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -221,6 +226,14 @@ const DetailHouseHoldResident = () => {
           sx={{ height: "40px" }}
         >
           Tìm kiếm
+        </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={handleRefresh}
+          sx={{ height: "40px" }}
+        >
+          Làm mới
         </Button>
         {/* <Button
           variant="contained"
