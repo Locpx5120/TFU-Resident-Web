@@ -66,6 +66,7 @@ const SendRequest = () => {
                 if (!serviceTypes) return;
                 const resServiceName = await getServiceName(serviceTypes);
                 setServiceNameArr(resServiceName.data);
+                console.log(resServiceName)
             } catch (error) {
 
             }
@@ -142,7 +143,7 @@ const SendRequest = () => {
             if (serviceTypes === themThanhVien) {
                 const services = {
                     apartmentId: apartment,
-                    serviceId: serviceTypes,
+                    serviceId: 'F517BEF7-D325-487B-9F76-EB5D20413634',
                     members: requests.map((request) => ({
                         name: request.name,
                         email: request.email,
