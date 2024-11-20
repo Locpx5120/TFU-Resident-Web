@@ -1,18 +1,23 @@
 import {endpointUrl, getData, postData, putData} from "./api";
 import Cookies from "js-cookie";
 
-const header = {
+export const getDetailVehicle = async (body) => {
+    return await getData(`/service-contract/get/${Cookies.get('residentId')}`, endpointUrl.BUILDING_URL, {
         'Authorization': `Bearer ${Cookies.get("accessToken")}`,
         'content-type': 'application/json',
-        'buildingPermalink': Cookies.get('buildingID'),}
-export const getDetailVehicle = async (body) => {
-    return await getData(`/service-contract/get/${Cookies.get('residentId')}`, endpointUrl.BUILDING_URL, header)
+        'buildingPermalink': Cookies.get('buildingID'),})
 }
 export const listCategory =  async () => {
-    return await getData(`/servicecategory/GetAll`, endpointUrl.BUILDING_URL, header)
+    return await getData(`/servicecategory/GetAll`, endpointUrl.BUILDING_URL, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),})
 }
 export const addVehicle = async (body) => {
-    return await postData(`/service-contract/add-vehicle-service`, body, header, endpointUrl.BUILDING_URL)
+    return await postData(`/service-contract/add-vehicle-service`, body, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),}, endpointUrl.BUILDING_URL)
 }
 export const getServiceRequest = async () => {
     return await getData(`/service-request/get-service-requests`, endpointUrl.BUILDING_URL)
