@@ -27,7 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { ThirtyFpsOutlined } from "@mui/icons-material";
+import {ThermostatAutoOutlined, ThirtyFpsOutlined} from "@mui/icons-material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
 import DirectorPage from "../pages/buildingDirector/dashboard";
@@ -45,6 +45,7 @@ import Receptionist from "../pages/receptionist";
 import HistoryPay from "../pages/receptionist/historyPay";
 import AccountantPage from "../pages/accountant/AccountantPage";
 import Adminitrative from "../pages/administrative";
+import Administrator from "../components/Administrator/Administrator";
 
 
 export const routeArray = [
@@ -195,6 +196,12 @@ export const routeResident = [
         routeName: "Quản lí bên thứ ba",
         component: <ThirdParty />,
         icon: <ThirtyFpsOutlined />,
+    },
+    {
+        route: "/administrator",
+        routeName: "Thành viên quản trị",
+        component: <Administrator />,
+        icon: <ThermostatAutoOutlined />,
     },
 ];
 
