@@ -15,11 +15,11 @@ import { set } from 'lodash';
 import { DatePicker } from 'antd';
 import moment from 'moment/moment';
 import {getBuilding} from "../../../services/residentService";
-import {addMember, getServiceName, testApi} from "../../../services/apartmentService";
+import {addMember, getServiceName, getServices, testApi} from "../../../services/apartmentService";
 import {listAllPackage} from "../../../services/PackageService";
 import { addVehicle, listCategory} from "../../../services/vehicleService";
 import { useLocation } from 'react-router-dom';
-import {themThanhVien, vehicleCode, vehicleService} from '../../../constants';
+import {listVehicleCode, themThanhVien, vehicleCode, vehicleService} from '../../../constants';
 
 const SendRequest = () => {
     const location = useLocation();
@@ -63,8 +63,7 @@ const SendRequest = () => {
                 setPackagesArr(packages.data)
                 const resServiceTypes = await listCategory();
                 setServiceTypesArr(resServiceTypes.data);
-                if (!serviceTypes) return;
-                const resServiceName = await getServiceName(serviceTypes);
+                const resServiceName = await getServices();
                 setServiceNameArr(resServiceName.data);
                 console.log(resServiceName)
             } catch (error) {
@@ -143,7 +142,7 @@ const SendRequest = () => {
             if (serviceTypes === themThanhVien) {
                 const services = {
                     apartmentId: apartment,
-                    serviceId: 'F517BEF7-D325-487B-9F76-EB5D20413634',
+                    serviceId: serviceTypes,
                     members: requests.map((request) => ({
                         name: request.name,
                         email: request.email,
@@ -221,7 +220,7 @@ const SendRequest = () => {
                     onChange={(e) => setServiceTypes(e.target.value)}
                     required
                 >
-                    {optionServiceTypes.map((option) => (
+                    {optionServiceName.map((option) => (
                         <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                     ))}
                 </Select>
@@ -339,7 +338,7 @@ const SendRequest = () => {
                                         ))}
                                     </Select>
                                 </FormControl>
-                                {serviceTypes === vehicleCode && <DatePicker
+                                {listVehicleCode.includes(serviceTypes) && <DatePicker
                                     fullWidth
                                     placeholder="Ngày gửi xe"
                                     value={request.startDate ? moment(request.startDate) : null}
