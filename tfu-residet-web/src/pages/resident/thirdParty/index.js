@@ -30,8 +30,6 @@ const ThirdParty = () => {
     }, []);
 
     const rows = useMemo(() => data, [data]);
-    console.log(rows);
-    
 
     const modalFields = [
         <TextField
@@ -118,7 +116,6 @@ const ThirdParty = () => {
     };
 
     const handleSaveThirdParty = () => {
-        console.log('Saved Data:', selectedThirdParty);
         handleCloseModal();
     };
 

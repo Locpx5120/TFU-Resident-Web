@@ -19,7 +19,6 @@ function DownloadMenu() {
   };
   
   const handleDownload = (fileType) => {
-    console.log(`Downloading ${fileType} file`);
     // if (fileType === 'SVG') {
     //   // tải xuống file SVG
     // } else if (fileType === 'PNG') {

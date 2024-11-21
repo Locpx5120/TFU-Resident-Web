@@ -44,8 +44,6 @@ const OTPInput = () => {
             localStorage.setItem("isNew", JSON.stringify(true));
             navigator('/login');
         }
-        console.log(result);
-        console.log(typeof otp.join(""));
     };
 
     return (

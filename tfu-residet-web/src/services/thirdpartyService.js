@@ -8,7 +8,10 @@ const header = {
 }
 
 export const getThirdList = async (CompanyName, Status) => {
-    return await getData(`/thirdparty/list??CompanyName=${CompanyName}&Status=${Status}`, endpointUrl.BUILDING_URL, header);
+    if(!CompanyName || !Status) {
+        return await getData(`/thirdparty/list?CompanyName`, endpointUrl.BUILDING_URL, header);
+    }
+    return await getData(`/thirdparty/list?CompanyName=${CompanyName}&Status=${Status}`, endpointUrl.BUILDING_URL, header);
 }
 export const getContracts = async () => {
     return await getData(`/thirdparty/contracts`, endpointUrl.BUILDING_URL, header);

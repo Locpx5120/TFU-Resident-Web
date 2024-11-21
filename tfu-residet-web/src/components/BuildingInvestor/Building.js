@@ -81,7 +81,6 @@ const Building = () => {
                         )
                     }
                 ));
-                console.log(data.data)
                 setBuildings(data.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);

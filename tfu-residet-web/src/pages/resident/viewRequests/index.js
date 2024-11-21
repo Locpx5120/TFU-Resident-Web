@@ -2,27 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { Card, TablePagination, Typography, Button } from '@mui/material';
 import TableCustom from '../../../components/Table';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import {getDetailVehicle, getServiceRequest} from "../../../services/vehicleService";
+import Cookies from "js-cookie";
+import {getDetailVehicle} from "../../../services/vehicleService";
+import { getBuilding } from '../../../services/residentService';
 
 const ViewRequests = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [requests, setRequests] = useState([]);
-    const { id } = useParams();
+    const residentId = Cookies.get("residentId");
+    const buildingID = Cookies.get("buildingID");
 
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await getServiceRequest();
-                if (response?.data?.items) setRequests(response.data?.items);
+                const data = await getBuilding(residentId, buildingID);
+                const apartmentIds = data?.data || [];
+    
+                const responses = await Promise.all(
+                    apartmentIds.map(item => getDetailVehicle(item.apartmentId))
+                );
+                
+                const allItems = responses
+                .flatMap(response => response?.data || []);
+                
+                setRequests(allItems);
             } catch (error) {
                 console.error(error);
             }
         };
+        
         fetchRequests();
-    }, []);
+    }, [residentId, buildingID]);
+    
     // const requests = [
     //     { serviceName: 'Gửi xe ô tô', submissionDate: '2024-11-01', room: '101', status: 'Đang xử lý', details: 'Chi tiết đơn 1' },
     //     { serviceName: 'Gửi xe máy', submissionDate: '2024-10-28', room: '102', status: 'Hoàn thành', details: 'Chi tiết đơn 2' },
@@ -34,20 +47,23 @@ const ViewRequests = () => {
     // ];
 
     const columns = [
+        { esName: 'apartment', name: 'Tên căn hộ' },
+        { esName: 'building', name: 'Tòa nhà' },
+        { esName: 'createdDate', name: 'Ngày tạo' },
+        { esName: 'note', name: 'Ghi chú' },
+        { esName: 'processedDate', name: 'Ngày xử lý' },
+        { esName: 'purpose', name: 'Mục đích' },
+        { esName: 'quantityOrArea', name: 'Số lượng/Diện tích' },
         { esName: 'serviceName', name: 'Tên dịch vụ' },
-        { esName: 'submissionDate', name: 'Ngày gửi' },
-        { esName: 'room', name: 'Phòng' },
         { esName: 'status', name: 'Trạng thái' },
+        { esName: 'unitPrice', name: 'Đơn giá' },
         { esName: 'details', name: 'Chi tiết' },
     ];
 
     const paginatedRows = requests && requests.length > 0 ? requests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((request) => ({
-        serviceName: request.serviceType,
-        submissionDate: new Date(request.date).toLocaleDateString(),
-        room: request.building,
-        status: request.status,
+       ...request,
         details: (
-          <Button variant="outlined" onClick={() => navigate(`/xem-chi-tiet-don/${request.serviceContractId}`, { state: { request } })}>
+          <Button variant="outlined" onClick={() => navigate(`/xem-chi-tiet-don/${request.serviceContractId}&purpose=${request.purpose}`, { state: { request } })}>
               Xem
           </Button>
       ),

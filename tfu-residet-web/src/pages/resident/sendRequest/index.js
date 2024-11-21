@@ -65,7 +65,6 @@ const SendRequest = () => {
                 setServiceTypesArr(resServiceTypes.data);
                 const resServiceName = await getServices();
                 setServiceNameArr(resServiceName.data);
-                console.log(resServiceName)
             } catch (error) {
 
             }

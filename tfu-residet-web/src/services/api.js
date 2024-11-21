@@ -36,7 +36,6 @@ const defaultHeader = {
 }
 export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
     try {
-        console.log(defaultHeader.Authorization)
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: "POST",
             headers: header,
@@ -55,8 +54,6 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
 
 // Tương tự cho PUT và DELETE
 export const putData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
-    console.log(data);
-    
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'PUT',

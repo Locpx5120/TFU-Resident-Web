@@ -113,8 +113,6 @@ const DetailHouseHold = () => {
 
   const handleSaveMember = async (memberData) => {
     if (modalMode.mode === 'add') {
-      console.log(memberData);
-      
       try {
         const data = await addResident({
             Phone: memberData.phoneNumber,

@@ -17,13 +17,11 @@ const PersonalInfoModal = ({ data, isModalOpen, setIsModalOpen }) => {
     form
       .validateFields()
       .then((values) => {
-        console.log("Updated Values:", values);
         message.success("Thông tin cá nhân đã được cập nhật!");
         setIsModalOpen(false);
         form.resetFields();
       })
       .catch((error) => {
-        console.log("Validation Failed:", error);
       });
   };
 

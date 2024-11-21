@@ -117,7 +117,7 @@ const DetailHouseHoldResident = () => {
       try {
         const response = await addMemberInApartment({
             phoneNumber: memberData.phoneNumber,
-            MemberName: memberData.MemberName,
+            memberName: memberData.memberName,
             email: memberData.email,
             apartmentId: id,
           });
@@ -155,7 +155,7 @@ const DetailHouseHoldResident = () => {
   };
 
   const modalFields = [
-    <TextField fullWidth label="Tên thành viên" name="MemberName" />,
+    <TextField fullWidth label="Tên thành viên" name="memberName" />,
     <TextField fullWidth label="Điện thoại" name="phoneNumber" />,
     <TextField fullWidth label="Email" name="email" />,
   ];

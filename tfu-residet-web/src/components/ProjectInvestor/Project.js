@@ -30,11 +30,9 @@ const Project = () => {
     }, [page, rowsPerPage, isOpenCreate, isOpenEdit]);
     const fetchData = async () => {
         try {
-            console.log(header.Authorization)
             const data = await viewManager("projects");
             setData(data.data);
         } catch (e) {
-            console.log(e)
         }
 
     };

@@ -52,7 +52,6 @@ const Login = () => {
             }
         } catch (error) {
             dispatch({type: "LOGIN_FAILURE", payload: error.response?.data?.message || error.message});
-            console.log('aaa', error)
             Swal.fire({
                 icon: 'error',
                 title: 'Đăng nhập thất bại',

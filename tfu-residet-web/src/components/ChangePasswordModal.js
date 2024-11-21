@@ -3,8 +3,6 @@ import { Modal, Form, Input, message } from 'antd';
 
 const ChangePasswordModal = ({ isModalOpen, setIsModalOpen }) => {
   const [form] = Form.useForm();
-  console.log(isModalOpen);
-  
 
   const handleOk = () => {
     form
@@ -19,7 +17,6 @@ const ChangePasswordModal = ({ isModalOpen, setIsModalOpen }) => {
         }
       })
       .catch(info => {
-        console.log("Validate Failed:", info);
       });
   };
 
