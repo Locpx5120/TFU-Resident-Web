@@ -5,6 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 import {authService, loginApi} from "../services/authService";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
@@ -30,15 +31,15 @@ const Login = () => {
             if (!res.ok) alert(res.message)
             if (res.data && res.data .token) {
                 Cookies.set('accessToken', res.data.token, {expires: 1});
-
+                const decoded = jwtDecode(res.data.token).role;
+                Cookies.set('role', decoded, {expires: 1});
+                dispatch({type: "LOGIN_SUCCESS", payload: decoded});
                 const isNew = localStorage.getItem('isNew') || false;
 
                 if (isNew === 'true') {
                     navigate('/change-password');
                     return;
                 }
-                dispatch({type: "LOGIN_SUCCESS", payload: res.data.user});
-
                 Swal.fire({
                     icon: 'success',
                     title: 'Đăng nhập thành công',

@@ -11,6 +11,10 @@ const LogoutButton = () => {
   const [isOpenUser, setIsOpenUser] = useState(false);
   const handleLogout = () => {
      Cookies.remove('accessToken');
+     Cookies.remove('buildingID');
+     Cookies.remove('residentId');
+     Cookies.remove('role');
+     sessionStorage.removeItem('hasReloaded');
     window.location.href = '/login';
   };
 

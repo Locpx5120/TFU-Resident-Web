@@ -5,6 +5,7 @@ import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import Swal from "sweetalert2";
 import {authService, loginBuildingApi} from "../services/authService";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const LoginBuilding = () => {
     const location = useLocation();
@@ -35,10 +36,12 @@ const LoginBuilding = () => {
             const result = await loginBuildingApi(credentials, buildingId);
             if (!result.success) alert(result.message)
             if (result.data && result.data.token) {
+                const decoded = jwtDecode(result.data.token).role;
+                Cookies.set('role', decoded, {expires: 1});
                 Cookies.set('accessToken', result.data.token, {expires: 1});
                 Cookies.set('buildingID', buildingId, {expires: 1});
                 Cookies.set('residentId', residentId, {expires: 1});
-                dispatch({type: "LOGIN_SUCCESS", payload: result.data.user});
+                dispatch({type: "LOGIN_SUCCESS", payload: decoded});
 
                 Swal.fire({
                     icon: 'success',

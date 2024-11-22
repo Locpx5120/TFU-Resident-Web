@@ -94,7 +94,7 @@ export const loginApi = async (credentials) => {
 }
 
 export const loginBuildingApi = async (credentials, buildingId) => {
-    const header: Headers = new Headers();
+    const header = new Headers();
     header.set('Content-Type', 'application/json');
     header.set('BuildingPermalink', buildingId)
     return await postData('/auth/token', credentials,header, endpointUrl.BUILDING_URL)
