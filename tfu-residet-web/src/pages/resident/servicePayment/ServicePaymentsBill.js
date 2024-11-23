@@ -29,7 +29,13 @@ const ServicePaymentsBill = () => {
         totalAmount: 0,
     });
 
-    const openModal = () => setModalIsOpen(true);
+    const openModal = () => {
+        if(payments?.services?.length < 1) {
+            Swal.fire('Thông báo', 'Không có dịch vụ để thanh toán', 'info');
+            return;
+        }
+        setModalIsOpen(true)
+    };
     const closeModal = () => setModalIsOpen(false);
 
     useEffect(() => {
