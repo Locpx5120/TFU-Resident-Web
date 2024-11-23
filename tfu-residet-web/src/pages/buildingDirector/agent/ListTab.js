@@ -47,7 +47,6 @@ const ListTab = () => {
         const data = await getStaff();
         setEmployees(data.data);
       } catch (error) {
-        console.log(error);
       }
     }
     fetchEmployees();

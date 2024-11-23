@@ -80,7 +80,7 @@ const SendRequest = () => {
         }
     ));
 
-    const optionServiceName = serviceNameArr?.map((serviceName) => (
+    const optionServiceName = serviceNameArr?.filter(item => item.serviceName !== 'Gia hạn hợp đồng')?.map((serviceName) => (
         {
             label: serviceName.serviceName,
             value: serviceName.id

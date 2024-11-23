@@ -1,1 +1,0 @@
-//Hàm liên quan đến thông báo

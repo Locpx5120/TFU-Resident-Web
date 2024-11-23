@@ -23,7 +23,6 @@ export const getData = async (endpoint, baseURL = endpointUrl.RESIDENT_URL, head
         return await response.json();
     } catch (error) {
         console.error("Error fetching data:", error);
-        throw error;
     }
 };
 
@@ -48,7 +47,6 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
         return await response.json();
     } catch (error) {
         console.error("Error posting data:", error);
-        throw error;
     }
 };
 

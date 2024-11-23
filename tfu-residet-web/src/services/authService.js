@@ -70,6 +70,7 @@ const authReducer = (state, action) => {
 // Tên hàm đổi thành AuthServiceProvider (bắt đầu bằng chữ hoa)
 export const AuthServiceProvider = ({children}) => {
     const [state, dispatch] = useReducer(authReducer, initial_state);
+console.log(state);
 
     useEffect(() => {
         localStorage.setItem("user", JSON.stringify(state.user));
@@ -94,7 +95,7 @@ export const loginApi = async (credentials) => {
 }
 
 export const loginBuildingApi = async (credentials, buildingId) => {
-    const header: Headers = new Headers();
+    const header = new Headers();
     header.set('Content-Type', 'application/json');
     header.set('BuildingPermalink', buildingId)
     return await postData('/auth/token', credentials,header, endpointUrl.BUILDING_URL)

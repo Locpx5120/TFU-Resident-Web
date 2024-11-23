@@ -5,6 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 import {authService, loginApi} from "../services/authService";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
@@ -29,8 +30,11 @@ const Login = () => {
             const res = await loginApi(credentials)
             if (!res.ok) alert(res.message)
             if (res.data && res.data .token) {
+                const decoded = jwtDecode(res.data.token);
+                Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', res.data.token, {expires: 1});
-
+                Cookies.set('residentId', decoded.nameid, {expires: 1});
+                dispatch({type: "LOGIN_SUCCESS", payload: decoded});
                 const isNew = localStorage.getItem('isNew') || false;
 
                 if (isNew === 'true') {
