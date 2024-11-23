@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {GetBuildings, viewManager} from "../../services/buildingService";
 import Swal from "sweetalert2";
 import {
@@ -6,93 +6,115 @@ import {
     Dialog,
     DialogActions,
     DialogTitle,
-    FormControl,
+    FormControl, FormControlLabel, FormLabel,
     InputLabel,
-    MenuItem,
+    MenuItem, Radio, RadioGroup,
     Select,
     TextField
 } from "@mui/material";
+import moment from "moment";
+import {DatePicker} from "antd";
+import {createAdmin, updateAdmin} from "../../services/AdminService";
+import {updateUser} from "../../services/userService";
 
 const initialAdmin = {
     name: '',
-    projectId: '',
-    buildingId: '',
+    dob: new Date(),
+    gender: 'Male',
     phone: '',
     email: ''
 }
 const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
-    const [buildings, setBuilding] = useState([]);
-    const [projects, setProject] = useState([]);
-    const [adminEdit, setAdminEdit] = useState();
     const [admin, setAdmin] = useState(initialAdmin)
     useEffect(() => {
-        fetchBuilding();
-        fetchProject();
         setFormInit();
-    }, [ isUpdate, item]);
+    }, [isUpdate, item]);
     const setFormInit = () => {
         if (isUpdate) {
-        setAdmin({name: item.name, projectsId: item.project, buildingId: item.building, phone: item.phone, email: item.email })
-        }else {
+            setAdmin({
+                name: item.userName,
+                dob: item.dob,
+                gender: item.genders,
+                phone: item.phone,
+                email: item.email
+            })
+        } else {
             setAdmin(initialAdmin)
         }
     }
-    const fetchBuilding = async () => {
-        try {
-            const response = await GetBuildings();
-            setBuilding(response.data);
-        } catch (e) {
-            Swal.fire('Lỗi', 'Lấy danh sách toà nhà thất bại', 'error');
-
-        }
-    }
-    const fetchProject = async () => {
-        try {
-            const response = await viewManager("projects");
-            setProject(response.data)
-        } catch (e) {
-            Swal.fire('Lỗi', 'Lấy danh sách dự án thất bại', 'error');
-
-        }
-    }
     const handleInputChange = (event) => {
-        const {name, value} = event.target;
+        const {name, value} = event?.target ?? event;
+        if (!name && !value) {
+            return
+        }
         setAdmin((prevData) => ({
             ...prevData,
             [name]: value,
         }));
 
     }
+    // const handleChange = (index, field, value) => {
+    //     console.log(alue)
+    //    };
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log('Form Data Submitted:', admin);
         // Add form submission logic here (e.g., send to API)
         if (isUpdate) {
             update();
-        }else {
+        } else {
             create();
         }
     };
     const create = async () => {
         try {
-            console.log('create');
-            onClose();
-        }catch (e) {
-
+            const response = await createAdmin(admin);
+            console.log(response)
+            if (response.code === 200) {
+                Swal.fire(
+                    'Đã thêm mới!',
+                    'Quản trị viên đã được thêm mới.',
+                    'success'
+                );
+            }
+        } catch (e) {
+            Swal.fire({
+                icon: "error",
+                title: "Có lỗi xảy ra!",
+                text: "Không thể tạo mới quản trị viên",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#3085d6",
+            });
         }
+        onClose();
     }
     const update = async () => {
         try {
             console.log('update')
-            onClose();
-        }catch (e) {
-
+            const response = await updateAdmin(admin);
+            console.log(response)
+            if (response.code === 200) {
+                Swal.fire(
+                    'Đã cập nhật!',
+                    'Quản trị viên đã được cập nhật.',
+                    'success'
+                );
+            }
+        } catch (e) {
+            Swal.fire({
+                icon: "error",
+                title: "Có lỗi xảy ra!",
+                text: "Không thể cập nhật quản trị viên",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#3085d6",
+            });
         }
+        onClose();
     }
     return (
         <>
             <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
-                <DialogTitle>Thêm quản trị viên</DialogTitle>
+                <DialogTitle>{!isUpdate ? 'Thêm' : 'Sửa'} quản trị viên</DialogTitle>
                 <div style={{padding: '1rem'}}>
                     <form onSubmit={handleSubmit}>
                         <TextField
@@ -107,35 +129,27 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
                             onChange={handleInputChange}
                             required
                         />
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Dự án</InputLabel>
-                            <Select
-                                name="projectId"
-                                value={admin.projectId}
+                        <DatePicker
+                            fullWidth
+                            placeholder="Ngày sinh"
+                            name="dob"
+                            value={admin.dob ? moment(admin.dob) : null}
+                            onChange={(date, dateString) => handleInputChange({name: 'dob', value: dateString})}
+                            required
+                            style={{width: '100%', margin: '8px 0', flex: '1 1 0'}}
+                        />
+                        <FormControl row>
+                            <FormLabel id="demo-controlled-radio-buttons-group">Giới tính </FormLabel>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                name="gender"
+                                value={admin.gender}
                                 onChange={handleInputChange}
-                                // required
                             >
-                                {projects.map((project) => (
-                                    <MenuItem key={project.id} value={project.id}>
-                                        {project.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Toà nhà </InputLabel>
-                            <Select
-                                name="buildingId"
-                                value={admin.buildingId}
-                                onChange={handleInputChange}
-                                required
-                            >
-                                {buildings.map((building) => (
-                                    <MenuItem key={building.id} value={building.id}>
-                                        {building.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                                <FormControlLabel value="Male" control={<Radio/>} label="Nam"/>
+                                <FormControlLabel value="Female" control={<Radio/>} label="Nữ"/>
+                            </RadioGroup>
                         </FormControl>
                         <TextField
                             autoFocus
@@ -164,7 +178,7 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
                         <DialogActions>
                             <Button onClick={onClose}>Hủy</Button>
                             <Button type="submit" variant="contained" color="primary">
-                                Thêm
+                                {!isUpdate ? 'Thêm' : 'Sửa'}
                             </Button>
                         </DialogActions>
                     </form>

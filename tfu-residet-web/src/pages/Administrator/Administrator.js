@@ -4,6 +4,9 @@ import TableCustom from "../../components/Table";
 import FormAdministrator from './FormAdmintrator';
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {viewManager} from "../../services/buildingService";
+import {deleteAdmin, viewAdminManager} from "../../services/AdminService";
+import Swal from "sweetalert2";
 
 const Administrator = () => {
     const [sortColumn, setSortColumn] = useState(0);
@@ -14,8 +17,27 @@ const Administrator = () => {
     const [isUpdate, setIsUpdate] = useState(false);
     const [column, setColumn] = useState(0);
     const [adminList, setAdminList] = useState([])
-    const [chooseItem, setChooseItem] = useState()
-    const handleDeleteClick = (item) => {
+    const [chooseItem, setChooseItem] = useState();
+    const handleDeleteClick = async (item) => {
+        try {
+            const response = await deleteAdmin(item.id)
+            if (response.code === 200) {
+                Swal.fire(
+                    'Đã xoá mới!',
+                    'Quản trị viên đã được xoá.',
+                    'success'
+                );
+                fetchAdmin();
+            }
+        } catch (e) {
+            Swal.fire({
+                icon: "error",
+                title: "Có lỗi xảy ra!",
+                text: "Không thể xoá quản trị viên",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#3085d6",
+            });
+        }
     };
     const handleEditClick = (item) => {
         setIsOpen(true);
@@ -23,33 +45,30 @@ const Administrator = () => {
         setChooseItem(item)
     };
     useEffect(() => {
-        const fetchAdmin = () => {
-            const listAdmin = [
-                 {
-                    name: 'a',
-                    building: 'a',
-                    project: 'a',
-                    phone: 'a',
-                    email: 'a',
-                }
-            ]
-
-            setAdminList(listAdmin.map((items) =>( {...items, action: (
-            <Box sx={{display: "flex", justifyContent: "center", gap: 1}}>
-                <AutoFixHighIcon
-                    onClick={() => handleEditClick(items)}
-                    style={{cursor: "pointer"}}
-                />
-                <DeleteIcon
-                    onClick={() => handleDeleteClick(items)}
-                    style={{cursor: "pointer", color: "red"}}
-                />
-            </Box>
-        )})))
-        }
         fetchAdmin()
     }, [isOpen]);
+    const fetchAdmin = async () => {
+        try {
+            const response = await viewAdminManager(localStorage.getItem('user'));
+            const listAdmin = response.data;
+            setAdminList(listAdmin.map((items) => ({
+                ...items, action: (
+                    <Box sx={{display: "flex", justifyContent: "center", gap: 1}}>
+                        <AutoFixHighIcon
+                            onClick={() => handleEditClick(items)}
+                            style={{cursor: "pointer"}}
+                        />
+                        <DeleteIcon
+                            onClick={() => handleDeleteClick(items)}
+                            style={{cursor: "pointer", color: "red"}}
+                        />
+                    </Box>
+                )
+            })))
+        } catch (e) {
 
+        }
+    }
     const sortedRows = useMemo(() => {
         if (!sortColumn) return adminList;
 
@@ -154,11 +173,11 @@ const Administrator = () => {
     )
 }
 const columnData = [
-    {name: "Tên thành viên", align: "left", esName: "name", sortable: true},
-    {name: "Tên tòa nhà", align: "left", esName: "building", sortable: true},
-    {name: "Dự án", align: "left", esName: "project"},
+    {name: "Tên thành viên", align: "left", esName: "userName", sortable: true},
     {name: "Điện thoại", align: "left", esName: "phone"},
     {name: "Email", align: "left", esName: "email"},
+    {name: "Ngày sinh", align: "left", esName: "dob"},
+    {name: "Giới tính", align: "left", esName: "genders"},
     {name: "Thao tác", align: "left", esName: "action"},
 ];
 export default Administrator;
