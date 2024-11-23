@@ -39,12 +39,14 @@ import PaymentHistory from "../pages/buildingDirector/paymentHistory";
 import Notification from "../pages/buildingDirector/notification";
 import ViewRequests from "../pages/resident/viewRequests";
 import RequestDetail from "../pages/resident/viewRequests/RequestDetail";
+import ThirdPartyList from "../pages/buildingDirector/thirdParty";
 
 //receptionist
 import Receptionist from "../pages/receptionist";
 import HistoryPay from "../pages/receptionist/historyPay";
 import AccountantPage from "../pages/accountant/AccountantPage";
 import Adminitrative from "../pages/administrative";
+import DetailThirdParty from "../pages/buildingDirector/thirdParty/DetailThirdParty";
 // import Administrator from "../components/Administrator/Administrator";
 
 
@@ -191,12 +193,12 @@ export const routeResident = [
         component: <SendRequest/>,
         icon: <SettingsIcon/>,
     },
-    {
-        route: "/ben-thu-ba",
-        routeName: "Quản lí bên thứ ba",
-        component: <ThirdParty />,
-        icon: <ThirtyFpsOutlined />,
-    },
+    // {
+    //     route: "/ben-thu-ba",
+    //     routeName: "Quản lí bên thứ ba",
+    //     component: <ThirdParty />,
+    //     icon: <ThirtyFpsOutlined />,
+    // },
     {
         route: "/administrator",
         routeName: "Thành viên quản trị",
@@ -212,15 +214,15 @@ export const routeDirector = [
         component: <DirectorHomepage/>,
         icon: <WidgetsIcon/>,
     },
-    {
-        route: "/",
-        routeName: "Dashboard",
-        component: <DirectorPage/>,
-        icon: <WidgetsIcon/>,
-    },
+    // {
+    //     route: "/",
+    //     routeName: "Dashboard",
+    //     component: <DirectorPage/>,
+    //     icon: <WidgetsIcon/>,
+    // },
     {
         route: "/thanh-vien",
-        routeName: "Quản lý thành viên",
+        routeName: "Quản lý nhân viên",
         component: <SalaryListPage/>,
         icon: <PersonIcon/>,
     },
@@ -248,7 +250,34 @@ export const routeDirector = [
         component: <PaymentHistory/>,
         icon: <HistoryIcon/>,
     },
+    {
+        route: "/ben-thu-ba",
+        routeName: "Quản lí bên thứ ba",
+        component: <ThirdPartyList />,
+        icon: <ThirtyFpsOutlined />,
+    },
+    {
+        route: "/ben-thu-ba/:id",
+        routeName: "Quản lí bên thứ ba",
+        hidden: true,
+        component: <DetailThirdParty />,
+    },
 ];
+
+export const routeThirdParty = [
+    {
+        route: "/",
+        routeName: "Trang chính",
+        component: <DirectorHomepage/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/ben-thu-ba",
+        routeName: "Quản lí bên thứ ba",
+        component: <ThirdParty />,
+        icon: <ThirtyFpsOutlined />,
+    },
+]
 
 export const routeReceptionist = [
     {

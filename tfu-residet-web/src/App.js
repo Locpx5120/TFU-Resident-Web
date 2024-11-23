@@ -11,9 +11,10 @@ import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import OTPInput from './pages/OTPInput';
 import ChangePassword from './pages/ChangePassword';
-import { routeArray, routeResident, routeDirector, routeAccountant, routeAdmin } from "./constants/routes";
+import { routeArray, routeResident, routeDirector, routeAccountant, routeAdmin, routeThirdParty } from "./constants/routes";
 import LoginBuilding from "./pages/LoginBuilding";
 import { authService } from "./services/authService";
+import Cookies from 'js-cookie';
 
 function App() {
   const { user } = useContext(authService);
@@ -23,12 +24,13 @@ function App() {
       case 'Resident': return routeResident;
       case 'Building Director': return routeDirector;
       case 'Accountant': return routeAccountant;
+      case 'Bên thứ ba': return routeThirdParty;
       case 'Administrator': return routeAdmin;
       default: return routeArray;
     }
   }, [user]);
-
-  const routes = getRoutesByRole(user);
+  
+  const routes = getRoutesByRole(!user ? Cookies.get('role') : user);
 
   const renderRoutes = (routeList, parentPath = '') => {
     return routeList.map((item) => {

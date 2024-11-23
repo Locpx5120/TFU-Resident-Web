@@ -70,6 +70,7 @@ const authReducer = (state, action) => {
 // Tên hàm đổi thành AuthServiceProvider (bắt đầu bằng chữ hoa)
 export const AuthServiceProvider = ({children}) => {
     const [state, dispatch] = useReducer(authReducer, initial_state);
+console.log(state);
 
     useEffect(() => {
         localStorage.setItem("user", JSON.stringify(state.user));

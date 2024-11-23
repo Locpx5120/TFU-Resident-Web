@@ -2,99 +2,107 @@ import React, { useEffect, useMemo, useState } from 'react';
 import TableCustom from '../../../components/Table';
 import { Button, Card, Box, TextField, MenuItem } from '@mui/material';
 import CustomModal from '../../../common/CustomModal';
-import { getThirdList } from '../../../services/thirdpartyService';
+import { extendContract, getContracts } from '../../../services/thirdpartyService';
+import { listAllPackage } from '../../../services/PackageService';
+import { getServices } from '../../../services/apartmentService';
+import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
+import moment from 'moment';
+import { formatCurrency } from '../../../utils/calculatePrice';
 
 const ThirdParty = () => {
+    const thirdPartyId = Cookies.get('residentId')
     const [modalOpen, setModalOpen] = useState(false);
+    const [reload, setReload] = useState(false);
     const [data, setData] = useState([]);
+    const [packageArr, setPackagesArr] = useState([]);
+    const [serviceNameArr, setServiceNameArr] = useState([]);
     const [selectedThirdParty, setSelectedThirdParty] = useState({});
     const [modalMode, setModalMode] = useState({ mode: 'add', title: 'Thêm hợp đồng' });
 
     const columnData = [
         { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
-        { esName: 'companyName', name: 'Tên công ty', width: 200 },
-        { esName: 'floor', name: 'Tầng', width: 100 },
-        { esName: 'room', name: 'Phòng', width: 100 },
+        { esName: 'floorNumber', name: 'Tầng', width: 100 },
+        { esName: 'roomNumber', name: 'Phòng', width: 100 },
         { esName: 'area', name: 'Diện tích mặt bằng (m2)', width: 200 },
         { esName: 'startDate', name: 'Ngày thuê', width: 150 },
         { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
-        { esName: 'servicePrice', name: 'Giá dịch vụ', width: 150 },
+        { esName: 'status', name: 'Trạng thái', width: 150 },
+        { esName: 'price', name: 'Giá dịch vụ', width: 150 },
     ];
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getThirdList();
-            setData(res.data);
-        }
+            const res = await getContracts();
+            const packages = await listAllPackage();
+            const resServiceName = await getServices();
+            setServiceNameArr(resServiceName.data);
+            setPackagesArr(packages.data);
+            setData(res?.data || []);
+        };
         fetchData();
-    }, []);
+    }, [reload]);
 
-    const rows = useMemo(() => data, [data]);
+    const rows = useMemo(() => {
+        return data.map(item => ({
+            ...item,
+            startDate: moment(item.startDate).isValid() ? moment(item.startDate).format('YYYY-MM-DD') : null,
+            endDate: moment(item.endDate).isValid() ? moment(item.endDate).format('YYYY-MM-DD') : null,
+            price: formatCurrency(item.price),
+        }));
+    }, [data]);
+
+    const optionServiceName = serviceNameArr?.filter(item => item.serviceName === 'Gia hạn hợp đồng').map((serviceName) => (
+        {
+            label: serviceName.serviceName,
+            value: serviceName.id
+        }
+    ));
+
+    const optionPackageName = packageArr?.map((pkg) => (
+        {
+            label: pkg.name,
+            value: pkg.id
+        }
+    ));
 
     const modalFields = [
         <TextField
             fullWidth
+            label="Tên dịch vụ"
+            name="serviceId"
+            value={selectedThirdParty.serviceId}
+            onChange={(e) => handleFieldChange('serviceId', e.target.value)}
             select
-            label="Tòa nhà"
-            name="building"
-            value={selectedThirdParty.building || ''}
-            onChange={(e) => handleFieldChange('building', e.target.value)}
         >
-            {['Tòa A', 'Tòa B', 'Tòa C'].map((option) => (
-                <MenuItem key={option} value={option}>
-                    {option}
+            {optionServiceName.map(item => (
+                <MenuItem key={item.value} value={item.value}>
+                    {item.label}
                 </MenuItem>
             ))}
         </TextField>,
         <TextField
             fullWidth
-            label="Diện tích (m2)"
-            name="area"
-            type="number"
-            value={selectedThirdParty.area || ''}
-            onChange={(e) => handleFieldChange('area', e.target.value)}
-        />,
+            select
+            label="Gói"
+            name="packageServiceId"
+            value={selectedThirdParty.packageServiceId || ''}
+            onChange={(e) => handleFieldChange('packageServiceId', e.target.value)}
+        >
+            {optionPackageName.map(item => (
+                <MenuItem key={item.value} value={item.value}>
+                    {item.label}
+                </MenuItem>
+            ))}
+        </TextField>,
         <TextField
             fullWidth
-            label="Số tầng"
-            name="floor"
-            type="number"
-            value={selectedThirdParty.floor || ''}
-            onChange={(e) => handleFieldChange('floor', e.target.value)}
-        />,
-        <TextField
-            fullWidth
-            label="Số phòng"
-            name="room"
-            type="number"
-            value={selectedThirdParty.room || ''}
-            onChange={(e) => handleFieldChange('room', e.target.value)}
-        />,
-        <TextField
-            fullWidth
-            label="Ngày bắt đầu thuê"
-            name="startDate"
-            type="date"
-            InputLabelProps={{ shrink: true }}
-            value={selectedThirdParty.startDate || ''}
-            onChange={(e) => handleFieldChange('startDate', e.target.value)}
-        />,
-        <TextField
-            fullWidth
-            label="Ngày hết hạn thuê"
-            name="endDate"
-            type="date"
-            InputLabelProps={{ shrink: true }}
-            value={selectedThirdParty.endDate || ''}
-            onChange={(e) => handleFieldChange('endDate', e.target.value)}
-        />,
-        <TextField
-            fullWidth
-            label="Số tiền"
-            name="servicePrice"
-            type="number"
-            value={selectedThirdParty.servicePrice || ''}
-            onChange={(e) => handleFieldChange('servicePrice', e.target.value)}
+            label="Mục đích"
+            name="purpose"
+            multiline
+            rows={4}
+            value={selectedThirdParty.purpose || ''}
+            onChange={(e) => handleFieldChange('purpose', e.target.value)}
         />,
     ];
 
@@ -108,45 +116,36 @@ const ThirdParty = () => {
     const handleOpenModal = (mode, title) => {
         setModalMode({ mode, title });
         setModalOpen(true);
+        setSelectedThirdParty(prev => ({
+            ...prev,
+            nameService: 'Gia hạn hợp đồng'
+        }));
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
-        setSelectedThirdParty({});
     };
 
-    const handleSaveThirdParty = () => {
-        handleCloseModal();
+    const handleSaveThirdParty = async (data) => {
+        try {
+            const res = await extendContract({
+                ...data,
+                apartmentId: data[0]?.apartmentId,
+            });
+            if (res?.success) {
+                setReload(!reload);
+                handleCloseModal();
+                Swal.fire('Thành công', res.message, 'success');
+            } else {
+                Swal.fire('Thất bại', res?.message, 'error');
+            }
+        } catch (err) {
+            Swal.fire('Thất bại', 'Email đã tồn tại', 'error');
+        }
     };
 
     return (
         <section className="content">
-            <Box
-                sx={{
-                    display: 'flex',
-                    gap: 2,
-                    flexWrap: 'wrap',
-                    alignItems: 'flex-end',
-                    mb: 2,
-                }}
-            >
-                <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleOpenModal('add', 'Thêm hợp đồng bên thuê mặt bằng')}
-                    sx={{ height: '40px' }}
-                >
-                    Thêm hợp đồng bên thuê mặt bằng
-                </Button>
-                <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleOpenModal('update', 'Cập nhật hợp đồng bên thuê mặt bằng')}
-                    sx={{ height: '40px' }}
-                >
-                    Cập nhật hợp đồng bên thuê mặt bằng
-                </Button>
-            </Box>
             <Card sx={{ maxHeight: '700px' }}>
                 <TableCustom
                     columns={columnData}
@@ -156,6 +155,26 @@ const ThirdParty = () => {
                         handleOpenModal('update', 'Cập nhật hợp đồng bên thuê mặt bằng');
                     }}
                 />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 2,
+                        flexWrap: 'wrap',
+                        alignItems: 'flex-end',
+                        justifyContent: 'flex-end',
+                        my: 4,
+                        mx: 2,
+                    }}
+                >
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleOpenModal('add', 'Gửi đơn cho phòng hành chính')}
+                        sx={{ height: '40px' }}
+                    >
+                        Gia hạn hợp đồng
+                    </Button>
+                </Box>
             </Card>
             <CustomModal
                 open={modalOpen}

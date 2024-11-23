@@ -7,24 +7,41 @@ const header = {
             'buildingPermalink': Cookies.get("buildingID"),
 }
 
-export const getThirdList = async (CompanyName, Status) => {
-    if(!CompanyName || !Status) {
-        return await getData(`/thirdparty/list?CompanyName`, endpointUrl.BUILDING_URL, header);
+export const getThirdList = async (CompanyName = '', Status = '') => {
+    let queryParams = [];
+
+    if (CompanyName.trim()) {
+        queryParams.push(`CompanyName=${encodeURIComponent(CompanyName)}`);
     }
-    return await getData(`/thirdparty/list?CompanyName=${CompanyName}&Status=${Status}`, endpointUrl.BUILDING_URL, header);
-}
+    if (Status.trim()) {
+        queryParams.push(`Status=${encodeURIComponent(Status)}`);
+    }
+
+    const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+    const url = `/thirdparty/list${queryString}`;
+
+    return await getData(url, endpointUrl.BUILDING_URL, header);
+};
+
 export const getContracts = async () => {
     return await getData(`/thirdparty/contracts`, endpointUrl.BUILDING_URL, header);
 }
-export const getContractDetail = async (contractId) => {
-    return await getData(`/thirdparty/contract-detail/${contractId}`, endpointUrl.BUILDING_URL, header);
+export const getContractDetail = async (thirdPartyId) => {
+    return await postData(`/thirdparty/details-contract`, {thirdPartyId}, header, endpointUrl.BUILDING_URL);
+}
+
+export const createThirdParty = async (body) => {
+    return await postData(`/thirdparty/add`, body, header, endpointUrl.BUILDING_URL);
+}
+export const extendContract = async (body) => {
+    return await postData(`/service-contract/extend-contract`, body, header, endpointUrl.BUILDING_URL);
 }
  
 //  export const deleteThirdOne = async (id) => {
 //      return await deleteData('/thirdparty', {: id}, header)
 //  }
  export const addContractThird = async (body) => {
-    return await postData(`/add-contract`, body, endpointUrl.BUILDING_URL, header);
+    return await postData(`/thirdparty/add-contract`, body, header, endpointUrl.BUILDING_URL);
  }
  export const updateStaff = async (body) => {
     return await putData(`/staff/listEmployee`,body, endpointUrl.BUILDING_URL, header);

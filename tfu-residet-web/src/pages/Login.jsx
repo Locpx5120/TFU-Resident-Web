@@ -30,9 +30,10 @@ const Login = () => {
             const res = await loginApi(credentials)
             if (!res.ok) alert(res.message)
             if (res.data && res.data .token) {
+                const decoded = jwtDecode(res.data.token);
+                Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', res.data.token, {expires: 1});
-                const decoded = jwtDecode(res.data.token).role;
-                Cookies.set('role', decoded, {expires: 1});
+                Cookies.set('residentId', decoded.nameid, {expires: 1});
                 dispatch({type: "LOGIN_SUCCESS", payload: decoded});
                 const isNew = localStorage.getItem('isNew') || false;
 

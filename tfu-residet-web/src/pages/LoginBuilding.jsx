@@ -36,12 +36,12 @@ const LoginBuilding = () => {
             const result = await loginBuildingApi(credentials, buildingId);
             if (!result.success) alert(result.message)
             if (result.data && result.data.token) {
-                const decoded = jwtDecode(result.data.token).role;
-                Cookies.set('role', decoded, {expires: 1});
+                const decoded = jwtDecode(result.data.token);
+                Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', result.data.token, {expires: 1});
                 Cookies.set('buildingID', buildingId, {expires: 1});
-                Cookies.set('residentId', residentId, {expires: 1});
-                dispatch({type: "LOGIN_SUCCESS", payload: decoded});
+                Cookies.set('residentId', decoded.nameid, {expires: 1});
+                dispatch({type: "LOGIN_SUCCESS", payload: decoded?.role });
 
                 Swal.fire({
                     icon: 'success',
