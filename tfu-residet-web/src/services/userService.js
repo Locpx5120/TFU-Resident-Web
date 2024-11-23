@@ -1,4 +1,4 @@
-import {deleteData, postData} from "./api";
+    import {deleteData, postData} from "./api";
 
 export const viewUserManager = async (name) => {
     return await postData('/user/viewManager', {

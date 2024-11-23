@@ -47,7 +47,7 @@ import HistoryPay from "../pages/receptionist/historyPay";
 import AccountantPage from "../pages/accountant/AccountantPage";
 import Adminitrative from "../pages/administrative";
 import DetailThirdParty from "../pages/buildingDirector/thirdParty/DetailThirdParty";
-// import Administrator from "../components/Administrator/Administrator";
+import Administrator from "../pages/Administrator/Administrator";
 
 
 export const routeArray = [
@@ -202,7 +202,7 @@ export const routeResident = [
     {
         route: "/administrator",
         routeName: "Thành viên quản trị",
-        // component: <Administrator />,
+        component: <Administrator />,
         icon: <ThermostatAutoOutlined />,
     },
 ];
