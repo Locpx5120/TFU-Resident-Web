@@ -103,7 +103,6 @@ const Administrator = () => {
 
     return (
         <section className="content">
-            administrator
             <FormAdministrator
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
