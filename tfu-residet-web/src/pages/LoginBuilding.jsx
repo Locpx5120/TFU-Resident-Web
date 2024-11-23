@@ -37,13 +37,14 @@ const LoginBuilding = () => {
             if (!result.success) alert(result.message)
             if (result.data && result.data.token) {
                 const decoded = jwtDecode(result.data.token);
+                console.log('decoded', decoded);
+                
                 Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', result.data.token, {expires: 1});
                 Cookies.set('buildingID', buildingId, {expires: 1});
                 Cookies.set('residentId', decoded.nameid, {expires: 1});
-                dispatch({type: "LOGIN_SUCCESS", payload: decoded?.role });
+                dispatch({type: "LOGIN_SUCCESS", payload: decoded.role });
                 Cookies.set('residentId', residentId, {expires: 1});
-                dispatch({type: "LOGIN_SUCCESS", payload: credentials.email});
 
                 Swal.fire({
                     icon: 'success',
