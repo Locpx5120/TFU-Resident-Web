@@ -20,7 +20,7 @@ import {updateUser} from "../../services/userService";
 const initialAdmin = {
     name: '',
     dob: new Date(),
-    gender: 'Male',
+    genders: 'Male',
     phone: '',
     email: ''
 }
@@ -34,7 +34,7 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
             setAdmin({
                 name: item.userName,
                 dob: item.dob,
-                gender: item.genders,
+                genders: item.genders,
                 phone: item.phone,
                 email: item.email
             })
@@ -144,7 +144,7 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
                                 row
                                 aria-labelledby="demo-controlled-radio-buttons-group"
                                 name="gender"
-                                value={admin.gender}
+                                value={admin.genders}
                                 onChange={handleInputChange}
                             >
                                 <FormControlLabel value="Male" control={<Radio/>} label="Nam"/>
