@@ -30,8 +30,7 @@ function App() {
     }
   }, [user]);
   
-  // const routes = getRoutesByRole(!user ? Cookies.get('role') : user);
-  const routes = getRoutesByRole('Building Director');
+  const routes = getRoutesByRole(!user ? Cookies.get('role') : user);
 
   const renderRoutes = (routeList, parentPath = '') => {
     return routeList.map((item) => {
