@@ -41,7 +41,6 @@ const Login = () => {
                     navigate('/change-password');
                     return;
                 }
-                dispatch({type: "LOGIN_SUCCESS", payload: credentials.email});
 
                 Swal.fire({
                     icon: 'success',

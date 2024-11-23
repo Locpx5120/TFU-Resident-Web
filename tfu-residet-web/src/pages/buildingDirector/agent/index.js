@@ -51,7 +51,7 @@ function SalaryListPage() {
       <Paper elevation={3} sx={{ p: 3 }}>
         <Tabs value={tab} onChange={handleTabChange} aria-label="salary tabs">
           <Tab label="Danh sách" />
-          <Tab label="Lương" />
+          {/* <Tab label="Lương" /> */}
         </Tabs>
         
         <Box sx={{ mt: 3 }}>

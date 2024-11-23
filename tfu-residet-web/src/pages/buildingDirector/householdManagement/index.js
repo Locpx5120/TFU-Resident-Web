@@ -96,10 +96,14 @@ const HouseHold = () => {
       }
     } else {
       try {
+        console.log(houseHoldData);
         const data = await updateOwner({
-            ...houseHoldData,
-            id: selectedHouseHold.id
-          });
+          floorNumber: houseHoldData.floorNumber,
+          id: houseHoldData.id,
+          email: houseHoldData.email,
+          roomNumber: houseHoldData.email,
+          // buildingId: houseHoldData.id,
+        });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {

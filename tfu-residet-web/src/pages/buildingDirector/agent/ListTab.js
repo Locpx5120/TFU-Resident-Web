@@ -40,7 +40,6 @@ const ListTab = () => {
     fetchRoles();
   }, [])
 
-  //https://localhost:7082/api/staff/listEmployee
   useEffect(() => {
     const fetchEmployees = async () => {
       try {

@@ -52,13 +52,14 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
 
 // Tương tự cho PUT và DELETE
 export const putData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_URL, header = defaultHeader) => {
+    console.log(endpoint, data, baseURL, header );
+    
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: 'PUT',
             headers: header,
             body: JSON.stringify(data)
         });
-        if (!response.ok) throw new Error("Network response was not ok");
         return await response.json();
     } catch (error) {
         console.error("Error updating data:", error);

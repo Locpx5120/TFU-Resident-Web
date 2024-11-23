@@ -126,7 +126,7 @@ const ThirdParty = () => {
         setModalOpen(false);
     };
 
-    const handleSaveThirdParty = async (data) => {
+     const handleSaveThirdParty = async (data) => {
         try {
             const res = await extendContract({
                 ...data,

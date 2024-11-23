@@ -37,7 +37,6 @@ const LoginBuilding = () => {
             if (!result.success) alert(result.message)
             if (result.data && result.data.token) {
                 const decoded = jwtDecode(result.data.token);
-                console.log('decoded', decoded);
                 
                 Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', result.data.token, {expires: 1});
