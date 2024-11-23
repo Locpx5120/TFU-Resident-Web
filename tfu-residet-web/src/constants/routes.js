@@ -70,10 +70,10 @@ export const routeArray = [
         icon: <ApartmentIcon/>,
     },
     {
-        route: "/thanh-vien",
-        routeName: "Thành viên",
-        component: <>Chua Co</>,
-        icon: <PersonIcon/>,
+        route: "/administrator",
+        routeName: "Thành viên quản trị",
+        component: <Administrator />,
+        icon: <ThermostatAutoOutlined />,
     },
     {
         route: "/cai-dat",
@@ -199,12 +199,6 @@ export const routeResident = [
     //     component: <ThirdParty />,
     //     icon: <ThirtyFpsOutlined />,
     // },
-    {
-        route: "/administrator",
-        routeName: "Thành viên quản trị",
-        component: <Administrator />,
-        icon: <ThermostatAutoOutlined />,
-    },
 ];
 
 export const routeDirector = [
