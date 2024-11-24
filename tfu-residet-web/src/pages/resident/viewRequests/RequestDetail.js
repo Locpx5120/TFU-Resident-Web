@@ -176,9 +176,10 @@ const RequestDetail = () => {
                 </div>
             </div>
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                <Button onClick={handleSubmit} variant="contained" color="primary">
+                {request.status !== 'Approved' && <Button onClick={handleSubmit} variant="contained" color="primary">
                     Duyệt
-                </Button>
+                </Button>}
+
                 <Button
                     variant="outlined"
                     color="secondary"
