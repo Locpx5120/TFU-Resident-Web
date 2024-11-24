@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
     Box,
     Card,
@@ -7,13 +7,15 @@ import {
     MenuItem,
     Typography,
 } from "@mui/material";
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import TableCustom from '../../../components/Table';
-import { detailApartment, getServices } from "../../../services/apartmentService";
+import {detailApartment, getServices} from "../../../services/apartmentService";
 import Swal from 'sweetalert2';
+import {Calendar} from "primereact/calendar";
+import {Button} from "antd";
 
 const ServiceDetail = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [selectedService, setSelectedService] = useState({
@@ -22,6 +24,7 @@ const ServiceDetail = () => {
     });
     const [typeData, setTypeData] = useState([]);
     const [roomsData, setRoomsData] = useState([]);
+    const [dates, setDates] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,7 +43,6 @@ const ServiceDetail = () => {
         };
         fetchData();
     }, [id, selectedService]);
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -64,6 +66,14 @@ const ServiceDetail = () => {
             id: service.id,
         }));
     };
+    const handleDateChange = (e) => {
+        console.log(e)
+        setSelectedService((prev) => ({
+            ...prev,
+            startDateFrom: e ?? e[0],
+            startDateTo:  e[1] || e[0]
+        }));
+    }
 
     const paginatedRows = useMemo(() => {
         const startIndex = page * rowsPerPage;
@@ -79,7 +89,8 @@ const ServiceDetail = () => {
                     value={selectedService.name}
                     onChange={handleServiceChange}
                     displayEmpty
-                    sx={{ margin: "20px 0" }}
+                    name="id"
+                    sx={{margin: "20px 10px 10px"}}
                 >
                     <MenuItem value="initial">Tất cả dịch vụ</MenuItem>
                     {typeData.map((service) => (
@@ -92,12 +103,18 @@ const ServiceDetail = () => {
                         </MenuItem>
                     ))}
                 </Select>
+                <Calendar value={dates} onChange={(e) => {
+                    setDates(e.value);
+                    handleDateChange(e.value)
+                }} selectionMode="range" readOnlyInput
+                          hideOnRangeSelection placeholder="Chọn khoảng thời gian" dateFormat="dd/mm/yy"/>
             </Box>
-            <Card sx={{ maxHeight: "800px", marginTop: "30px" }}>
+            <Card sx={{maxHeight: "800px", marginTop: "30px"}}>
                 <TableCustom
                     columns={columnData}
                     rows={paginatedRows}
-                    onRowClick={() => {}}
+                    onRowClick={() => {
+                    }}
                 />
                 <TablePagination
                     component="div"
@@ -114,13 +131,13 @@ const ServiceDetail = () => {
 }
 
 const columnData = [
-    { name: "Tên dịch vụ", align: "left", esName: "serviceName" },
-    { name: "Ngày bắt đầu", align: "left", esName: "startDate" },
-    { name: "Ngày kết thúc", align: "left", esName: "endDate" },
-    { name: "Số lượng/m2", align: "left", esName: "quantityOrArea" },
-    { name: "Mô tả", align: "left", esName: "description" },
-    { name: "Giá tiền", align: "left", esName: "unitPrice" },
-    { name: "Tổng tiền", align: "left", esName: "totalPrice" },
+    {name: "Tên dịch vụ", align: "left", esName: "serviceName"},
+    {name: "Ngày bắt đầu", align: "left", esName: "startDate"},
+    {name: "Ngày kết thúc", align: "left", esName: "endDate"},
+    {name: "Số lượng/m2", align: "left", esName: "quantityOrArea"},
+    {name: "Mô tả", align: "left", esName: "description"},
+    {name: "Giá tiền", align: "left", esName: "unitPrice"},
+    {name: "Tổng tiền", align: "left", esName: "totalPrice"},
 ];
 
 export default ServiceDetail;
