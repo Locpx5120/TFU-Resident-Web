@@ -1,248 +1,195 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {
-  memeberServiceDetail,
-  updateVehicle,
-  vehicleServiceDetail,
+    memeberServiceDetail,
+    updateVehicle,
+    vehicleServiceDetail,
 } from "../../../services/vehicleService";
+import dayjs from "dayjs";
+import Swal from "sweetalert2";
 
 const RequestDetail = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const params = useParams();
-  const paramSplit = location.pathname?.split("&");
-  const Purpose = decodeURIComponent(paramSplit[1]?.slice(8));
-
-  const { request } = location.state || {};
-
-  // States for all fields
-  const [memberName, setMemberName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [serviceName, setServiceName] = useState(request?.serviceName || "");
-  const [quantity, setQuantity] = useState("1");
-  const [room, setRoom] = useState(request?.room || "");
-  const [status, setStatus] = useState(request?.status || "");
-  const [purpose, setPurpose] = useState("");
-  const [notes, setNotes] = useState("");
-  const [apartmentNumber, setApartmentNumber] = useState("");
-  const [buildingName, setBuildingName] = useState("");
-  const [licensePlate, setLicensePlate] = useState("");
-  const [packageType, setPackageType] = useState("");
-  const [vehicleType, setVehicleType] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log({
-      serviceName,
-      quantity,
-      room,
-      status,
-      purpose,
-      notes,
-      apartmentNumber,
-      buildingName,
-      licensePlate,
-      packageType,
-      vehicleType,
-      startDate,
-      endDate,
-    });
-    const body = {
-      serviceContractId: params.id,
-      status,
-      notes,
+    const location = useLocation();
+    const navigate = useNavigate();
+    const params = useParams();
+    const paramSplit = location.pathname?.split("&");
+    const Purpose = decodeURIComponent(paramSplit[1]?.slice(8));
+    const {request} = location.state || {};
+    const [status, setStatus] = useState(request?.status || "");
+    const [purpose, setPurpose] = useState("");
+    const [notes, setNotes] = useState("");
+    const [requestInfo, setRequestInfo] = useState({
+        buildingName: '',
+        apartmentNumber: '',
+        serviceName: '',
+        memberName: '',
+        dateOfBirth: '',
+        email: '',
+        phoneNumber: '',
+        note: '',
+        package: '',
+        licensePlate: '',
+        startDate: '',
+        endDate: '',
+        vehicleType: '',
+        status: request?.status
+    })
+    const handleSubmit = () => {
+         const id = paramSplit[0]?.split("/")[2];
+        const body = {
+            serviceContractId: id,
+            status,
+            notes,
+        };
+        callUpdate(body);
+        // navigate('/xem-don');
     };
-    callUpdate(body);
-    // navigate('/xem-don');
-  };
 
-  useEffect(() => {
-    const fetchRequest = async () => {
-      try {
-        let response = null;
-        const id = paramSplit[0]?.split("/")[2];
-        if (Purpose === "Add member") {
-          response = await memeberServiceDetail(id);
-        } else {
-          response = await vehicleServiceDetail(id);
+    useEffect(() => {
+        const fetchRequest = async () => {
+            try {
+                let response = null;
+                const id = paramSplit[0]?.split("/")[2];
+                if (Purpose === "Add member") {
+                    response = await memeberServiceDetail(id);
+                } else {
+                    response = await vehicleServiceDetail(id);
+                }
+                const data = response.data;
+                setRequestInfo(data)
+                setPurpose(data?.purpose || "");
+                setNotes(data?.note || "");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchRequest();
+    }, [params.id]);
+
+    const callUpdate = async (body) => {
+        try {
+            const res = await updateVehicle(body);
+
+            console.log(res);
+        } catch (e) {
+            console.error(e);
+             Swal.fire({
+                icon: 'error',
+                title: '',
+                text: 'Có lỗi xảy ra',
+            });
         }
-        const data = response.data;
-
-        setServiceName(data?.serviceName || "");
-        setRoom(data?.room || "");
-        setQuantity(data?.quantity || "1");
-        setStatus(data?.status || "");
-        setPurpose(data?.purpose || "");
-        setNotes(data?.note || "");
-        setApartmentNumber(data?.apartmentNumber || "");
-        setBuildingName(data?.buildingName || "");
-        setLicensePlate(data?.licensePlate || "");
-        setPackageType(data?.package || "");
-        setVehicleType(data?.vehicleType || "");
-        setStartDate(data?.startDate || "");
-        setEndDate(data?.endDate || "");
-        setMemberName(data?.memberName || "");
-        setDateOfBirth(data?.dateOfBirth || "");
-        setEmail(data?.email || "");
-        setPhoneNumber(data?.phoneNumber || "");
-      } catch (error) {
-        console.error(error);
-      }
     };
-    fetchRequest();
-  }, [params.id]);
 
-  const callUpdate = async (body) => {
-    try {
-      const res = await updateVehicle(body);
-      console.log(res);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  return (
-    <Box className="content" sx={{ padding: "20px" }}>
-      <Typography variant="h5" gutterBottom>
-        Chi tiết Đơn
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Box sx={{ flex: "1 1 50%", padding: "10px" }}>
-          {purpose && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Mục đích"
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-            />
-          )}
-          {licensePlate && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Biển số xe"
-              value={licensePlate}
-              onChange={(e) => setLicensePlate(e.target.value)}
-            />
-          )}
-          {packageType && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Gói dịch vụ"
-              value={packageType}
-              onChange={(e) => setPackageType(e.target.value)}
-            />
-          )}
-          {vehicleType && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Loại xe"
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-            />
-          )}
-          {startDate && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Ngày bắt đầu"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          )}
-          {endDate && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Ngày kết thúc"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          )}
-          {memberName && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Tên thành viên"
-              value={memberName}
-              onChange={(e) => setMemberName(e.target.value)}
-            />
-          )}
-          {dateOfBirth && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Ngày sinh"
-              type="date"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          )}
-          {email && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          )}
-          {phoneNumber && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Số điện thoại"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-          )}
-          {notes && (
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Chú thích"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          )}
+    return (
+        <Box className="content" sx={{padding: "20px"}}>
+            <Typography variant="h5" gutterBottom>
+                Chi tiết Đơn
+            </Typography>
+            <div className="row">
+                <div className="grid">
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">Toà nhà</div>
+                        <div className="col-6">{requestInfo.buildingName ?? ''}</div>
+                    </div>
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">Mục đích</div>
+                        <div className="col-6">{Purpose}</div>
+                    </div>
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">Số căn hộ</div>
+                        <div className="col-6">{requestInfo.apartmentNumber ?? ''}</div>
+                    </div>
+                </div>
+                <div className="grid">
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">Tên dịch vụ</div>
+                        <div className="col-6">{requestInfo.serviceName ?? ''}</div>
+                    </div>
+                    {Purpose === "Add member" ? <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Thành viên</div>
+                            <div className="col-6">{requestInfo.memberName}</div>
+                        </div> :
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Gói</div>
+                            <div className="col-6">{requestInfo.package}</div>
+                        </div>}
+                </div>
+                {Purpose === "Add member" ?
+                    <div className="grid">
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Email</div>
+                            <div className="col-6">{requestInfo.email}</div>
+                        </div>
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Ngày sinh</div>
+                            <div className="col-6">{dayjs(requestInfo.dateOfBirth).format('DD/MM/YYYY')}</div>
+                        </div>
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Số điện thoại</div>
+                            <div className="col-6">{requestInfo.phoneNumber}</div>
+                        </div>
+                    </div> : <div className="grid">
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Loại xe</div>
+                            <div className="col-6">{requestInfo.vehicleType}</div>
+                        </div>
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Biển số</div>
+                            <div className="col-6">{requestInfo.licensePlate}</div>
+                        </div>
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Ngày bắt đầu</div>
+                            <div className="col-6">{dayjs(requestInfo.startDate).format('DD/MM/YYYY')}</div>
+                        </div>
+                        <div className="col-6 flex">
+                            <div className="col-6 font-semibold">Ngày kết thúc</div>
+                            <div className="col-6">{dayjs(requestInfo.endDate).format('DD/MM/YYYY')}</div>
+                        </div>
+                    </div>
+                }
+                <div className="grid">
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">Trạng thái</div>
+                        <div className="col-6">{request.status}</div>
+                    </div>
+                    <div className="col-6 flex">
+                        <div className="col-6 font-semibold">chú thích</div>
+                        <div className="col-6"><TextField
+                            fullWidth
+                            margin="normal"
+                            value={notes}
+                            sx={{margin: 0}}
+                            onChange={(e) => setNotes(e.target.value)}
+                        /></div>
+                    </div>
+                </div>
+            </div>
+            <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
+                <Button onClick={handleSubmit} variant="contained" color="primary">
+                    Duyệt
+                </Button>
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => navigate("/xem-don")}
+                    sx={{marginLeft: "10px"}}
+                >
+                    Đóng
+                </Button>
+            </Box>
         </Box>
-        <Box sx={{ textAlign: "right", marginTop: "20px", width: "100%" }}>
-          <Button type="submit" variant="contained" color="primary">
-            Lưu
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => navigate("/xem-don")}
-            sx={{ marginLeft: "10px" }}
-          >
-            Đóng
-          </Button>
-        </Box>
-      </form>
-    </Box>
-  );
+    );
 };
 
 export default RequestDetail;
