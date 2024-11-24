@@ -4,10 +4,10 @@ import { Button, Card, Box, TextField, MenuItem } from '@mui/material';
 import CustomModal from '../../../common/CustomModal';
 import { addContractThird, getContractDetail } from '../../../services/thirdpartyService';
 import { useParams } from 'react-router-dom';
-import { GetBuildings } from '../../../services/buildingService';
 import Swal from 'sweetalert2';
+import { getBuildingNew } from '../../../services/apartmentService';
 
-const DetailThirdParty = () => {
+const DetailThirdPartyRent = () => {
     const { id } = useParams();
     const [reload, setReload] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
@@ -30,7 +30,7 @@ const DetailThirdParty = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await getContractDetail(id);
-            const building = await GetBuildings();
+            const building = await getBuildingNew();
             setData(res?.data || []);
             setBuildings(building?.data || []);
         }
@@ -208,4 +208,4 @@ const DetailThirdParty = () => {
     );
 };
 
-export default DetailThirdParty;
+export default DetailThirdPartyRent;

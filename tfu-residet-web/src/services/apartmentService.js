@@ -18,6 +18,13 @@ export const getServiceName  =  async (serviceTypes) => {
                     'buildingPermalink': Cookies.get("buildingID"),
                   })
 }
+export const getBuildingNew  =  async () => {
+    return await getData(`/building/get`, endpointUrl.BUILDING_URL, {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                    'buildingPermalink': Cookies.get("buildingID"),
+                  })
+}
 export const addMember = async (body) => {
 
     return await postData(`/resident/add-members`, body, {

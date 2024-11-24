@@ -126,10 +126,10 @@ const ThirdParty = () => {
         setModalOpen(false);
     };
 
-     const handleSaveThirdParty = async (data) => {
+     const handleSaveThirdParty = async (formData) => {
         try {
             const res = await extendContract({
-                ...data,
+                ...formData,
                 apartmentId: data[0]?.apartmentId,
             });
             if (res?.success) {

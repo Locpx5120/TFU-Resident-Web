@@ -15,6 +15,7 @@ import { routeArray, routeResident, routeDirector, routeAccountant, routeAdmin, 
 import LoginBuilding from "./pages/LoginBuilding";
 import { authService } from "./services/authService";
 import Cookies from 'js-cookie';
+import DynamicBreadcrumbs from "./common/Breadcrumbs";
 
 function App() {
   const { user } = useContext(authService);
@@ -73,6 +74,7 @@ function App() {
                 <Sidebar routes={routes.filter(route => !route.hidden)} />
                 <div className="main-content">
                   <Header />
+                  <DynamicBreadcrumbs routes={routes} />
                   <Routes>
                     {renderRoutes(routes)}
                   </Routes>

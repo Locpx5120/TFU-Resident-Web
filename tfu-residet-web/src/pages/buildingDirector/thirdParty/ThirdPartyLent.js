@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import TableCustom from '../../../components/Table';
 import { Button, Card, Box, TextField, MenuItem } from '@mui/material';
 import CustomModal from '../../../common/CustomModal';
-import { createThirdParty, getThirdList } from '../../../services/thirdpartyService';
-import { GetBuildings } from '../../../services/buildingService';
+import { addHireThirdParty, getThirdList } from '../../../services/thirdpartyService';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { DeleteOutline } from '@mui/icons-material';
+import { getBuildingNew } from '../../../services/apartmentService';
 
 const ThirdPartyLent = () => {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ThirdPartyLent = () => {
     const fetchData = async (keyword = '', status = '') => {
         try {
             const res = await getThirdList(keyword, status, false);
-            const building = await GetBuildings();
+            const building = await getBuildingNew();
             setData(res.data);
             setBuildings(building.data);
         } catch (error) {
@@ -46,43 +47,38 @@ const ThirdPartyLent = () => {
     }, [reload]);
 
     const handleViewContract = (item) => {
-        navigate('/ben-thu-ba/'+ item.thirdPartyId);
+        navigate('/ben-thu-ba/thue-dich-vu/'+ item.thirdPartyId);
     };
+
+    const handleDeleteContract = (item) => {
+        alert('Chưa có api');
+    }
 
     const rows = data.map((item) => ({
         ...item,
+        startDate: item.startDate ? item.startDate : 'Chưa có chi tiết HĐ',
+        endDate: item.endDate ? item.endDate : 'Chưa có chi tiết HĐ',
         action: (
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleViewContract(item)}
-            >
-                Xem chi tiết HĐ
-            </Button>
+            <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleViewContract(item)}
+                >
+                    Xem chi tiết HĐ
+                </Button>
+                <DeleteOutline  onClick={() => handleDeleteContract(item)} />
+            </div>
         ),
     }));
 
     const modalFields = [
         <TextField
             fullWidth
-            select
-            label="Tòa nhà"
-            name="building"
-            value={selectedThirdParty.building || ''}
-            onChange={(e) => handleFieldChange('building', e.target.value)}
-        >
-            {buildings.map((building) => (
-                <MenuItem key={building.id} value={building.id}>
-                    {building.name}
-                </MenuItem>
-            ))}
-        </TextField>,
-        <TextField
-            fullWidth
             label="Tên công ty"
-            name="companyName"
-            value={selectedThirdParty.companyName || ''}
-            onChange={(e) => handleFieldChange('companyName', e.target.value)}
+            name="NameCompany"
+            value={selectedThirdParty.NameCompany || ''}
+            onChange={(e) => handleFieldChange('NameCompany', e.target.value)}
         />,
         <TextField
             fullWidth
@@ -92,13 +88,6 @@ const ThirdPartyLent = () => {
             value={selectedThirdParty.contactInfo || ''}
             onChange={(e) => handleFieldChange('contactInfo', e.target.value)}
         />,
-        <TextField
-            fullWidth
-            label="Loại cửa hàng"
-            name="storeType"
-            value={selectedThirdParty.storeType || ''}
-            onChange={(e) => handleFieldChange('storeType', e.target.value)}
-        />
     ];    
 
     const handleFieldChange = (fieldName, value) => {
@@ -121,7 +110,7 @@ const ThirdPartyLent = () => {
 
     const handleSaveThirdParty = async (data) => {
         try {
-            const res = await createThirdParty(data);
+            const res = await addHireThirdParty(data);
             if (res?.success) {
                 setReload(!reload);
                 handleCloseModal();
@@ -159,9 +148,8 @@ const ThirdPartyLent = () => {
                     onChange={(e) => setSelectedStatus(e.target.value)}
                     sx={{ minWidth: 200 }}
                 >
-                    <MenuItem value="">Tất cả</MenuItem>
-                    <MenuItem value="active">Đang hoạt động</MenuItem>
-                    <MenuItem value="inactive">Không hoạt động</MenuItem>
+                    <MenuItem value="Trong thời hạn">Trong thời hạn</MenuItem>
+                    <MenuItem value="Chuẩn bị hết hạn">Chuẩn bị hết hạn</MenuItem>
                 </TextField>
 
                 <Button

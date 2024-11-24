@@ -3,9 +3,9 @@ import TableCustom from '../../../components/Table';
 import { Button, Card, Box, TextField, MenuItem } from '@mui/material';
 import CustomModal from '../../../common/CustomModal';
 import { createThirdParty, getThirdList } from '../../../services/thirdpartyService';
-import { GetBuildings } from '../../../services/buildingService';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { getBuildingNew } from '../../../services/apartmentService';
 
 const ThirdPartyRent = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const ThirdPartyRent = () => {
     const fetchData = async (keyword = '', status = '') => {
         try {
             const res = await getThirdList(keyword, status);
-            const building = await GetBuildings();
+            const building = await getBuildingNew();
             setData(res.data);
             setBuildings(building.data);
         } catch (error) {
@@ -46,7 +46,7 @@ const ThirdPartyRent = () => {
     }, [reload]);
 
     const handleViewContract = (item) => {
-        navigate('/ben-thu-ba/'+ item.thirdPartyId);
+        navigate('/ben-thu-ba/cho-thue/'+ item.thirdPartyId);
     };
 
     const rows = data.map((item) => ({
@@ -73,7 +73,7 @@ const ThirdPartyRent = () => {
         >
             {buildings.map((building) => (
                 <MenuItem key={building.id} value={building.id}>
-                    {building.name}
+                    {building.buildingName}
                 </MenuItem>
             ))}
         </TextField>,
@@ -159,9 +159,8 @@ const ThirdPartyRent = () => {
                     onChange={(e) => setSelectedStatus(e.target.value)}
                     sx={{ minWidth: 200 }}
                 >
-                    <MenuItem value="">Tất cả</MenuItem>
-                    <MenuItem value="active">Đang hoạt động</MenuItem>
-                    <MenuItem value="inactive">Không hoạt động</MenuItem>
+                    <MenuItem value="true">Đang hoạt động</MenuItem>
+                    <MenuItem value="false">Không hoạt động</MenuItem>
                 </TextField>
 
                 <Button

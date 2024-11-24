@@ -46,8 +46,10 @@ import Receptionist from "../pages/receptionist";
 import HistoryPay from "../pages/receptionist/historyPay";
 import AccountantPage from "../pages/accountant/AccountantPage";
 import Adminitrative from "../pages/administrative";
-import DetailThirdParty from "../pages/buildingDirector/thirdParty/DetailThirdParty";
+import DetailThirdParty from "../pages/buildingDirector/thirdParty/DetailThirdPartyRent";
 import Administrator from "../pages/Administrator/Administrator";
+import DetailThirdPartyRent from "../pages/buildingDirector/thirdParty/DetailThirdPartyRent";
+import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThirdPartyLent";
 
 
 export const routeArray = [
@@ -251,10 +253,16 @@ export const routeDirector = [
         icon: <ThirtyFpsOutlined />,
     },
     {
-        route: "/ben-thu-ba/:id",
+        route: "/ben-thu-ba/cho-thue/:id",
         routeName: "Quản lí bên thứ ba",
         hidden: true,
-        component: <DetailThirdParty />,
+        component: <DetailThirdPartyRent />,
+    },
+    {
+        route: "/ben-thu-ba/thue-dich-vu/:id",
+        routeName: "Quản lí bên thứ ba",
+        hidden: true,
+        component: <DetailThirdPartyLent />,
     },
 ];
 
