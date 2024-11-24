@@ -17,7 +17,7 @@ const DetailThirdPartyRent = () => {
     const [modalMode, setModalMode] = useState({ mode: 'add', title: 'Thêm hợp đồng' });
 
     const columnData = [
-        { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
+        // { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
         { esName: 'companyName', name: 'Tên công ty', width: 200 },
         { esName: 'floor', name: 'Tầng', width: 100 },
         { esName: 'room', name: 'Phòng', width: 100 },
@@ -61,23 +61,23 @@ const DetailThirdPartyRent = () => {
     };
 
     const modalFields = [
+        // <TextField
+        //     fullWidth
+        //     select
+        //     label="Tòa nhà"
+        //     name="building"
+        //     value={selectedThirdParty.building || ''}
+        //     onChange={(e) => handleFieldChange('building', e.target.value)}
+        // >
+        //     {buildings.map((building) => (
+        //         <MenuItem key={building.id} value={building.id}>
+        //             {building.name}
+        //         </MenuItem>
+        //     ))}
+        // </TextField>,
         <TextField
             fullWidth
-            select
-            label="Tòa nhà"
-            name="building"
-            value={selectedThirdParty.building || ''}
-            onChange={(e) => handleFieldChange('building', e.target.value)}
-        >
-            {buildings.map((building) => (
-                <MenuItem key={building.id} value={building.id}>
-                    {building.name}
-                </MenuItem>
-            ))}
-        </TextField>,
-        <TextField
-            fullWidth
-            label="Tên dịch vụ"
+            label="Tên công ty"
             name="nameService"
             type="text"
             value={selectedThirdParty.nameService || ''}

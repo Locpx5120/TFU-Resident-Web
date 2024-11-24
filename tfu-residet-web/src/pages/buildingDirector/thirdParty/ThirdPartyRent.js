@@ -24,8 +24,8 @@ const ThirdPartyRent = () => {
         { esName: 'companyName', name: 'Tên công ty', width: 200 },
         { esName: 'contactInfo', name: 'Thông tin liên hệ', width: 200 },
         { esName: 'storeType', name: 'Loại cửa hàng', width: 200 },
-        { esName: 'startDate', name: 'Ngày thuê', width: 150 },
-        { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
+        // { esName: 'startDate', name: 'Ngày thuê', width: 150 },
+        // { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
         { esName: 'status', name: 'Trạng thái', width: 150 },
         { esName: 'action', name: 'Tùy chọn', width: 150 },
     ];

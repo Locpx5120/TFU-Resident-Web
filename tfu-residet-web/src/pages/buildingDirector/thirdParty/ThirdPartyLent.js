@@ -21,12 +21,12 @@ const ThirdPartyLent = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
 
     const columnData = [
-        { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
+        // { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
         { esName: 'companyName', name: 'Tên công ty', width: 200 },
         { esName: 'contactInfo', name: 'Thông tin liên hệ', width: 200 },
         { esName: 'storeType', name: 'Loại cửa hàng', width: 200 },
-        { esName: 'startDate', name: 'Ngày thuê', width: 150 },
-        { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
+        // { esName: 'startDate', name: 'Ngày thuê', width: 150 },
+        // { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
         { esName: 'status', name: 'Trạng thái', width: 150 },
         { esName: 'action', name: 'Tùy chọn', width: 150 },
     ];
@@ -177,7 +177,7 @@ const ThirdPartyLent = () => {
                     onClick={() => handleOpenModal('add', 'Thêm dịch bên thuê dịch vụ')}
                     sx={{ height: '40px' }}
                 >
-                    Thêm dịch bên thuê dịch vụ
+                    Thêm dịch vụ bên thuê dịch vụ
                 </Button>
             </Box>
 
