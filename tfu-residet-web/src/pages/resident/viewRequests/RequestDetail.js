@@ -17,6 +17,7 @@ import {
 } from "../../../services/vehicleService";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 const RequestDetail = () => {
     const location = useLocation();
@@ -176,7 +177,7 @@ const RequestDetail = () => {
                 </div>
             </div>
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                {request.status !== 'Approved' && <Button onClick={handleSubmit} variant="contained" color="primary">
+                {(request.status !== 'Approved' && Cookies.get('role') === 'Hành chính') && <Button onClick={handleSubmit} variant="contained" color="primary">
                     Duyệt
                 </Button>}
 
