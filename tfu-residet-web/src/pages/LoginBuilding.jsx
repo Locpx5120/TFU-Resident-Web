@@ -43,7 +43,6 @@ const LoginBuilding = () => {
                 Cookies.set('buildingID', buildingId, {expires: 1});
                 Cookies.set('residentId', decoded.nameid, {expires: 1});
                 dispatch({type: "LOGIN_SUCCESS", payload: decoded.role });
-                Cookies.set('residentId', residentId, {expires: 1});
 
                 Swal.fire({
                     icon: 'success',

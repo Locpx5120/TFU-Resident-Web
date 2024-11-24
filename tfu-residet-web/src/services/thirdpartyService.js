@@ -7,7 +7,7 @@ const header = {
             'buildingPermalink': Cookies.get("buildingID"),
 }
 
-export const getThirdList = async (CompanyName = '', Status = '') => {
+export const getThirdList = async (CompanyName = '', Status = '', IsTenant = true) => {
     let queryParams = [];
 
     if (CompanyName.trim()) {
@@ -18,7 +18,7 @@ export const getThirdList = async (CompanyName = '', Status = '') => {
     }
 
     const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
-    const url = `/thirdparty/list${queryString}`;
+    const url = `/thirdparty/list${queryString}?IsTenant=${IsTenant}`;
 
     return await getData(url, endpointUrl.BUILDING_URL, header);
 };

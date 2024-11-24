@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import BadgeAvatars from "./Avatar";
 import { Box } from "@mui/material";
+import { invoiceAdd } from "../services/roomService";
 
 const StyledUl = styled.ul`
   list-style-type: none;
@@ -46,6 +47,10 @@ const StyledLi = styled.li`
 const Sidebar = ({routes}) => {
   const location = useLocation();
 
+  const callApi = async () => {
+    await invoiceAdd();
+  }
+
   return (
     <div className="sidebar">
       <div className="profile">
@@ -61,7 +66,11 @@ const Sidebar = ({routes}) => {
               key={i}
               className={location.pathname === item.route ? "active" : ""}
             >
-              <Link to={item.route}>
+              <Link to={item.route} onClick={() => {
+                if( '/thanh-toan-dich-vu' === item.route) {
+                  callApi();
+                }
+              }}>
                 <span>{item.icon}</span>
                 {item.routeName}
               </Link>

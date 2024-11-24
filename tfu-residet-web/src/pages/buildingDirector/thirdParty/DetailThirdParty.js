@@ -143,6 +143,7 @@ const DetailThirdParty = () => {
                 price: Number(data?.price || 0),
                 floorNumber: Number(data?.floorNumber || 0),
                 roomNumber: Number(data?.roomNumber || 0),
+                thirdPartyId: id
             });
             if (res?.success) {
                 setReload(!reload);

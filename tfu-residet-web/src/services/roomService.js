@@ -27,6 +27,9 @@ export const getSummary = async (rowsPerPage, page) => {
 export const processPayment = async (body) => {
     return await postData(`/invoice/process-payment`, body, undefined, endpointUrl.BUILDING_URL);
 }
+export const invoiceAdd = async () => {
+    return await postData(`/invoice/add`, {}, undefined, endpointUrl.BUILDING_URL);
+}
 export const paymentSummary = async (rowsPerPage, page) => {
     return await getData(`/apartment-services/payment-summary?pageSize=${rowsPerPage}&pageNumber=${page + 1}`,endpointUrl.BUILDING_URL, {
         Authorization: `Bearer ${Cookies.get("accessToken")}`,
