@@ -96,7 +96,7 @@ const ServiceManage = () => {
 
     return (
         <section className="content service">
-            <Typography sx={{
+            {/* <Typography sx={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
@@ -105,8 +105,8 @@ const ServiceManage = () => {
                 fontSize: '22px',
             }}>
                 Dịch vụ căn hộ <Avatar variant="square" sx={{ background: '#2ca8a2', borderRadius: 1 }}>0</Avatar>
-            </Typography>
-            <Box
+            </Typography> */}
+            {/* <Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
@@ -132,7 +132,7 @@ const ServiceManage = () => {
                 <Button onClick={() => setIsOpenCreate(true)} variant="contained" sx={{ background: "#2ca8a2" }}>
                     Thêm mới
                 </Button>
-            </Box>
+            </Box> */}
             <Card sx={{ maxHeight: "800px", marginTop: "30px" }}>
                 <TableCustom
                     columns={columnData}
