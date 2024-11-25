@@ -6,6 +6,7 @@ import { addContractThird, getContractDetail } from '../../../services/thirdpart
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { getBuildingNew } from '../../../services/apartmentService';
+import moment from 'moment';
 
 const DetailThirdPartyRent = () => {
     const { id } = useParams();
@@ -22,8 +23,8 @@ const DetailThirdPartyRent = () => {
         { esName: 'floor', name: 'Tầng', width: 100 },
         { esName: 'room', name: 'Phòng', width: 100 },
         { esName: 'area', name: 'Diện tích mặt bằng (m2)', width: 200 },
-        { esName: 'startDate', name: 'Ngày thuê', width: 150 },
-        { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
+        { esName: 'startDateFormat', name: 'Ngày thuê', width: 150 },
+        { esName: 'endDateFormat', name: 'Ngày hết hạn', width: 150 },
         { esName: 'servicePrice', name: 'Giá dịch vụ', width: 150 },
     ];
 
@@ -37,67 +38,45 @@ const DetailThirdPartyRent = () => {
         fetchData();
     }, [reload]);
 
-    const rows = useMemo(() => data, [data]);
-
-    const formatNumberWithCommas = (value) => {
-        if (!value) return '';
-        return value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    };
+    const rows = useMemo(() => {
+        return data.map(item => ({
+            ...item,
+            startDateFormat: moment(item.startDate).format('DD-MM-YYYY'),
+            endDateFormat: moment(item.endDate).format('DD-MM-YYYY'),
+        }))
+    }, [data]);
 
     const handleFieldChange = (fieldName, value) => {
-        if (fieldName === 'price') {
-            const numericValue = value.replace(/[^\d]/g, '');
-            const formattedValue = formatNumberWithCommas(numericValue);
-            setSelectedThirdParty((prev) => ({
-                ...prev,
-                [fieldName]: formattedValue,
-            }));
-        } else {
             setSelectedThirdParty((prev) => ({
                 ...prev,
                 [fieldName]: value,
             }));
-        }
     };
 
     const modalFields = [
-        // <TextField
-        //     fullWidth
-        //     select
-        //     label="Tòa nhà"
-        //     name="building"
-        //     value={selectedThirdParty.building || ''}
-        //     onChange={(e) => handleFieldChange('building', e.target.value)}
-        // >
-        //     {buildings.map((building) => (
-        //         <MenuItem key={building.id} value={building.id}>
-        //             {building.name}
-        //         </MenuItem>
-        //     ))}
-        // </TextField>,
         <TextField
             fullWidth
             label="Tên công ty"
-            name="nameService"
+            name="companyName"
             type="text"
-            value={selectedThirdParty.nameService || ''}
-            onChange={(e) => handleFieldChange('nameService', e.target.value)}
+            value={selectedThirdParty.companyName || ''}
+            onChange={(e) => handleFieldChange('companyName', e.target.value)}
         />,
         <TextField
             fullWidth
             label="Số tầng"
-            name="floorNumber"
+            name="floor"
             type="number"
-            value={selectedThirdParty.floorNumber || ''}
-            onChange={(e) => handleFieldChange('floorNumber', e.target.value)}
+            value={selectedThirdParty.floor || ''}
+            onChange={(e) => handleFieldChange('floor', e.target.value)}
         />,
         <TextField
             fullWidth
             label="Số phòng"
-            name="roomNumber"
+            name="room"
             type="number"
-            value={selectedThirdParty.roomNumber || ''}
-            onChange={(e) => handleFieldChange('roomNumber', e.target.value)}
+            value={selectedThirdParty.room || ''}
+            onChange={(e) => handleFieldChange('room', e.target.value)}
         />,
         <TextField
             fullWidth
@@ -120,10 +99,10 @@ const DetailThirdPartyRent = () => {
         <TextField
             fullWidth
             label="Số tiền"
-            name="price"
+            name="servicePrice"
             type="text"
-            value={formatNumberWithCommas(selectedThirdParty.price)}
-            onChange={(e) => handleFieldChange('price', e.target.value)}
+            value={selectedThirdParty.servicePrice}
+            onChange={(e) => handleFieldChange('servicePrice', e.target.value)}
         />,
     ];
 
@@ -168,7 +147,8 @@ const DetailThirdPartyRent = () => {
                     mb: 2,
                 }}
             >
-                <Button
+                {
+                    data.length < 1 && <Button
                     variant="contained"
                     color="success"
                     onClick={() => handleOpenModal('add', 'Thêm hợp đồng bên thuê mặt bằng')}
@@ -176,6 +156,7 @@ const DetailThirdPartyRent = () => {
                 >
                     Thêm hợp đồng bên thuê mặt bằng
                 </Button>
+                }
                 <Button
                     variant="contained"
                     color="success"
