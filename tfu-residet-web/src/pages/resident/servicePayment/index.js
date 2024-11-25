@@ -72,8 +72,8 @@ const ServicePayments = () => {
     return services.data;
   }, [page, rowsPerPage, services]);
 
-  const handleDetailClick = (id) => {
-    navigate(`/thanh-toan-dich-vu/${id}`);
+  const handleDetailClick = (data) => {
+    navigate(`/thanh-toan-dich-vu/${data.apartmentId}&isPayment=${data.paymentStatus}`);
   };
 
   return (
@@ -133,7 +133,7 @@ const ServicePayments = () => {
                   style={{ fontSize: 12, textTransform: "lowercase" }}
                   variant="contained"
                   color="primary"
-                  onClick={() => handleDetailClick(service.apartmentId)}
+                  onClick={() => handleDetailClick(service)}
                 >
                   Xem chi tiết
                 </Button>
