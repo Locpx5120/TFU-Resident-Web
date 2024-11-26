@@ -27,12 +27,12 @@ const ServiceManage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchBuildings = async () => {
-            const data = await GetBuildingsByUser();
-            setBuildings(data?.data || []);
-        };
-        fetchBuildings();
-    }, []);
+        const fetchRooms = async () => {
+            try {
+                const data = await getSummary(rowsPerPage, page);
+                setServices(data.data);
+                console.log(data.data)
+            } catch (error) {
 
     useEffect(() => {
         if (!selectedBuilding) return;
@@ -83,15 +83,33 @@ const ServiceManage = () => {
 
     return (
         <section className="content service">
-            <Box sx={{ display: "flex", gap: 2, marginBottom: 2 }}>
-                <FormControl sx={{ minWidth: 150 }}>
-                    <InputLabel>Tòa nhà</InputLabel>
-                    <Select
-                        value={selectedBuilding}
-                        label="Tòa nhà"
-                        onChange={(e) => {
-                            setSelectedBuilding(e.target.value);
-                            setSelectedApartment("");  // Reset apartment when building changes
+            <Typography sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                fontWeight: 'bold',
+                margin: '10px 0',
+                fontSize: '22px',
+            }}>
+               Danh sách dịch vụ căn hộ
+            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <TextField
+                        id="outlined-multiline-flexible"
+                        label=""
+                        color="success"
+                        placeholder="Tên"
+                        sx={{
+                            "#outlined-multiline-flexible": {
+                                padding: "7px !important",
+                            },
                         }}
                     >
                         {buildings.map((building) => (

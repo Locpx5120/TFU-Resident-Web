@@ -163,7 +163,7 @@ const DetailHouseHoldResident = () => {
   const columnData = [
     { name: "STT", align: "left", esName: "stt" },
     { name: "Tên thành viên", align: "left", esName: "memberName" },
-    { name: "Quyền", align: "left", esName: "role" },
+    // { name: "Quyền", align: "left", esName: "role" },
     { name: "Điện thoại", align: "left", esName: "phoneNumber" },
     { name: "Email", align: "left", esName: "email" },
     { name: "Tùy chọn", align: "left", esName: "action" }

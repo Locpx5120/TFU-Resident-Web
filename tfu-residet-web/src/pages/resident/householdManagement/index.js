@@ -129,9 +129,10 @@ const HouseHoldResident = () => {
   const columnData = [
     { name: "STT", align: "center", esName: "stt" },
     // { name: "Chủ căn hộ", align: "center", esName: "ownerName" },
-    { name: "Số tầng", align: "center", esName: "floorNumber" },
-    { name: "Số Phòng", align: "center", esName: "roomNumber" },
-    { name: "Điện thoại", align: "center", esName: "phoneNumber" },
+    { name: "Toà nhà", align: "center", esName: "building" },
+    { name: "Tầng", align: "center", esName: "floorNumber" },
+    { name: "Căn hộ", align: "center", esName: "roomNumber" },
+    { name: "Tổng thành viên", align: "center", esName: "" },
     // { name: "Email", align: "center", esName: "email" },
     {
       name: "Tùy chọn",
