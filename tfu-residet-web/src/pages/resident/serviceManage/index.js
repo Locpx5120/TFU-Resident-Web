@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
+    Avatar,
     Box,
     Button,
     Card,
     TablePagination,
-    MenuItem,
-    Select,
-    InputLabel,
-    FormControl
+    TextField,
+    Typography,
 } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 import TableCustom from '../../../components/Table';
-import { getSummary } from "../../../services/roomService";
-import { GetBuildingsByUser, getApartmentByBuilding } from "../../../services/buildingService";
+import { useNavigate } from 'react-router-dom';
+import {getSummary} from "../../../services/roomService";
 
 const ServiceManage = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -20,11 +20,28 @@ const ServiceManage = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [services, setServices] = useState([]);
-    const [buildings, setBuildings] = useState([]);
-    const [apartments, setApartments] = useState([]);
-    const [selectedBuilding, setSelectedBuilding] = useState("");
-    const [selectedApartment, setSelectedApartment] = useState("");
     const navigate = useNavigate();
+    const [buildings, setBuildings] = useState([
+        {
+            STT: "1",
+            soPhong: 204,
+            tongDichVu: "04",
+            chiTiet: <Button variant="contained" onClick={() => navigate('/quan-ly-dich-vu/204')}>Chi tiết</Button>
+        },
+        {
+            STT: "2",
+            soPhong: 304,
+            tongDichVu: "02",
+            chiTiet: <Button variant="contained" onClick={() => navigate('/quan-ly-dich-vu/304')}>Chi tiết</Button>
+        },
+        {
+            STT: "3",
+            soPhong: 404,
+            tongDichVu: "01",
+            chiTiet: <Button variant="contained" onClick={() => navigate('/quan-ly-dich-vu/404')}>Chi tiết</Button>
+        },
+    ]);
+    const [isOpenCreate, setIsOpenCreate] = useState(false);
 
     useEffect(() => {
         const fetchRooms = async () => {
@@ -34,38 +51,34 @@ const ServiceManage = () => {
                 console.log(data.data)
             } catch (error) {
 
-    useEffect(() => {
-        if (!selectedBuilding) return;
-        const fetchApartments = async () => {
-            const res = await getApartmentByBuilding(selectedBuilding);
-            setApartments(res?.data || []);
-        };
-        fetchApartments();
-    }, [selectedBuilding]);
+            }
 
-    useEffect(() => {
-        const fetchRooms = async () => {
-            const data = await getSummary(rowsPerPage, page);
-            setServices(data?.data?.data || []);
-        };
+        }
         fetchRooms();
     }, [page, rowsPerPage]);
 
-    const filteredRows = useMemo(() => {
-        return (services.length > 0 ? services : [])
-            ?.filter(service =>
-                (!selectedBuilding || service.buildingId === selectedBuilding) &&
-                (!selectedApartment || service.apartmentId === selectedApartment)
-            )
-            ?.map((item, index) => ({
-                STT: index + 1,
-                toaNha: item.buildingName,
-                canHo: item.roomNumber,
-                tongDichVu: item.totalServices,
-                chiTiet: <Button variant="contained" onClick={() => navigate(`/quan-ly-dich-vu/${item.apartmentId}`)}>Chi tiết</Button>,
-                action: <Button variant="contained" onClick={() => navigate(`/gui-don`)}>Thêm dịch vụ</Button>
-            }));
-    }, [services, selectedBuilding, selectedApartment]);
+    const sortedRows = useMemo(() => {
+        if (!sortColumn) return buildings;
+
+        return [...buildings].sort((a, b) => {
+            if (a[sortColumn] < b[sortColumn])
+                return sortDirection === "asc" ? -1 : 1;
+            if (a[sortColumn] > b[sortColumn])
+                return sortDirection === "asc" ? 1 : -1;
+            return 0;
+        });
+    }, [services, sortColumn, sortDirection]);
+
+    const paginatedRows = useMemo(() => {
+        if(!services?.data) return [];
+        return services.data.map((item, index) => ({
+            STT: index + 1,
+            toaNha: item.buildingName,
+            canHo: item.roomNumber,
+            tongDichVu: item.totalServices,
+            chiTiet: <Button variant="contained" onClick={() => navigate(`/quan-ly-dich-vu/${item.apartmentId}`)}>Chi tiết</Button>
+        }));
+    }, [page, rowsPerPage, services]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -76,9 +89,10 @@ const ServiceManage = () => {
         setPage(0);
     };
 
-    const handleResetFilters = () => {
-        setSelectedBuilding("");
-        setSelectedApartment("");
+    const handleSort = (column) => {
+        const isAsc = sortColumn === column && sortDirection === "asc";
+        setSortDirection(isAsc ? "desc" : "asc");
+        setSortColumn(column);
     };
 
     return (
@@ -111,45 +125,26 @@ const ServiceManage = () => {
                                 padding: "7px !important",
                             },
                         }}
-                    >
-                        {buildings.map((building) => (
-                            <MenuItem key={building.id} value={building.id}>
-                                {building.buildingName}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                
-                <FormControl sx={{ minWidth: 150 }} disabled={!selectedBuilding}>
-                    <InputLabel>Căn hộ</InputLabel>
-                    <Select
-                        value={selectedApartment}
-                        label="Căn hộ"
-                        onChange={(e) => setSelectedApartment(e.target.value)}
-                    >
-                        {apartments.map((apartment) => (
-                            <MenuItem key={apartment.id} value={apartment.id}>
-                                {apartment.roomNumber}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <Button variant="outlined" color="primary" onClick={handleResetFilters}>
-                    Reset
+                    />
+                    <Button variant="outlined" color="success">
+                        Tìm kiếm
+                    </Button>
+                </Box>
+                <Button onClick={() => setIsOpenCreate(true)} variant="contained" sx={{ background: "#2ca8a2" }}>
+                    Thêm mới
                 </Button>
             </Box>
-
-            <Card sx={{ maxHeight: "800px" }}>
+            <Card sx={{ maxHeight: "800px", marginTop: "30px" }}>
                 <TableCustom
                     columns={columnData}
-                    rows={filteredRows}
+                    rows={paginatedRows}
                     sortColumn={sortColumn}
                     sortDirection={sortDirection}
+                    onSort={handleSort}
                 />
                 <TablePagination
                     component="div"
-                    count={filteredRows.length}
+                    count={buildings.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}
@@ -159,7 +154,7 @@ const ServiceManage = () => {
             </Card>
         </section>
     );
-};
+}
 
 const columnData = [
     { name: "STT", align: "left", esName: "STT", sortable: true },
@@ -167,7 +162,6 @@ const columnData = [
     { name: "Căn hộ", align: "left", esName: "canHo", sortable: true },
     { name: "Tổng dịch vụ", align: "left", esName: "tongDichVu" },
     { name: "Chi tiết", align: "left", esName: "chiTiet" },
-    { name: "Tùy chọn", align: "left", esName: "action" },
-];
+  ];
 
 export default ServiceManage;

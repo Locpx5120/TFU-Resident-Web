@@ -31,7 +31,7 @@ const ServicePaymentsDetail = () => {
         const fetchRooms = async () => {
             try {
                 const response = await getDetailServiceUnpaids({
-                        apartmentId: idService,
+                        apartmentId: id,
                         serviceType: "",
                     });
                 setRoomsData(response);

@@ -103,7 +103,7 @@ export const routeOwner = [
         routeName: "Báo cáo",
         component: <ReportInvestor/>,
         icon: <DescriptionIcon/>,
-    },                          
+    },             
     {
         route: "/lich-su",
         routeName: "Lịch sử",

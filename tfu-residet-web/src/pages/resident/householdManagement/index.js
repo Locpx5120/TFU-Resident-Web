@@ -127,13 +127,13 @@ const HouseHoldResident = () => {
     />,
   ];
   const columnData = [
-    { name: "STT", align: "center", esName: "stt" },
-    // { name: "Chủ căn hộ", align: "center", esName: "ownerName" },
-    { name: "Toà nhà", align: "center", esName: "building" },
-    { name: "Tầng", align: "center", esName: "floorNumber" },
-    { name: "Căn hộ", align: "center", esName: "roomNumber" },
-    { name: "Tổng thành viên", align: "center", esName: "" },
-    // { name: "Email", align: "center", esName: "email" },
+    { name: "STT", align: "left", esName: "stt" },
+    // { name: "Chủ căn hộ", align: "left", esName: "ownerName" },
+    // { name: "Toà nhà", align: "left", esName: "building" },
+    { name: "Tầng", align: "left", esName: "floorNumber" },
+    { name: "Căn hộ", align: "left", esName: "roomNumber" },
+    // { name: "Tổng thành viên", align: "left", esName: "" },
+    // { name: "Email", align: "left", esName: "email" },
     {
       name: "Tùy chọn",
       align: "left",
