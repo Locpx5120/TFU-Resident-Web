@@ -103,7 +103,7 @@ export const routeOwner = [
         routeName: "Báo cáo",
         component: <ReportInvestor/>,
         icon: <DescriptionIcon/>,
-    },
+    },                          
     {
         route: "/lich-su",
         routeName: "Lịch sử",
@@ -144,7 +144,7 @@ export const routeResident = [
         icon: <SettingsIcon/>,
     },
     {
-        route: "/thanh-toan-dich-vu/:id",
+        route: "/thanh-toan-dich-vu/:id/:status",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsDetail/>,
         icon: <SettingsIcon/>,
@@ -311,5 +311,18 @@ export const routeAdmin = [
         routeName: "Xử lý đơn thêm dịch vụ",
         component: <Adminitrative/>,
         icon: <SettingsIcon/>,
+    },
+     {
+        route: "/xem-don",
+        routeName: "Danh sách yêu cầu",
+        component: <ViewRequests/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/xem-chi-tiet-don/:id",
+        routeName: "Xem đơn",
+        component: <RequestDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
     },
 ];

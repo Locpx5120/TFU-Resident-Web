@@ -16,7 +16,7 @@ import QRCodeModal from '../../../common/ModalQRCode';
 import { getDetailServiceUnpaids } from '../../../services/apartmentService';
 
 const ServicePaymentsDetail = () => {
-    const { id } = useParams();
+    const { id, status } = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [payments, setPayments] = useState([]);
@@ -40,6 +40,7 @@ const ServicePaymentsDetail = () => {
             }
         }
         fetchRooms();
+        console.log(status)
     }, [])
 
     const handleChangePage = (event, newPage) => {
@@ -87,7 +88,7 @@ const ServicePaymentsDetail = () => {
                 />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                     <h1>Tổng tiền cần thanh toán:  {roomsData?.totalAmount}</h1>
-                    <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>
+                    {status !== 'Đã thanh toán' && <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>}
                 </div>
             </Card>
         </section>

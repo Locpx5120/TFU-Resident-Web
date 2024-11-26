@@ -48,6 +48,7 @@ const ServiceManage = () => {
             try {
                 const data = await getSummary(rowsPerPage, page);
                 setServices(data.data);
+                console.log(data.data)
             } catch (error) {
 
             }
@@ -104,7 +105,7 @@ const ServiceManage = () => {
                 margin: '10px 0',
                 fontSize: '22px',
             }}>
-                Dịch vụ căn hộ <Avatar variant="square" sx={{ background: '#2ca8a2', borderRadius: 1 }}>0</Avatar>
+               Danh sách dịch vụ căn hộ
             </Typography>
             <Box
                 sx={{

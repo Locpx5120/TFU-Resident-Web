@@ -72,8 +72,8 @@ const ServicePayments = () => {
     return services.data;
   }, [page, rowsPerPage, services]);
 
-  const handleDetailClick = (id) => {
-    navigate(`/thanh-toan-dich-vu/${id}`);
+  const handleDetailClick = (id, status) => {
+    navigate(`/thanh-toan-dich-vu/${id}/${status}`);
   };
 
   return (
@@ -82,7 +82,6 @@ const ServicePayments = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>STT</TableCell>
             <TableCell align="left">
               <Checkbox
                 indeterminate={
@@ -103,9 +102,10 @@ const ServicePayments = () => {
                 }
                 onChange={handleSelectAll}
               />{" "}
-              Tất cả
             </TableCell>
-            <TableCell>Số phòng</TableCell>
+            <TableCell>STT</TableCell>
+            <TableCell>Toà nhà</TableCell>
+            <TableCell>Căn hộ</TableCell>
             <TableCell>Tổng dịch vụ</TableCell>
             <TableCell>Tháng</TableCell>
             <TableCell>Trạng thái</TableCell>
@@ -115,7 +115,6 @@ const ServicePayments = () => {
         <TableBody>
           {paginatedRows.map((service, index) => (
             <TableRow key={service.apartmentId}>
-              <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
               <TableCell>
                 {service.paymentStatus !== "Đã thanh toán" && (
                   <Checkbox
@@ -124,6 +123,8 @@ const ServicePayments = () => {
                   />
                 )}
               </TableCell>
+              <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
+            <TableCell>{service.buildingName}</TableCell>
               <TableCell>{service.roomNumber}</TableCell>
               <TableCell>{service.totalServices}</TableCell>
               <TableCell>{service.month}</TableCell>
@@ -133,7 +134,7 @@ const ServicePayments = () => {
                   style={{ fontSize: 12, textTransform: "lowercase" }}
                   variant="contained"
                   color="primary"
-                  onClick={() => handleDetailClick(service.apartmentId)}
+                  onClick={() => handleDetailClick(service.apartmentId, service.paymentStatus)}
                 >
                   Xem chi tiết
                 </Button>

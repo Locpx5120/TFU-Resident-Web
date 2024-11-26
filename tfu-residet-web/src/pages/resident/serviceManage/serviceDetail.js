@@ -20,7 +20,7 @@ const ServiceDetail = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [selectedService, setSelectedService] = useState({
         id: 0,
-        name: 'initial',
+        name: 'initial'
     });
     const [typeData, setTypeData] = useState([]);
     const [roomsData, setRoomsData] = useState([]);
@@ -29,10 +29,17 @@ const ServiceDetail = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const roomDetails = await detailApartment({
+                let roomRequest = {
                     apartmentId: id,
                     serviceType: selectedService.name === 'initial' ? "" : selectedService.name,
-                });
+                }
+                if (selectedService.startDateFrom) {
+                    roomRequest = {
+                        ...roomRequest, startDateFrom: selectedService.startDateFrom,
+                        startDateTo: selectedService.startDateTo
+                    }
+                }
+                const roomDetails = await detailApartment(roomRequest);
                 const serviceTypes = await getServices();
 
                 setRoomsData(roomDetails?.data || []);
@@ -70,11 +77,17 @@ const ServiceDetail = () => {
         console.log(e)
         setSelectedService((prev) => ({
             ...prev,
-            startDateFrom: e ?? e[0],
-            startDateTo:  e[1] || e[0]
+            startDateFrom: e[0],
+            startDateTo: e[1] || e[0]
         }));
     }
-
+    const resetForm = () => {
+        setDates([]);
+        setSelectedService({
+            id: 0,
+            name: 'initial'
+        })
+    }
     const paginatedRows = useMemo(() => {
         const startIndex = page * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
@@ -108,6 +121,8 @@ const ServiceDetail = () => {
                     handleDateChange(e.value)
                 }} selectionMode="range" readOnlyInput
                           hideOnRangeSelection placeholder="Chọn khoảng thời gian" dateFormat="dd/mm/yy"/>
+                <Button variant="outlined"  className="ml-2"
+                        color="primary" size="large" onClick={resetForm}>Reset</Button>
             </Box>
             <Card sx={{maxHeight: "800px", marginTop: "30px"}}>
                 <TableCustom
