@@ -71,7 +71,6 @@ const ServicePayments = () => {
     if (!services?.data) return [];
     return services.data;
   }, [page, rowsPerPage, services]);
-
   const handleDetailClick = (id, status) => {
     navigate(`/thanh-toan-dich-vu/${id}/${status}`);
   };

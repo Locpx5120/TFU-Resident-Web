@@ -19,9 +19,9 @@ const DetailThirdPartyLent = () => {
     const columnData = [
         { esName: 'companyName', name: 'Tên công ty', width: 200 },
         { esName: 'nameService', name: 'Tên dịch vụ', width: 200 },
-        { esName: 'floor', name: 'Tầng', width: 100 },
-        { esName: 'room', name: 'Phòng', width: 100 },
-        { esName: 'area', name: 'Diện tích mặt bằng (m2)', width: 200 },
+        // { esName: 'floor', name: 'Tầng', width: 100 },
+        // { esName: 'room', name: 'Phòng', width: 100 },
+        // { esName: 'area', name: 'Diện tích mặt bằng (m2)', width: 200 },
         { esName: 'startDate', name: 'Ngày thuê', width: 150 },
         { esName: 'endDate', name: 'Ngày hết hạn', width: 150 },
         { esName: 'servicePrice', name: 'Giá dịch vụ', width: 150 },

@@ -6,10 +6,12 @@ const HEADER_STAFF = {
             'content-type': 'application/json',
             'buildingPermalink': Cookies.get("buildingID"),
           }
-export const getStaff = async (body = {
-   Email: 'jane.smith@example.com'
-}) => {
-   return await postData(`/staff/listEmployee`, body, HEADER_STAFF , endpointUrl.BUILDING_URL);
+export const getStaff = async () => {
+   return await getData(`/staff/list`, endpointUrl.BUILDING_URL, {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink': Cookies.get("buildingID"),
+    });
 }
 
 export const deleteStaff = async (id) => {
