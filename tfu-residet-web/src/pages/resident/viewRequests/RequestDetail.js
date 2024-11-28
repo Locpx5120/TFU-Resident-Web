@@ -18,6 +18,7 @@ import {
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import {APPROVE_REQUEST, REJECT_REQUEST} from "../../../constants/ApproveConstant";
 
 const RequestDetail = () => {
     const location = useLocation();
@@ -45,11 +46,11 @@ const RequestDetail = () => {
         vehicleType: '',
         status: request?.status
     })
-    const handleSubmit = () => {
+    const handleSubmit = (statusCode) => {
         const id = paramSplit[0]?.split("/")[2];
         const body = {
             serviceContractId: id,
-            status,
+            status: statusCode,
             notes,
         };
         callUpdate(body);
@@ -190,7 +191,7 @@ const RequestDetail = () => {
             }
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
                 {(request.status !== 'Approved' && Cookies.get('role') === 'Hành chính') &&
-                    <Button onClick={handleSubmit} variant="contained" color="primary">
+                    <Button onClick={() => handleSubmit(APPROVE_REQUEST)} variant="contained" color="primary">
                         Duyệt
                     </Button>}
 
@@ -198,10 +199,14 @@ const RequestDetail = () => {
                     variant="outlined"
                     color="secondary"
                     onClick={() => navigate("/xem-don")}
-                    sx={{marginLeft: "10px"}}
+                    sx={{margin: "10px"}}
                 >
                     Đóng
                 </Button>
+                 {(request.status !== 'Approved' && Cookies.get('role') === 'Hành chính') &&
+                    <Button onClick={() => handleSubmit(REJECT_REQUEST)} variant="contained" color="error">
+                        Từ chối
+                    </Button>}
             </Box>
         </Box>
     );

@@ -115,7 +115,7 @@ const ViewRequests = () => {
     return (
         <Card className='content' sx={{maxHeight: "800px", marginTop: "30px"}}>
             <Box>
-                <Typography variant="h6">Chi tiết thanh toán dịch vụ phòng</Typography>
+                <Typography variant="h6">Danh sách yêu cầu</Typography>
                 <Select
                     value={selectedService.name}
                     onChange={handleServiceChange}
@@ -156,7 +156,8 @@ const ViewRequests = () => {
                     setDates(e.value);
                     handleDateChange(e.value)
                 }} selectionMode="range" readOnlyInput
-                          hideOnRangeSelection placeholder="Chọn khoảng thời gian" dateFormat="dd/mm/yy"/>
+                          hideOnRangeSelection placeholder="Chọn khoảng thời gian" dateFormat="dd/mm/yy"
+                />
                 <Select
                     value={selectedService.name}
                     onChange={handleServiceChange}
