@@ -66,7 +66,7 @@ const DetailThirdPartyRent = () => {
       fullWidth
       select
       label="Tòa nhà"
-      name="building"
+      name="buildingId"
       value={selectedThirdParty.building || ''}
       onChange={(e) => handleFieldChange('building', e.target.value)}
     >
@@ -95,7 +95,7 @@ const DetailThirdPartyRent = () => {
     <TextField
       fullWidth
       label="Số tầng"
-      name="floor"
+      name="floorNumber"
       type="number"
       value={selectedThirdParty.floor || ""}
       onChange={(e) => handleFieldChange("floor", e.target.value)}
@@ -103,7 +103,7 @@ const DetailThirdPartyRent = () => {
     <TextField
       fullWidth
       label="Số phòng"
-      name="room"
+      name="roomNumber"
       type="number"
       value={selectedThirdParty.room || ""}
       onChange={(e) => handleFieldChange("room", e.target.value)}
@@ -129,7 +129,7 @@ const DetailThirdPartyRent = () => {
     <TextField
       fullWidth
       label="Số tiền"
-      name="servicePrice"
+      name="price"
       type="text"
       value={selectedThirdParty.servicePrice}
       onChange={(e) => handleFieldChange("servicePrice", e.target.value)}
