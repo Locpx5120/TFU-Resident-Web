@@ -205,7 +205,7 @@ const RequestDetail = () => {
                 >
                     Đóng
                 </Button>
-                 {(request.status !== 'Rejected' && Cookies.get('role') === 'HanhChinh') &&
+                 {(request.status !== 'Rejected' && request.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(REJECT_REQUEST)} variant="contained" color="error">
                         Từ chối
                     </Button>}
