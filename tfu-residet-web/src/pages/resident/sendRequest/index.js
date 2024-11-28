@@ -143,6 +143,14 @@ const SendRequest = () => {
         newRequests[index][field] = value;
         setRequests(newRequests);
     };
+
+    const handleChangeServiceName = (index, field, value) => {
+        const newRequests = [...requests];
+        newRequests[index][field] = value;
+        setRequests(newRequests);
+        setServiceName(value);
+    };
+    
     const validateEmail = (email) => {
         // Regular expression for email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -425,7 +433,7 @@ const SendRequest = () => {
                     required
                 >
                     {apartments.map((option) => (
-                        <MenuItem key={option.roomNumber} value={option.roomNumber}>
+                        <MenuItem key={option.id} value={option.id}>
                             {option.roomNumber}
                         </MenuItem>
                     ))}
@@ -450,10 +458,33 @@ const SendRequest = () => {
                                     <Select
                                         labelId="service-type-label"
                                         value={request.serviceId}
-                                        onChange={(e) => handleChange(index, "serviceId", e.target.value)}
+                                        onChange={(e) => {
+                                            setServiceTypes(e.target.value);
+                                            handleChange(index, "serviceId", e.target.value)
+                                        }}
                                         required
                                     >
                                         {optionServiceTypes.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl
+                                    fullWidth
+                                    margin="normal"
+                                    sx={{marginRight: "10px", width: '50%'}}
+                                >
+                                    <InputLabel id="service-type-label">Tên dịch vụ</InputLabel>
+                                    <Select
+                                        labelId="service-type-label"
+                                        value={request.serviceName}
+                                        onChange={(e) => handleChangeServiceName(index, "serviceName", e.target.value)}
+                                        required
+                                        disabled={!serviceTypes}
+                                    >
+                                        {optionServiceName.map((option) => (
                                             <MenuItem key={option.value} value={option.value}>
                                                 {option.label}
                                             </MenuItem>
