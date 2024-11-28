@@ -244,7 +244,7 @@ const ListTab = () => {
 
 const columnData = [
   { name: "Tên nhân viên", align: "left", esName: "fullName" },
-  { name: "Bộ phận", align: "left", esName: "department" },
+  { name: "Bộ phận", align: "left", esName: "roleName" },
   { name: "Email", align: "left", esName: "email" },
   { name: "Điện thoại", align: "left", esName: "phone" },
   { name: "Ngày thuê", align: "left", esName: "hireDate" },
