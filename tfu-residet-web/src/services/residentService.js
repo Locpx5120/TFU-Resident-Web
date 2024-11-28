@@ -1,4 +1,4 @@
-import {deleteData, endpointUrl, getData, postData, putData} from "./api";
+import {endpointUrl, getData, postData, putData} from "./api";
 import Cookies from "js-cookie";
 
 export const getBuilding = async (residentId, buildingId, query='') => {
@@ -29,6 +29,23 @@ export const deleteResident = async (data) => {
 export const addResident  = async (data) => {
    return await postData(`/ceo/addResident`, data , endpointUrl.BUILDING_URL);
 }
+
+export const updateMemberResident  = async (data) => {
+   return await postData(`/resident/updateResident`, data , {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    } , endpointUrl.BUILDING_URL);
+}
+
+export const deleteMemberResident = async (residentId) => {
+   return await postData(`/resident/deleteResident`, {residentId}, {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    }, endpointUrl.BUILDING_URL);
+}
+
 export const updateResident  = async (data) => {
    return await putData(`/ceo/updateResident`, data , endpointUrl.BUILDING_URL);
 }

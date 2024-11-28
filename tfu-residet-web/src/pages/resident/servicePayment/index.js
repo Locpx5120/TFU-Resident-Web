@@ -71,8 +71,8 @@ const ServicePayments = () => {
     if (!services?.data) return [];
     return services.data;
   }, [page, rowsPerPage, services]);
-  const handleDetailClick = (id, status) => {
-    navigate(`/thanh-toan-dich-vu/${id}/${status}`);
+  const handleDetailClick = (id, status, year, month) => {
+    navigate(`/thanh-toan-dich-vu/${id}/${status}/${year}/${month}`);
   };
 
   return (
@@ -107,6 +107,7 @@ const ServicePayments = () => {
             <TableCell>Căn hộ</TableCell>
             <TableCell>Tổng dịch vụ</TableCell>
             <TableCell>Tháng</TableCell>
+            <TableCell>Năm</TableCell>
             <TableCell>Trạng thái</TableCell>
             <TableCell>Xem chi tiết</TableCell>
           </TableRow>
@@ -127,13 +128,14 @@ const ServicePayments = () => {
               <TableCell>{service.roomNumber}</TableCell>
               <TableCell>{service.totalServices}</TableCell>
               <TableCell>{service.month}</TableCell>
+              <TableCell>{service.year}</TableCell>
               <TableCell>{service.paymentStatus}</TableCell>
               <TableCell>
                 <Button
                   style={{ fontSize: 12, textTransform: "lowercase" }}
                   variant="contained"
                   color="primary"
-                  onClick={() => handleDetailClick(service.apartmentId, service.paymentStatus)}
+                  onClick={() => handleDetailClick(service.apartmentId, service.paymentStatus, service.year ,service.month)}
                 >
                   Xem chi tiết
                 </Button>

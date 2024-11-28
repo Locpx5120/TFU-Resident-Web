@@ -23,10 +23,10 @@ function App() {
   const getRoutesByRole = useCallback((role) => {
     switch (role) {
       case 'Resident': return routeResident;
-      case 'Ban quản lý': return routeDirector;
-      case 'Kế toán': return routeAccountant;
-      case 'Bên thứ ba': return routeThirdParty;
-      case 'Hành chính': return routeAdmin;
+      case 'BanQuanLy': return routeDirector;
+      case 'KeToan': return routeAccountant;
+      case 'BenThuBa': return routeThirdParty;
+      case 'HanhChinh': return routeAdmin;
       default: return routeArray;
     }
   }, [user]);

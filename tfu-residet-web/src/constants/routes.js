@@ -144,7 +144,7 @@ export const routeResident = [
         icon: <SettingsIcon/>,
     },
     {
-        route: "/thanh-toan-dich-vu/:id/:status",
+        route: "/thanh-toan-dich-vu/:id/:status/:year/:month",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsDetail/>,
         icon: <SettingsIcon/>,

@@ -117,14 +117,12 @@ const ListTab = () => {
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
-          Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+          Swal.fire('Thất bại', data.message, 'error');
         }
       } catch (error) {
         Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
       }
     } else {
-      console.log(employeeData, selectedEmployee);
-      
       try {
         const data = await updateStaff({
             staffId: selectedEmployee.id,

@@ -14,12 +14,24 @@ export const getStaff = async () => {
     });
 }
 
-export const deleteStaff = async (id) => {
-    return await deleteData('/staff/listEmployee', {staffId: id}, HEADER_STAFF).json()
+export const deleteStaff = async (staffId) => {
+  return await postData(`/staff/deleteStaff`, staffId, {
+    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+    'content-type': 'application/json',
+    'buildingPermalink': Cookies.get("buildingID"),
+  }, endpointUrl.BUILDING_URL);
 }
 export const createStaff = async (body) => {
-   return await postData(`/staff/listEmployee`, body, HEADER_STAFF, endpointUrl.BUILDING_URL);
+   return await postData(`/staff/addStaff`, body, {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink': Cookies.get("buildingID"),
+    }, endpointUrl.BUILDING_URL);
 }
 export const updateStaff = async (body) => {
-   return await putData(`/staff/listEmployee`,body, endpointUrl.BUILDING_URL, HEADER_STAFF);
+  return await postData(`/staff/updateStaff`, body, {
+    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+    'content-type': 'application/json',
+    'buildingPermalink': Cookies.get("buildingID"),
+  }, endpointUrl.BUILDING_URL);
 }

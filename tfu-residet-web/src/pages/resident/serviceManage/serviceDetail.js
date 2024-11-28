@@ -35,7 +35,8 @@ const ServiceDetail = () => {
                 }
                 if (selectedService.startDateFrom) {
                     roomRequest = {
-                        ...roomRequest, startDateFrom: selectedService.startDateFrom,
+                        ...roomRequest, 
+                        startDateFrom: selectedService.startDateFrom,
                         startDateTo: selectedService.startDateTo
                     }
                 }

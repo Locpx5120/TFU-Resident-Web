@@ -11,7 +11,7 @@ import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { addMemberInApartment, deleteResident, getMemberInApartment } from "../../../services/residentService";
+import { addMemberInApartment, deleteMemberResident, deleteResident, getMemberInApartment, updateMemberResident } from "../../../services/residentService";
 import { themThanhVien } from "../../../constants";
 
 const DetailHouseHoldResident = () => {
@@ -92,14 +92,11 @@ const DetailHouseHoldResident = () => {
 
   const handleDeleteMember = async(member) => {
     try {
-      const response = await deleteResident({
-          residentId: member.id
-        });
-      const data = await response.json();
-      if (data.error) {
-        Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
-      } else {
+      const response = await deleteMemberResident(member.id);
+      if (response.success) {
         Swal.fire('Thành công', 'Đã xóa thành công!', 'success');
+      } else {
+        Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
       }
     } catch (error) {
       Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
@@ -131,24 +128,24 @@ const DetailHouseHoldResident = () => {
         console.error('Error fetching projects:', error);
       }
     } 
-    // else {
-    //   try {
-    //     const response = await updateResident({
-    //         Phone: memberData.phoneNumber,
-    //         name: memberData.name,
-    //         email: memberData.email,
-    //         id: selectedMember.id
-    //       });
-    //     if (response.success) {
-    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-    //     } else {
-    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     }
-    //   } catch (error) {
-    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     console.error('Error updating household:', error);
-    //   }
-    // }
+    else {
+      try {
+        const response = await updateMemberResident({
+            phone: memberData.phoneNumber,
+            name: memberData.memberName,
+            email: memberData.email,
+            id: memberData.id
+          });
+        if (response.success) {
+          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+        } else {
+          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        console.error('Error updating household:', error);
+      }
+    }
 
     setReload(!reload);
     handleCloseModal();

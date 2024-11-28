@@ -16,7 +16,7 @@ import QRCodeModal from '../../../common/ModalQRCode';
 import { getDetailServiceUnpaids } from '../../../services/apartmentService';
 
 const ServicePaymentsDetail = () => {
-    const { id, status } = useParams();
+    const { id, status, year , month } = useParams();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [payments, setPayments] = useState([]);
@@ -33,6 +33,7 @@ const ServicePaymentsDetail = () => {
                 const response = await getDetailServiceUnpaids({
                         apartmentId: id,
                         serviceType: "",
+                        year , month
                     });
                 setRoomsData(response);
             } catch (error) {
@@ -40,7 +41,6 @@ const ServicePaymentsDetail = () => {
             }
         }
         fetchRooms();
-        console.log(status)
     }, [])
 
     const handleChangePage = (event, newPage) => {

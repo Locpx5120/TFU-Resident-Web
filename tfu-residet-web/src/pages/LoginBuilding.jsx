@@ -34,7 +34,9 @@ const LoginBuilding = () => {
 
         try {
             const result = await loginBuildingApi(credentials, buildingId);
-            if (!result.success) alert(result.message)
+            if (!result.success) {
+                Swal.fire('Thất bại', 'Sai tài khoản hoặc mật khẩu!', 'error');
+            }
             if (result.data && result.data.token) {
                 const decoded = jwtDecode(result.data.token);                
                 Cookies.set('role', decoded?.role, {expires: 1});

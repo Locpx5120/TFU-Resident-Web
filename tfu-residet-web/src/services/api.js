@@ -78,7 +78,6 @@ export const deleteData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_
         return await response.json();
     } catch (error) {
         console.error("Error deleting data:", error);
-        throw error;
     }
 };
 
