@@ -15,7 +15,7 @@ export const getStaff = async () => {
 }
 
 export const deleteStaff = async (staffId) => {
-  return await postData(`/staff/deleteStaff`, staffId, {
+  return await postData(`/staff/deleteStaff`, {staffId}, {
     Authorization: `Bearer ${Cookies.get("accessToken")}`,
     'content-type': 'application/json',
     'buildingPermalink': Cookies.get("buildingID"),
