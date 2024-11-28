@@ -63,20 +63,20 @@ const ThirdPartyRent = () => {
     }));
 
     const modalFields = [
-        <TextField
-            fullWidth
-            select
-            label="Tòa nhà"
-            name="building"
-            value={selectedThirdParty.building || ''}
-            onChange={(e) => handleFieldChange('building', e.target.value)}
-        >
-            {buildings.map((building) => (
-                <MenuItem key={building.id} value={building.id}>
-                    {building.buildingName}
-                </MenuItem>
-            ))}
-        </TextField>,
+        // <TextField
+        //     fullWidth
+        //     select
+        //     label="Tòa nhà"
+        //     name="building"
+        //     value={selectedThirdParty.building || ''}
+        //     onChange={(e) => handleFieldChange('building', e.target.value)}
+        // >
+        //     {buildings.map((building) => (
+        //         <MenuItem key={building.id} value={building.id}>
+        //             {building.buildingName}
+        //         </MenuItem>
+        //     ))}
+        // </TextField>,
         <TextField
             fullWidth
             label="Tên công ty"
