@@ -157,6 +157,8 @@ const ListTab = () => {
       ))}
     </TextField>,
     <TextField label="Email" name="email" disabled={modalMode.mode === 'edit'} />,
+    <TextField label="Họ và tên" name="name" />,
+    <TextField label="Số điện thoại" name="phone" />,
   ];
 
   const rows = employeeDatas.map((employee) => ({
