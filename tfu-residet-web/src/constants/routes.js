@@ -51,7 +51,7 @@ import Administrator from "../pages/Administrator/Administrator";
 import DetailThirdPartyRent from "../pages/buildingDirector/thirdParty/DetailThirdPartyRent";
 import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThirdPartyLent";
 
-
+import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 export const routeArray = [
     {
         route: "/",
@@ -264,6 +264,20 @@ export const routeDirector = [
         hidden: true,
         component: <DetailThirdPartyLent />,
     },
+    // },
+    {
+        route: "/approve",
+        routeName: "Phê duyệt",
+        component: <ViewRequests/>,
+        icon: <LibraryAddCheckIcon/>,
+    },
+    {
+        route: "/approve/:id",
+        routeName: "Xem đơn",
+        component: <RequestDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
 ];
 
 export const routeThirdParty = [
@@ -306,12 +320,12 @@ export const routeAccountant = [
 ];
 
 export const routeAdmin = [
-    {
-        route: "/xu-ly-don-them-dich-vu",
-        routeName: "Xử lý đơn thêm dịch vụ",
-        component: <Adminitrative/>,
-        icon: <SettingsIcon/>,
-    },
+    // {
+    //     route: "/xu-ly-don-them-dich-vu",
+    //     routeName: "Xử lý đơn thêm dịch vụ",
+    //     component: <Adminitrative/>,
+    //     icon: <SettingsIcon/>,
+    // },
      {
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",
