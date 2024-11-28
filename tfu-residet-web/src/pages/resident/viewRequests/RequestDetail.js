@@ -51,7 +51,7 @@ const RequestDetail = () => {
         const body = {
             serviceContractId: id,
             status: statusCode,
-            notes,
+            note: notes,
         };
         callUpdate(body);
         // navigate('/xem-don');
@@ -92,7 +92,9 @@ const RequestDetail = () => {
         try {
             const res = await updateVehicle(body);
 
-            console.log(res);
+            if(res.success) {
+                Swal.fire('Thành công!', res.message, 'success');
+            }
         } catch (e) {
             console.error(e);
             Swal.fire({
@@ -190,7 +192,7 @@ const RequestDetail = () => {
                 </div>
             }
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                {(request.status !== 'Approved' && Cookies.get('role') === 'Hành chính') &&
+                {(request.status !== 'Approved' && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(APPROVE_REQUEST)} variant="contained" color="primary">
                         Duyệt
                     </Button>}
@@ -203,7 +205,7 @@ const RequestDetail = () => {
                 >
                     Đóng
                 </Button>
-                 {(request.status !== 'Approved' && Cookies.get('role') === 'Hành chính') &&
+                 {(request.status !== 'Approved' && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(REJECT_REQUEST)} variant="contained" color="error">
                         Từ chối
                     </Button>}

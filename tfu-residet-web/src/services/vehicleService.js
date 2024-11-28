@@ -32,7 +32,10 @@ export const vehicleServiceDetail = async (id) => {
         'buildingPermalink': Cookies.get('buildingID'),})
 }
 export const updateVehicle = async (body) => {
-    return await putData(`/service-contract/update-service`, body, endpointUrl.BUILDING_URL)
+    return await postData(`/service-contract/update-service`, body,{
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID')}, endpointUrl.BUILDING_URL)
 }
 
 export const memeberServiceDetail = async (id) => {
