@@ -9,7 +9,10 @@ export const listApartment =  async (buildingID) => {
                   })
 }
 export const detailApartment = async (body) => {
-    return await postData(`/apartment-services/details`, body, undefined,  endpointUrl.BUILDING_URL,)
+    return await postData(`/apartment-services/details`, body, {
+                    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                    'content-type': 'application/json',
+                  },  endpointUrl.BUILDING_URL,)
 }
 export const getServiceName  =  async (serviceTypes) => {
     return await getData(`/apartment-services/GetByCategory/${serviceTypes}`, endpointUrl.BUILDING_URL, {

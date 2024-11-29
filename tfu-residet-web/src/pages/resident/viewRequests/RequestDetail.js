@@ -192,7 +192,7 @@ const RequestDetail = () => {
                 </div>
             }
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                {(request.status !== 'Approved' && Cookies.get('role') === 'HanhChinh') &&
+                {(request.status !== 'Rejected' && request.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(APPROVE_REQUEST)} variant="contained" color="primary">
                         Duyệt
                     </Button>}
