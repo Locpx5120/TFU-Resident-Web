@@ -10,7 +10,7 @@ export const getBuilding = async (residentId, buildingId, query='') => {
 }
 
 export const getMemberInApartment = async (apartmentId, query='') => {
-i   return await getData(`/apartment/resident/details/${apartmentId}?memberName=${query}`, endpointUrl.BUILDING_URL,{
+  return await getData(`/apartment/resident/details/${apartmentId}?memberName=${query}`, endpointUrl.BUILDING_URL,{
             Authorization: `Bearer ${Cookies.get("accessToken")}`,
             'content-type': 'application/json'
           });

@@ -176,7 +176,7 @@ const RequestDetail = () => {
                     <div className="grid">
                         <div className="col-6 flex">
                             <div className="col-6 font-semibold">Trạng thái</div>
-                            <div className="col-6">{request.status}</div>
+                            <div className="col-6">{requestInfo.status}</div>
                         </div>
                         <div className="col-6 flex">
                             <div className="col-6 font-semibold">chú thích</div>
@@ -192,7 +192,7 @@ const RequestDetail = () => {
                 </div>
             }
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                {(request.status !== 'Rejected' && request.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
+                {(requestInfo.status !== 'Rejected' && requestInfo.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(APPROVE_REQUEST)} variant="contained" color="primary">
                         Duyệt
                     </Button>}
@@ -205,7 +205,7 @@ const RequestDetail = () => {
                 >
                     Đóng
                 </Button>
-                 {(request.status !== 'Rejected' && request.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
+                 {(requestInfo.status !== 'Rejected' && requestInfo.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(REJECT_REQUEST)} variant="contained" color="error">
                         Từ chối
                     </Button>}
