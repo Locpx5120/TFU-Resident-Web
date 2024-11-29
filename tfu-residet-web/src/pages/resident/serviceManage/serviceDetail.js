@@ -98,7 +98,7 @@ const ServiceDetail = () => {
     return (
         <section className="content service">
             <Box>
-                <Typography variant="h6">Chi tiết thanh toán dịch vụ phòng</Typography>
+                <Typography variant="h6">Chi tiết quản lý dịch vụ</Typography>
                 <Select
                     value={selectedService.name}
                     onChange={handleServiceChange}

@@ -97,9 +97,11 @@ const ServicePaymentsDetail = () => {
 
 const columnData = [
     { name: "Tên dịch vụ", align: "left", esName: "serviceName" },
+    { name: "Ngày bắt đầu", align: "left", esName: "startDate" },
     { name: "Số lượng/m2", align: "left", esName: "quantityOrArea" },
     { name: "Giá tiền", align: "left", esName: "unitPrice" },
     { name: "Tổng tiền", align: "left", esName: "totalPrice" },
+    { name: "Trạng thái", align: "left", esName: "status" },
 ];
 
 export default ServicePaymentsDetail;
