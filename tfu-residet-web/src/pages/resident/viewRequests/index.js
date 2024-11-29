@@ -58,9 +58,11 @@ const ViewRequests = () => {
                         return items = {
                             ...items,
                             createdDate: dayjs(items.createdDate).format('DD/MM/YYYY'),
-                            processedDate: items.processedDate ? dayjs(items.processedDate).format('DD/MM/YYYY') : items.processedDate
+                            processedDate: items.processedDate ? dayjs(items.processedDate).format('DD/MM/YYYY') : items.processedDate,
+                            buildingName: 'Toà nhà Beta'
                         }
                     });
+                console.log(allItems);
                 const serviceTypes = await getServices();
                 setTypeData(serviceTypes?.data || []);
 
@@ -81,7 +83,7 @@ const ViewRequests = () => {
     }
     const columns = [
         // { esName: 'apartment', name: 'Tên căn hộ' },
-        {esName: 'building', name: 'Tòa nhà'},
+        {esName: 'buildingName', name: 'Tòa nhà'},
         {esName: 'serviceName', name: 'Tên dịch vụ'},
         {esName: 'createdDate', name: 'Ngày tạo'},
         {esName: 'processedDate', name: 'Ngày xử lý'},

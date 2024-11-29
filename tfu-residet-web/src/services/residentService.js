@@ -10,7 +10,10 @@ export const getBuilding = async (residentId, buildingId, query='') => {
 }
 
 export const getMemberInApartment = async (apartmentId, query='') => {
-   return await getData(`/apartment/resident/details/${apartmentId}?memberName=${query}`, endpointUrl.BUILDING_URL);
+i   return await getData(`/apartment/resident/details/${apartmentId}?memberName=${query}`, endpointUrl.BUILDING_URL,{
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            'content-type': 'application/json'
+          });
 }
 export const addMemberInApartment = async (body) => {
    return await postData('/apartment/add-apartment-member', body, undefined, endpointUrl.BUILDING_URL);
