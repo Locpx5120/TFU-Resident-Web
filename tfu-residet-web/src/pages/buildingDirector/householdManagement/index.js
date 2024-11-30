@@ -20,6 +20,7 @@ const HouseHold = () => {
     title: 'Thêm chủ căn hộ',
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
+  const [totalRecord, setTotalRecord] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const HouseHold = () => {
             pageNumber: page + 1,
           });
         setBuildings(data.data);
+        setTotalRecord(data.totalRecords)
       } catch (error) {
         console.log(error);
       }
@@ -172,6 +174,7 @@ const HouseHold = () => {
 
   return (
     <section className="content">
+      <h1>Tổng số cư dân hiện tại: {totalRecord}</h1>
       <Box
         sx={{
           display: "flex",
