@@ -35,6 +35,11 @@ const ServicePaymentsDetail = () => {
                         serviceType: "",
                         year , month
                     });
+                console.log(response)
+                response.services.map((items) => {
+                    items.unitPrice = items?.unitPrice?.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+                    items.totalPrice = items?.totalPrice?.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
+                })
                 setRoomsData(response);
             } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
@@ -87,7 +92,7 @@ const ServicePaymentsDetail = () => {
                     rowsPerPageOptions={[5, 10, 25]}
                 />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
-                    <h1>Tổng tiền cần thanh toán:  {roomsData?.totalAmount}</h1>
+                    <h1>Tổng tiền cần thanh toán:  {roomsData?.totalAmount?.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'})}</h1>
                     {status !== 'Đã thanh toán' && <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>}
                 </div>
             </Card>
