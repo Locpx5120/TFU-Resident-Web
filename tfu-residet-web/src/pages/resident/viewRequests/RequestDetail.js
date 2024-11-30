@@ -58,7 +58,10 @@ const RequestDetail = () => {
     };
 
     useEffect(() => {
-        const fetchRequest = async () => {
+
+        fetchRequest();
+    }, [params.id]);
+const fetchRequest = async () => {
             try {
                 let response = null;
                 const id = paramSplit[0]?.split("/")[2];
@@ -85,15 +88,13 @@ const RequestDetail = () => {
                 });
             }
         };
-        fetchRequest();
-    }, [params.id]);
-
     const callUpdate = async (body) => {
         try {
             const res = await updateVehicle(body);
 
             if(res.success) {
                 Swal.fire('Thành công!', res.message, 'success');
+                fetchRequest();
             }
         } catch (e) {
             console.error(e);
@@ -192,7 +193,7 @@ const RequestDetail = () => {
                 </div>
             }
             <Box sx={{textAlign: "center", marginTop: "20px", width: "100%"}}>
-                {(requestInfo.status !== 'Rejected' && requestInfo.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
+                {(requestInfo.status !== APPROVE_REQUEST && requestInfo.status !== REJECT_REQUEST  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(APPROVE_REQUEST)} variant="contained" color="primary">
                         Duyệt
                     </Button>}
@@ -205,7 +206,7 @@ const RequestDetail = () => {
                 >
                     Đóng
                 </Button>
-                 {(requestInfo.status !== 'Rejected' && requestInfo.status !== 'Approved'  && Cookies.get('role') === 'HanhChinh') &&
+                 {(requestInfo.status !== APPROVE_REQUEST && requestInfo.status !== REJECT_REQUEST  && Cookies.get('role') === 'HanhChinh') &&
                     <Button onClick={() => handleSubmit(REJECT_REQUEST)} variant="contained" color="error">
                         Từ chối
                     </Button>}
