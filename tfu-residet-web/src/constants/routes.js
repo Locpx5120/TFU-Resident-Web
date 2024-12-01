@@ -53,6 +53,7 @@ import DetailThirdPartyRent from "../pages/buildingDirector/thirdParty/DetailThi
 import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThirdPartyLent";
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import DetailNews from "../pages/news/detailNews";
 export const routeArray = [
     {
         route: "/",
@@ -271,6 +272,10 @@ export const routeDirector = [
         routeName: "Quản lí bản tin",
         icon: <SettingsIcon/>,
         component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
     },
     {
         route: "/approve",
