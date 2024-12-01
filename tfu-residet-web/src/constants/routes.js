@@ -12,12 +12,13 @@ import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement/index";
 import ThirdParty from "../pages/resident/thirdParty";
 import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
+import News from "../pages/news";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
 import ReportInvestor from "../components/owner/report";
 import HistoryOnwer from "../components/owner/history";
-// icons  
+// icons
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import BusinessIcon from "@mui/icons-material/Business";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -103,7 +104,7 @@ export const routeOwner = [
         routeName: "Báo cáo",
         component: <ReportInvestor/>,
         icon: <DescriptionIcon/>,
-    },             
+    },
     {
         route: "/lich-su",
         routeName: "Lịch sử",
@@ -265,6 +266,12 @@ export const routeDirector = [
         component: <DetailThirdPartyLent />,
     },
     // },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
     {
         route: "/approve",
         routeName: "Phê duyệt",
