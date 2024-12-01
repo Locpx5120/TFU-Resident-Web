@@ -52,6 +52,7 @@ import DetailThirdPartyRent from "../pages/buildingDirector/thirdParty/DetailThi
 import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThirdPartyLent";
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import FeedbackPage from "../pages/resident/feedback";
 export const routeArray = [
     {
         route: "/",
@@ -195,12 +196,12 @@ export const routeResident = [
         component: <SendRequest/>,
         icon: <SettingsIcon/>,
     },
-    // {
-    //     route: "/ben-thu-ba",
-    //     routeName: "Quản lí bên thứ ba",
-    //     component: <ThirdParty />,
-    //     icon: <ThirtyFpsOutlined />,
-    // },
+    {
+        route: "/danh-gia",
+        routeName: "Đánh giá dịch vụ",
+        component: <FeedbackPage />,
+        icon: <ThirtyFpsOutlined />,
+    },
 ];
 
 export const routeDirector = [

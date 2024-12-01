@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Card, TextField, TablePagination } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import TableCustom from "../../../components/Table";
@@ -158,7 +158,7 @@ const HouseHold = () => {
       esName: "action",
     },
   ];
-  const rows = buildings.map((building) => ({
+  const rows = useMemo(() => buildings.map((building) => ({
     ...building,
     action: (
       <>
@@ -170,7 +170,7 @@ const HouseHold = () => {
           </Button>
       </>
     ),
-  }));
+  })), [buildings]);
 
   return (
     <section className="content">
