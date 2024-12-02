@@ -43,6 +43,13 @@ const FormNews = () => {
 
         }
     }
+    const handleChangeInput = (event) => {
+        const { name, value } =  event?.target;
+        setNewsFormInput((prevState) => ({...prevState, [name]: value}))
+    }
+    const handleChangeDropdown = () => {
+
+    }
     return (
         <>
             <Card className="content" title={params ? 'Sửa bản tin' : ' Tạo bản tin'}>
@@ -50,7 +57,8 @@ const FormNews = () => {
                 <div className="col-12 grid">
                     <div className="field col-4">
                         <label form="firstname1">Loại thông báo</label>
-                        <Dropdown className="w-full" options={statusTypeList}/>
+                        <Dropdown className="w-full" options={statusTypeList} name="notificationType" onChange={handleChangeInput}/>
+                        <small className="text-red-500">vcl lỗi </small>
                     </div>
                     <div className="field col-4">
                         <label form="firstname1">Toà nhà</label>
@@ -65,15 +73,15 @@ const FormNews = () => {
                 <div className="col-12 grid">
                     <div className="field col-6">
                         <label form="firstname1">Tiêu đề</label>
-                        <InputText className="w-full"/>
+                        <InputText className="w-full" name="title" onChange={handleChangeInput}/>
                     </div>
                     <div className="field col-6">
                         <label form="firstname1">Nội dung rút gọn</label>
-                        <InputText className="w-full"/>
+                        <InputText className="w-full" name="content" onChange={handleChangeInput}/>
                     </div>
                     <div className="field col-12">
                         <label form="firstname1">Nội dung chi tiết</label>
-                        <Editor className="w-full h-10rem"/>
+                        <Editor className="w-full h-10rem"  name="contentDetail" onChange={handleChangeInput}/>
                     </div>
                     <div className="field col-12 mt-5">
                         <label form="firstname1">Ảnh minh hoạ</label>
@@ -85,7 +93,7 @@ const FormNews = () => {
                 <div className="col-12 grid">
                     <div className="field col-12">
                         <label form="firstname1">Thời gian áp dụng</label>
-                        <Calendar showTime hourFormat="24" className="w-full" showIcon/>
+                        <Calendar showTime hourFormat="24" className="w-full" showIcon name="contentDetail" onChange={handleChangeInput} />
                     </div>
                 </div>
             </Card>
