@@ -322,12 +322,6 @@ export const routeAccountant = [
 ];
 
 export const routeAdmin = [
-    {
-        route: "/gui-don",
-        routeName: "Gửi đơn",
-        component: <SendRequestHanhChinh/>,
-        icon: <SettingsIcon/>,
-    },
      {
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",
