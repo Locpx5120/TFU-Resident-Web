@@ -53,6 +53,7 @@ import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThi
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import FeedbackPage from "../pages/resident/feedback";
+import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
 export const routeArray = [
     {
         route: "/",
@@ -321,12 +322,12 @@ export const routeAccountant = [
 ];
 
 export const routeAdmin = [
-    // {
-    //     route: "/xu-ly-don-them-dich-vu",
-    //     routeName: "Xử lý đơn thêm dịch vụ",
-    //     component: <Adminitrative/>,
-    //     icon: <SettingsIcon/>,
-    // },
+    {
+        route: "/gui-don",
+        routeName: "Gửi đơn",
+        component: <SendRequestHanhChinh/>,
+        icon: <SettingsIcon/>,
+    },
      {
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",

@@ -27,7 +27,7 @@ import {
   GetBuildingsByUser,
 } from "../../../services/buildingService";
 
-const SendRequest = () => {
+const SendRequestHanhChinh = () => {
   const role = Cookies.get('role');
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -651,4 +651,4 @@ const SendRequest = () => {
   );
 };
 
-export default SendRequest;
+export default SendRequestHanhChinh;
