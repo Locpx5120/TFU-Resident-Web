@@ -14,7 +14,7 @@ export const getOwnerShip = async (id) => {
    return await getData(`/ceo/GetOwnerShipById/${id}`, endpointUrl.BUILDING_URL);
 }
 export const getOwnerShipPostMethod =  async (body) => {
-    return await postData(`/ceo/GetByOwnershipId`, body, undefined, endpointUrl.BUILDING_URL)
+    return await postData(`/resident/GetOwnerShipById`, body, undefined, endpointUrl.BUILDING_URL)
 }
 
 export const getAllResident = async () => {

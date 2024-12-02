@@ -75,7 +75,7 @@ const DetailHouseHold = () => {
   const handleAddMember = () => {
     setModalMode({
         mode: 'add',
-        title: `Thêm thành viên căn hộ: ${buildings.roomNumber}`
+        title: `Thêm thành viên căn hộ: ${buildings?.roomNumber}`
     });
     setSelectedMember(null);
     setModalOpen(true);
@@ -84,7 +84,7 @@ const DetailHouseHold = () => {
   const handleEditMember = (member) => {
     setModalMode({
         mode: 'edit',
-        title: `Cập nhật thông tin thành viên căn hộ: ${buildings.roomNumber}`
+        title: `Cập nhật thông tin thành viên căn hộ: ${buildings?.roomNumber}`
     });
     setSelectedMember(member);
     setModalOpen(true);
@@ -118,7 +118,7 @@ const DetailHouseHold = () => {
             Phone: memberData.phoneNumber,
             name: memberData.name,
             email: memberData.email,
-            ownerShipId: buildings.id,
+            ownerShipId: buildings?.id,
           });
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
@@ -197,7 +197,7 @@ const DetailHouseHold = () => {
   return (
     <section className="content">
       <Typography variant="h5" gutterBottom>
-       <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {buildings.roomNumber}
+       <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {buildings?.roomNumber}
       </Typography>
       <Box
         sx={{

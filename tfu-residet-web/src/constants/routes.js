@@ -19,7 +19,7 @@ import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
 import ReportInvestor from "../components/owner/report";
 import HistoryOnwer from "../components/owner/history";
-// icons
+// icons  
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import BusinessIcon from "@mui/icons-material/Business";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -54,6 +54,7 @@ import DetailThirdPartyRent from "../pages/buildingDirector/thirdParty/DetailThi
 import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThirdPartyLent";
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
+import FeedbackPage from "../pages/resident/feedback";
 import DetailNews from "../pages/news/detailNews";
 export const routeArray = [
     {
@@ -106,7 +107,7 @@ export const routeOwner = [
         routeName: "Báo cáo",
         component: <ReportInvestor/>,
         icon: <DescriptionIcon/>,
-    },
+    },             
     {
         route: "/lich-su",
         routeName: "Lịch sử",
@@ -198,12 +199,12 @@ export const routeResident = [
         component: <SendRequest/>,
         icon: <SettingsIcon/>,
     },
-    // {
-    //     route: "/ben-thu-ba",
-    //     routeName: "Quản lí bên thứ ba",
-    //     component: <ThirdParty />,
-    //     icon: <ThirtyFpsOutlined />,
-    // },
+    {
+        route: "/danh-gia",
+        routeName: "Đánh giá dịch vụ",
+        component: <FeedbackPage />,
+        icon: <ThirtyFpsOutlined />,
+    },
 ];
 
 export const routeDirector = [
