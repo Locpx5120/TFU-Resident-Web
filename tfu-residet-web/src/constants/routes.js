@@ -13,6 +13,7 @@ import HouseHoldResident from "../pages/resident/householdManagement/index";
 import ThirdParty from "../pages/resident/thirdParty";
 import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
 import News from "../pages/news";
+import FormNews from "../pages/news/formNews";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -276,6 +277,17 @@ export const routeDirector = [
      {
         route: "/news/:id",
         component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
     },
     {
         route: "/approve",

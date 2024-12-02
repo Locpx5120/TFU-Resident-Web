@@ -9,6 +9,7 @@ import {Button} from 'primereact/button';
 
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
+import {useNavigate} from "react-router-dom";
 
 const News = () => {
     const [filterNews, setFilterNews] = useState({
@@ -18,6 +19,7 @@ const News = () => {
         status: ''
     });
     const [listNews, setListNews] = useState([]);
+    const navigate = useNavigate();
     const handleChange = (event) => {
         const {name, value} = event.target;
         setFilterNews((prevData) => ({
@@ -72,7 +74,7 @@ const News = () => {
     return (
         <Box className="content">
             <Card title="Quản lý bản tin">
-                <InputText value={filterNews.title} name="title" onChange={handleChange} className="mx-2"/>
+                <InputText value={filterNews.title} name="title" onChange={handleChange} className="mx-2" placeholder="Nhập tiêu đề"/>
                 <Dropdown value={filterNews.notificationType} name="notificationType" onChange={(e) => handleSelect(e)}
                           options={NotificationTypeList}
                           placeholder="Chọn loại tin" width={75} className="mx-2"
@@ -85,8 +87,8 @@ const News = () => {
                 />
             </Card>
             <Card title="Danh sách bản tin" className="mt-2">
-                <Button label="Thêm bản tin" className="mb-2"></Button>
-                <DataTable value={listNews} scrollable tableStyle={{width: '100rem'}}
+                <Button label="Thêm bản tin" className="mb-2" onClick={() => navigate('/news/add')}></Button>
+                <DataTable value={listNews} scrollable tableStyle={{minWidth: '100rem'}}
                            emptyMessage="Không có dữ liệu">
                     {columnTable.map((item) =>
                         <Column key={item.field} field={item.field} header={item.header}></Column>)}
