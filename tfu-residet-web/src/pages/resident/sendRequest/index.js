@@ -402,7 +402,7 @@ const SendRequest = () => {
   const addReportFixTemplate = (request, index) => {
     return (
         <>
-            <DatePicker
+            {/* <DatePicker
                 fullWidth
                 placeholder="thời gian"
                 value={
@@ -413,7 +413,7 @@ const SendRequest = () => {
                 }
                 required
                 style={{marginRight: '10px',  width: '40%' }}
-            />
+            /> */}
         </>
     )
 }
