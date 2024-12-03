@@ -336,3 +336,19 @@ export const routeAdmin = [
         hidden: true,
     },
 ];
+
+export const routeTechnique = [
+    {
+       route: "/xem-don",
+       routeName: "Danh sách yêu cầu",
+       component: <ViewRequests/>,
+       icon: <SettingsIcon/>,
+   },
+   {
+       route: "/xem-chi-tiet-don/:id",
+       routeName: "Xem đơn",
+       component: <RequestDetail/>,
+       icon: <SettingsIcon/>,
+       hidden: true,
+   },
+];
