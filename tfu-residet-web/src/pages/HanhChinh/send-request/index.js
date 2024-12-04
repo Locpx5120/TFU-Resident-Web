@@ -11,16 +11,12 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { set } from "lodash";
 import { DatePicker } from "antd";
 import moment from "moment/moment";
-import { getBuilding } from "../../../services/residentService";
 import {
   addMember,
   getServiceName,
-  getServices,
   listApartment,
-  testApi,
 } from "../../../services/apartmentService";
 import { listAllPackage } from "../../../services/PackageService";
 import { addVehicle, listCategory } from "../../../services/vehicleService";
@@ -31,7 +27,8 @@ import {
   GetBuildingsByUser,
 } from "../../../services/buildingService";
 
-const SendRequest = () => {
+const SendRequestHanhChinh = () => {
+  const role = Cookies.get('role');
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const agentType = queryParams.get("agentType");
@@ -136,7 +133,13 @@ const SendRequest = () => {
     fetchData();
   }, [building]);
 
-  const optionServiceTypes = serviceTypesArr?.map((serviceType) => ({
+  const optionServiceTypes = serviceTypesArr?.filter(item => {
+    if (role === 'HanhChinh') {
+      return item.id === baoCaoSuaChua;
+    }else {
+      return item.id !== baoCaoSuaChua;
+    }
+  }).map((serviceType) => ({
     label: serviceType.name,
     value: serviceType.id,
   }));
@@ -195,6 +198,18 @@ const SendRequest = () => {
             phone: "",
             email: "",
             birthday: "",
+          }
+        : serviceTypes === baoCaoSuaChua
+        ? {
+            ownerName: '',
+            ownerPhone: '',
+            ownerEmail: '',
+            technicianName: '',
+            technicianPhone: '',
+            startDate: null,
+            cost: '',
+            note: '',
+            serviceId: serviceTypes,
           }
         : {
             serviceId: "",
@@ -401,22 +416,84 @@ const SendRequest = () => {
 
   const addReportFixTemplate = (request, index) => {
     return (
-        <>
-            {/* <DatePicker
-                fullWidth
-                placeholder="thời gian"
-                value={
-                    request.startDate ? moment(request.startDate) : null
-                }
-                onChange={(date, dateString) =>
-                    handleChange(index, "startDate", dateString)
-                }
-                required
-                style={{marginRight: '10px',  width: '40%' }}
-            /> */}
-        </>
-    )
-}
+      <>
+        {/* Hàng 1: Tên chủ căn hộ, Sđt, Email */}
+        <Box sx={{ display: "flex", gap: 2, mt: 5 }}>
+          <TextField
+            label="Tên chủ căn hộ"
+            fullWidth
+            value={request.ownerName || ""}
+            onChange={(e) => handleChange(index, "ownerName", e.target.value)}
+          />
+          <TextField
+            label="Số điện thoại"
+            fullWidth
+            value={request.ownerPhone || ""}
+            onChange={(e) => handleChange(index, "ownerPhone", e.target.value)}
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            value={request.ownerEmail || ""}
+            onChange={(e) => handleChange(index, "ownerEmail", e.target.value)}
+          />
+        </Box>
+
+        {/* Hàng 2: Tên kỹ thuật viên, Sđt kỹ thuật viên */}
+        <Box sx={{ display: "flex", gap: 2, mt: 5 }}>
+          <TextField
+            label="Tên kỹ thuật viên"
+            fullWidth
+            value={request.technicianName || ""}
+            onChange={(e) =>
+              handleChange(index, "technicianName", e.target.value)
+            }
+          />
+          <TextField
+            label="Số điện thoại kỹ thuật viên"
+            fullWidth
+            value={request.technicianPhone || ""}
+            onChange={(e) =>
+              handleChange(index, "technicianPhone", e.target.value)
+            }
+          />
+        </Box>
+
+        {/* Hàng 3: Thời gian sửa chữa, Giá tiền */}
+        <Box sx={{ display: "flex", gap: 2, mt: 5, ml: 2 }}>
+          <DatePicker
+            fullWidth
+            placeholder="Thời gian sửa chữa"
+            value={request.startDate ? moment(request.startDate) : null}
+            onChange={(date, dateString) =>
+              handleChange(index, "startDate", dateString)
+            }
+            required
+            style={{ width: "100%" }}
+          />
+          <TextField
+            label="Giá tiền"
+            fullWidth
+            type="number"
+            value={request.cost || ""}
+            onChange={(e) => handleChange(index, "cost", e.target.value)}
+          />
+        </Box>
+
+        {/* Hàng 4: Ghi chú của chủ căn hộ */}
+        <TextField
+          label="Ghi chú của chủ căn hộ"
+          fullWidth
+          multiline
+          rows={3}
+          sx={{mt: 5}}
+          value={request.note || ""}
+          onChange={(e) => handleChange(index, "note", e.target.value)}
+        />
+
+      </>
+    );
+  };
 
   return (
     <Box sx={{ padding: "20px" }} className="content">
@@ -489,7 +566,7 @@ const SendRequest = () => {
                     ))}
                   </Select>
                 </FormControl>
-                {request.serviceId !== baoCaoSuaChua && <FormControl
+                <FormControl
                   fullWidth
                   margin="normal"
                   sx={{ marginRight: "10px", width: "50%" }}
@@ -514,7 +591,7 @@ const SendRequest = () => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>}
+                </FormControl>
                 {request.serviceId === themThanhVien &&
                   addMemberTemplate(request, index)}
                 {request.serviceId === baoCaoSuaChua &&
@@ -574,4 +651,4 @@ const SendRequest = () => {
   );
 };
 
-export default SendRequest;
+export default SendRequestHanhChinh;

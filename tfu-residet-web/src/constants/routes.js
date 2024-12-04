@@ -55,6 +55,7 @@ import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThi
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import FeedbackPage from "../pages/resident/feedback";
+import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
 import DetailNews from "../pages/news/detailNews";
 export const routeArray = [
     {
@@ -366,12 +367,6 @@ export const routeAccountant = [
 ];
 
 export const routeAdmin = [
-    // {
-    //     route: "/xu-ly-don-them-dich-vu",
-    //     routeName: "Xử lý đơn thêm dịch vụ",
-    //     component: <Adminitrative/>,
-    //     icon: <SettingsIcon/>,
-    // },
      {
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",
@@ -385,4 +380,20 @@ export const routeAdmin = [
         icon: <SettingsIcon/>,
         hidden: true,
     },
+];
+
+export const routeTechnique = [
+    {
+       route: "/xem-don",
+       routeName: "Danh sách yêu cầu",
+       component: <ViewRequests/>,
+       icon: <SettingsIcon/>,
+   },
+   {
+       route: "/xem-chi-tiet-don/:id",
+       routeName: "Xem đơn",
+       component: <RequestDetail/>,
+       icon: <SettingsIcon/>,
+       hidden: true,
+   },
 ];
