@@ -49,6 +49,22 @@ export const postData = async (endpoint, data, header = defaultHeader, baseURL =
         console.error("Error posting data:", error);
     }
 };
+export const postBlobData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
+    try {
+        const response = await fetch(`${baseURL}${endpoint}`, {
+            method: "POST",
+            headers: header,
+            body: data,
+        });
+
+        // Nếu response không thành công, ném lỗi để vào catch
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error posting data:", error);
+    }
+};
 
 // Tương tự cho PUT và DELETE
 export const putData = async (endpoint, data, baseURL = endpointUrl.RESIDENT_URL, header = defaultHeader) => {

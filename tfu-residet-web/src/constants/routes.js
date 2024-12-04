@@ -12,6 +12,8 @@ import SendRequest from "../pages/resident/sendRequest";
 import HouseHoldResident from "../pages/resident/householdManagement/index";
 import ThirdParty from "../pages/resident/thirdParty";
 import DetailHouseHoldResident from "../pages/resident/householdManagement/DetailHouseHoldResident";
+import News from "../pages/news";
+import FormNews from "../pages/news/formNews";
 // owners
 import DashboardOwner from "../components/owner/dashboard";
 import Agent from "../components/owner/agent";
@@ -54,6 +56,7 @@ import DetailThirdPartyLent from "../pages/buildingDirector/thirdParty/DetailThi
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import FeedbackPage from "../pages/resident/feedback";
 import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
+import DetailNews from "../pages/news/detailNews";
 export const routeArray = [
     {
         route: "/",
@@ -203,6 +206,27 @@ export const routeResident = [
         component: <FeedbackPage />,
         icon: <ThirtyFpsOutlined />,
     },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
+    },
 ];
 
 export const routeDirector = [
@@ -267,6 +291,27 @@ export const routeDirector = [
         component: <DetailThirdPartyLent />,
     },
     // },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
+    },
     {
         route: "/approve",
         routeName: "Phê duyệt",
