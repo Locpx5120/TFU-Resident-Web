@@ -1,5 +1,5 @@
 import {Card} from "primereact/card";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 import {InputText} from 'primereact/inputtext';
 import {Dropdown} from "primereact/dropdown";
@@ -8,14 +8,16 @@ import {FileUpload} from "primereact/fileupload";
 import {Calendar} from "primereact/calendar";
 import {useEffect, useState} from "react";
 import {GetBuildings, GetBuildingsByUser} from "../../services/buildingService";
-import {NotificationType, NotificationTypeList, RoleList} from "./NewsConstant";
+import {NotificationType, NotificationTypeList, RoleList, statusType} from "./NewsConstant";
 import {Button} from "primereact/button";
-import convertObjectToFormData from "./BussinessNews";
-import {NewsCreate} from "../../services/NewsService";
+import {convertObjectToFormData, convertNewObj} from "./BussinessNews";
+import {getDetail, NewsCreate} from "../../services/NewsService";
+import Swal from "sweetalert2";
 
 const FormNews = () => {
     const navigate = useNavigate();
-    const params = navigate.params;
+    const {id} = useParams();
+
     const imageUploadConfig = {
         empty: (<p className="m-0">Kéo thả ảnh tại đây .</p>),
         size: 1000000
@@ -53,8 +55,20 @@ const FormNews = () => {
         try {
             const data = await GetBuildingsByUser();
             setListBuilding(data.data);
+            if (id) {
+            handleUpdateData();
+            }
         } catch (e) {
 
+        }
+    }
+    const handleUpdateData = async () => {
+         try {
+            const response = await getDetail(id);
+            console.log(response)
+            setNewsFormInput(response?.data);
+        }catch (e) {
+          Swal.fire('Lỗi', 'Không lấy được thông tin bản tin ', 'error');
         }
     }
     const handleChangeInput = (event) => {
@@ -101,10 +115,11 @@ const FormNews = () => {
             [name]: ''
         }))
     }
-    const submitForm = () => {
+    const submitForm = (isDraft: boolean) => {
         // console.log(checkValidForm());
         if (!checkValidForm()) {
-            let formData = convertObjectToFormData(newsFormInput);
+            setNewsFormInput((prevState) => ({...prevState, status: isDraft ? statusType.DRAFT : statusType.PENDING_APPROVAL}))
+            let formData = convertObjectToFormData(convertNewObj(newsFormInput));
             try {
                 const response = NewsCreate(formData);
                 console.log(response)
@@ -130,9 +145,21 @@ const FormNews = () => {
         }
         return isInvalid;
     }
+     const customBase64Uploader = async (event) => {
+        // convert file to base64 encoded
+        const file = event.files[0];
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            const base64data = reader.result;
+        };
+        setNewsFormInput((prevState) => ({...prevState, image:  blob}))
+
+    };
     return (
         <>
-            <Card className="content p-0" title={params ? 'Sửa bản tin' : ' Tạo bản tin'}>
+            <Card className="content p-0 h-auto" title={id ? 'Sửa bản tin' : ' Tạo bản tin'}>
                 <h3>Cài đặt bản tin</h3>
                 <div className="col-12 grid">
                     <div className="field col-4">
@@ -177,8 +204,8 @@ const FormNews = () => {
                     </div>
                     <div className="field col-12 mt-5">
                         <label form="firstname1">Ảnh minh hoạ</label>
-                        <FileUpload name="demo[]" url={'/api/upload'} accept="image/*"
-                                    maxFileSize={imageUploadConfig.size} emptyTemplate={imageUploadConfig.empty}/>
+                        <FileUpload name="demo[]" url="/api/upload" accept="image/*" onSelect={customBase64Uploader}
+                                 mode="advanced" auto maxFileSize={imageUploadConfig.size} emptyTemplate={imageUploadConfig.empty}/>
                     </div>
                 </div>
                 <h3>Đặt lịch</h3>
@@ -192,8 +219,9 @@ const FormNews = () => {
                     </div>
                 </div>
                 <div className="col-12 grid justify-content-center">
-                    <Button label="Quay lại" className="mr-2" outlined onClick={() => navigate('/news')}></Button>
-                    <Button label={params ? 'Cập nhật' : 'Tạo mới'} onClick={submitForm}></Button>
+                    <Button label="Quay lại" outlined onClick={() => navigate('/news')}></Button>
+                    <Button label={id ? 'Cập nhật' : 'Tạo mới'} className="mx-2" onClick={() => submitForm(false)}></Button>
+                    <Button label="Lưu nháp" onClick={() => submitForm(true)}></Button>
                 </div>
             </Card>
         </>

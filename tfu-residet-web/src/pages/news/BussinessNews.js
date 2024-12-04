@@ -1,4 +1,6 @@
-const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => {
+import {Dayjs} from "dayjs";
+
+export const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => {
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             const value = obj[key];
@@ -7,10 +9,16 @@ const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => 
                 form.append(formKey, value.toISOString());
             } else if (value instanceof Array) {
                 value.forEach((item, index) => {
-                    objectToFormData({ [index]: item }, form, formKey);
+                    convertObjectToFormData({ [index]: item }, form, formKey);
                 });
-            } else if (typeof value === 'object' && value !== null) {
-                objectToFormData(value, form, formKey);
+
+            }else if (value instanceof Blob) {
+                console.log(value)
+                form.append(formKey, value, 'uploadImage.jpg')
+            }
+
+            else if (typeof value === 'object' && value !== null) {
+                convertObjectToFormData(value, form, formKey);
             } else {
                 form.append(formKey, value);
             }
@@ -18,8 +26,18 @@ const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => 
     }
     return form;
 }
-function objectToFormData(obj, form = new FormData(), namespace = '') {
-
+export const convertNewObj = (obj) => {
+    console.log(obj)
+    return {
+        notificationType: obj.notificationType,
+        applyTime: obj.applyTime.toLocaleTimeString(),
+        applyDate: obj.applyTime.toLocaleDateString(),
+        BuildingId: obj.building,
+        RoleId: obj.role,
+        Title: obj.title,
+        Image: obj.image,
+        Content: obj.content,
+        DetailContent: obj.detailContent,
+        Status: obj.status
+    }
 }
-
-export default convertObjectToFormData;

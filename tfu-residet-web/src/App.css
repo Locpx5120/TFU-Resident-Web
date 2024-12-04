@@ -1,5 +1,6 @@
 @import "primereact/resources/themes/lara-light-cyan/theme.css";
 @import 'primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
 
 /* Đặt cấu trúc chính cho layout ứng dụng */
 .app-container {

@@ -1,8 +1,13 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
+import {useNavigate, useParams} from "react-router-dom";
+import {getDetail} from "../../services/NewsService";
+import Swal from "sweetalert2";
+import dayjs from "dayjs";
 
 const DetailNews = () => {
+    const {id} = useParams();
     const [data, setData] = useState({
         building: '',
         role: '',
@@ -17,7 +22,26 @@ const DetailNews = () => {
         approvalBy: '',
         status: ''
     });
+    useEffect(() => {
+        fetchData(id)
+    }, [id]);
+    const fetchData = async (id) => {
+        try {
+            const response = await getDetail(id);
+            console.log(response)
 
+            setData(pipeData(response?.data))
+        }catch (e) {
+          Swal.fire('Lỗi', 'Không lấy được danh sách bản tin ', 'error');
+
+        }
+    }
+    const pipeData = (data) => {
+        return data = {
+            ...data,
+            applyDate: dayjs(data.applyDate).format('DD/MM/YYYY')
+        }
+    }
     const header = (
         <p className="text-center">
             <h1>Chi tiết bản tin</h1>
