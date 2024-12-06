@@ -37,7 +37,7 @@ const DetailNews = () => {
         }
     }
     const pipeData = (data) => {
-        return data = {
+        return {
             ...data,
             applyDate: dayjs(data.applyDate).format('DD/MM/YYYY')
         }
