@@ -32,7 +32,6 @@ const News = () => {
     const [totalRecord, setTotalRecord] = useState(0)
 
     const onPageChange = (event) => {
-        console.log(event)
         const {page, rows} = event;
         setFirst(event.first);
         setRows(event.rows);
@@ -75,7 +74,6 @@ const News = () => {
     const fetchListNews = async (request) => {
         try {
             const response = await GetNews(request);
-            console.log(response)
             setListNews(response.data.data);
             setTotalRecord(response.data.totalRecords);
         } catch (e) {

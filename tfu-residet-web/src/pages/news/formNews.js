@@ -7,7 +7,7 @@ import {Editor} from "primereact/editor";
 import {FileUpload} from "primereact/fileupload";
 import {Calendar} from "primereact/calendar";
 import {useEffect, useState} from "react";
-import {GetBuildings, GetBuildingsByUser} from "../../services/buildingService";
+import {GetBuildingsByUser} from "../../services/buildingService";
 import {NotificationType, NotificationTypeList, RoleList, statusType} from "./NewsConstant";
 import {Button} from "primereact/button";
 import {convertObjectToFormData, convertNewObj} from "./BussinessNews";
@@ -17,6 +17,7 @@ import Swal from "sweetalert2";
 const FormNews = () => {
     const navigate = useNavigate();
     const {id} = useParams();
+    const createValidTime = 10 * 60 * 1000;
 
     const imageUploadConfig = {
         empty: (<p className="m-0">Kéo thả ảnh tại đây .</p>),
@@ -56,19 +57,19 @@ const FormNews = () => {
             const data = await GetBuildingsByUser();
             setListBuilding(data.data);
             if (id) {
-            handleUpdateData();
+                await handleUpdateData();
             }
         } catch (e) {
 
         }
     }
     const handleUpdateData = async () => {
-         try {
+        try {
             const response = await getDetail(id);
             console.log(response)
             setNewsFormInput(response?.data);
-        }catch (e) {
-          Swal.fire('Lỗi', 'Không lấy được thông tin bản tin ', 'error');
+        } catch (e) {
+            Swal.fire('Lỗi', 'Không lấy được thông tin bản tin ', 'error');
         }
     }
     const handleChangeInput = (event) => {
@@ -99,6 +100,17 @@ const FormNews = () => {
             setNullForm(name)
         }
     }
+    const validateCurrentDate = (event) => {
+        const {name, value} = event.target;
+        if (new Date(value).getTime() - new Date().getTime() < createValidTime) {
+            setErrorForm((prevState) => ({
+                ...prevState,
+                [name]: 'Thời gian tối thiểu là 10 phút'
+            }))
+        } else {
+            setNullForm(name)
+        }
+    }
     const validateInputRequired = (e) => {
         const {name, value} = e.target;
         if (!value || value.length === 0) {
@@ -118,7 +130,10 @@ const FormNews = () => {
     const submitForm = (isDraft: boolean) => {
         // console.log(checkValidForm());
         if (!checkValidForm()) {
-            setNewsFormInput((prevState) => ({...prevState, status: isDraft ? statusType.DRAFT : statusType.PENDING_APPROVAL}))
+            setNewsFormInput((prevState) => ({
+                ...prevState,
+                status: isDraft ? statusType.DRAFT : statusType.PENDING_APPROVAL
+            }))
             let formData = convertObjectToFormData(convertNewObj(newsFormInput));
             try {
                 const response = NewsCreate(formData);
@@ -139,13 +154,20 @@ const FormNews = () => {
                 }))
                 isInvalid = true;
                 // console.log(f)
+            } else if (f === 'applyTime' && new Date(newsFormInput['applyTime']).getTime() - new Date().getTime() < createValidTime) {
+                setErrorForm((prevState) => ({
+                    ...prevState,
+                    applyTime: 'Thời gian tối thiểu là 10 phút'
+                }))
+                isInvalid = true;
             } else {
+                setNullForm(f)
                 isInvalid = false;
             }
         }
         return isInvalid;
     }
-     const customBase64Uploader = async (event) => {
+    const customBase64Uploader = async (event) => {
         // convert file to base64 encoded
         const file = event.files[0];
         const reader = new FileReader();
@@ -154,7 +176,7 @@ const FormNews = () => {
         reader.onloadend = function () {
             const base64data = reader.result;
         };
-        setNewsFormInput((prevState) => ({...prevState, image:  blob}))
+        setNewsFormInput((prevState) => ({...prevState, image: blob}))
 
     };
     return (
@@ -205,7 +227,8 @@ const FormNews = () => {
                     <div className="field col-12 mt-5">
                         <label form="firstname1">Ảnh minh hoạ</label>
                         <FileUpload name="demo[]" url="/api/upload" accept="image/*" onSelect={customBase64Uploader}
-                                 mode="advanced" auto maxFileSize={imageUploadConfig.size} emptyTemplate={imageUploadConfig.empty}/>
+                                    mode="advanced" auto maxFileSize={imageUploadConfig.size}
+                                    emptyTemplate={imageUploadConfig.empty}/>
                     </div>
                 </div>
                 <h3>Đặt lịch</h3>
@@ -214,13 +237,17 @@ const FormNews = () => {
                         <label form="firstname1">Thời gian áp dụng</label>
                         <Calendar showTime hourFormat="24" className="w-full" value={newsFormInput.applyTime} showIcon
                                   name="applyTime" onChange={handleChangeInput}
-                                  onBlur={() => validateBlurRequired('applyTime')}/>
+                                  onBlur={(e) => {
+                                      validateBlurRequired('applyTime');
+                                      validateCurrentDate(e)
+                                  }}/>
                         <small className="text-red-500">{errorForm.applyTime}</small>
                     </div>
                 </div>
                 <div className="col-12 grid justify-content-center">
                     <Button label="Quay lại" outlined onClick={() => navigate('/news')}></Button>
-                    <Button label={id ? 'Cập nhật' : 'Tạo mới'} className="mx-2" onClick={() => submitForm(false)}></Button>
+                    <Button label={id ? 'Cập nhật' : 'Tạo mới'} className="mx-2"
+                            onClick={() => submitForm(false)}></Button>
                     <Button label="Lưu nháp" onClick={() => submitForm(true)}></Button>
                 </div>
             </Card>

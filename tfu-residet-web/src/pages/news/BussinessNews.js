@@ -27,7 +27,6 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
     return form;
 }
 export const convertNewObj = (obj) => {
-    console.log(obj)
     return {
         notificationType: obj.notificationType,
         applyTime: obj.applyTime.toLocaleTimeString(),
