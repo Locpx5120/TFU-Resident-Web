@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import {authService, loginApi} from "../services/authService";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import PostNews from "./news/PostNews";
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
@@ -67,9 +68,10 @@ const Login = () => {
 
     return (
         <section className="login-section">
-            <Container>
-                <Row>
-                    <Col lg='8' className='m-auto'>
+            <div className="col-6">
+                <PostNews/>
+            </div>
+            <div className="col-6">
                         <div className="login-container d-flex justify-content-between">
 
                             <div className="login-form">
@@ -77,12 +79,12 @@ const Login = () => {
 
                                 <Form onSubmit={handleClick}>
                                     <FormGroup>
-                                        <input type="email" placeholder='Email' id='email' onChange={handleChange}
+                                        <input type="email" placeholder='Email' id='email' onChange={handleChange} className="w-full"
                                                required/>
                                     </FormGroup>
                                     <FormGroup>
                                         <input type="password" placeholder='Mật khẩu' id='password'
-                                               onChange={handleChange} required/>
+                                               onChange={handleChange} required  className="w-full" />
                                     </FormGroup>
                                     <Button className='btn primary-btn' type='submit'>Đăng nhập</Button>
                                 </Form>
@@ -90,9 +92,14 @@ const Login = () => {
                                 <p>Bạn chưa có tài khoản? <Link to='/register'>Đăng ký</Link></p>
                             </div>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+
+            </div>
+            {/*<Container>*/}
+            {/*    <Row>*/}
+            {/*        <Col lg='8' className='m-auto'>*/}
+            {/*        </Col>*/}
+            {/*    </Row>*/}
+            {/*</Container>*/}
         </section>
     );
 };
