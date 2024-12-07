@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import {authService, loginBuildingApi} from "../services/authService";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import PostNews from "./news/PostNews";
 
 const LoginBuilding = () => {
     const location = useLocation();
@@ -71,9 +72,10 @@ const LoginBuilding = () => {
 
     return (
         <section className="login-section">
-            <Container>
-                <Row>
-                    <Col lg='8' className='m-auto'>
+            <div className="col-6">
+                <PostNews deepClass="h-full"/>
+            </div>
+            <div className="col-6">
                         <div className="login-container d-flex justify-content-between">
 
                             <div className="login-form">
@@ -81,11 +83,11 @@ const LoginBuilding = () => {
 
                                 <Form onSubmit={handleClick}>
                                     <FormGroup>
-                                        <input type="email" placeholder='Email' id='email' onChange={handleChange}
+                                        <input type="email" placeholder='Email' id='email' onChange={handleChange} className="w-full"
                                                required/>
                                     </FormGroup>
                                     <FormGroup>
-                                        <input type="password" placeholder='Mật khẩu' id='password'
+                                        <input type="password" placeholder='Mật khẩu' id='password' className="w-full"
                                                onChange={handleChange} required/>
                                     </FormGroup>
                                     <Button className='btn primary-btn' type='submit'>Đăng nhập</Button>
@@ -93,9 +95,8 @@ const LoginBuilding = () => {
                                 <p><Link to='/forgot-password'>Quên mật khẩu?</Link></p>
                             </div>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+
+            </div>
         </section>
     );
 };

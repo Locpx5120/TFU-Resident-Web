@@ -57,6 +57,7 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import FeedbackPage from "../pages/resident/feedback";
 import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
 import DetailNews from "../pages/news/detailNews";
+import PostNews from "../pages/news/PostNews";
 export const routeArray = [
     {
         route: "/",
@@ -88,6 +89,11 @@ export const routeArray = [
         component: <>Chua Co</>,
         icon: <SettingsIcon/>,
     },
+    {
+        route: "/post-news",
+        component: <PostNews/>,
+
+    }
 ];
 
 export const routeOwner = [
@@ -227,6 +233,11 @@ export const routeResident = [
         component: <FormNews/>,
         hidden: true,
     },
+    {
+        route: "/post-news",
+        component: <PostNews/>,
+        hidden: true,
+    }
 ];
 
 export const routeDirector = [

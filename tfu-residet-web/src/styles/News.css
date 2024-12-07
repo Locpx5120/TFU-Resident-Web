@@ -2,3 +2,17 @@
     width: 75%;
 
 }
+
+.text-wrap {
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 5rem;
+}
+a {
+    color: blue;
+}
+a:hover {
+  text-decoration: underline;
+    cursor: pointer;
+}
