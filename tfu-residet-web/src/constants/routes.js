@@ -398,6 +398,27 @@ export const routeAdmin = [
         icon: <SettingsIcon/>,
         hidden: true,
     },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
+    },
 ];
 
 export const routeTechnique = [

@@ -5,9 +5,12 @@ import {useNavigate, useParams} from "react-router-dom";
 import {getDetail} from "../../services/NewsService";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
+import {mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
+import {statusType} from "./NewsConstant";
 
 const DetailNews = () => {
     const {id} = useParams();
+    const navigate = useNavigate();
     const [data, setData] = useState({
         building: '',
         role: '',
@@ -28,18 +31,19 @@ const DetailNews = () => {
     const fetchData = async (id) => {
         try {
             const response = await getDetail(id);
-            console.log(response)
-
             setData(pipeData(response?.data))
-        }catch (e) {
-          Swal.fire('Lỗi', 'Không lấy được danh sách bản tin ', 'error');
+        } catch (e) {
+            Swal.fire('Lỗi', 'Không lấy được chi tiết bản tin ', 'error');
 
         }
     }
     const pipeData = (data) => {
         return {
             ...data,
-            applyDate: dayjs(data.applyDate).format('DD/MM/YYYY')
+            statusName: mapNotificationTypeName(data.status),
+            notificationName: mapNotificationName(data.notificationType),
+            applyDate: dayjs(data.time).format('DD/MM/YYYY'),
+            applyTime: dayjs(data.time).format('HH:mm:ss'),
         }
     }
     const header = (
@@ -53,15 +57,15 @@ const DetailNews = () => {
                 <div className="col-12">
                     <div className="grid my-5">
                         <div className="col-3">Loại thông báo</div>
-                        <div className="col-9">{data.notificationType}</div>
+                        <div className="col-9">{data.notificationName}</div>
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Role</div>
-                        <div className="col-9">{data.role}</div>
+                        <div className="col-9">{data.roleName}</div>
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Toà nhà</div>
-                        <div className="col-9">{data.building}</div>
+                        <div className="col-9">{data.buildingName}</div>
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Tiêu đề</div>
@@ -69,11 +73,11 @@ const DetailNews = () => {
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Nội dung rút gọn</div>
-                        <div className="col-9">{data.content}</div>
+                        <div className="col-9">{data.shortContent}</div>
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Nội dung chi tiết</div>
-                        <div className="col-9">{data.detailContent}</div>
+                        <div className="col-9">{data.longContent}</div>
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Ảnh minh hoạ</div>
@@ -97,12 +101,12 @@ const DetailNews = () => {
                     </div>
                     <div className="grid my-5">
                         <div className="col-3">Trạng thái</div>
-                        <div className="col-9">{data.status}</div>
+                        <div className="col-9">{data.statusName}</div>
                     </div>
                     <div className="grid col justify-content-center">
-                        <Button label="Từ chối" severity="danger"></Button>
-                        <Button label="Quay lại" outlined className="mx-3"></Button>
-                        <Button label="Duyệt" severity="primary"></Button>
+                        {data.status === statusType.DRAFT && <Button label="Từ chối" severity="danger"></Button>}
+                        <Button label="Quay lại" outlined className="mx-3" onClick={() => navigate('/news')}></Button>
+                         {data.status === statusType.DRAFT && <Button label="Duyệt" severity="primary"></Button>}
                     </div>
                 </div>
             </Card>

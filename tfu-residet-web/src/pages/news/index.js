@@ -3,7 +3,7 @@ import {useCallback, useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {InputText} from "primereact/inputtext";
 import {Dropdown} from 'primereact/dropdown';
-import {NotificationTypeList, statusTypeList} from "./NewsConstant";
+import {NotificationTypeList, statusType, statusTypeList} from "./NewsConstant";
 import {Calendar} from "primereact/calendar";
 import {Button} from 'primereact/button';
 
@@ -14,12 +14,14 @@ import {GetNews} from "../../services/NewsService";
 import Swal from "sweetalert2";
 import {debounce as _debounce} from "lodash";
 import {Paginator} from "primereact/paginator";
-
+import dayjs from "dayjs";
+import {find} from 'lodash';
+import {mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
 const News = () => {
     const initForm = {
         title: '',
         notificationType: '',
-        applyDate: '',
+        applyDate: null,
         status: '',
         pageNumber: 1,
         pageSize: 10
@@ -74,7 +76,8 @@ const News = () => {
     const fetchListNews = async (request) => {
         try {
             const response = await GetNews(request);
-            setListNews(response.data.data);
+            // console.log(mapActionForData(response.data.data))
+            setListNews(mapActionForData(response.data.data));
             setTotalRecord(response.data.totalRecords);
         } catch (e) {
             Swal.fire('Lỗi', 'Không lấy được thông tin bản tin ', 'error');
@@ -87,26 +90,42 @@ const News = () => {
         fetchListNews(initForm);
     }
     const mapActionForData = (data: []) => {
-        data.map((item) => ({
-            ...item, action:
+      return  data.map((item, index) => ({
+            ...item,
+          index: index+1,
+          statusName: mapNotificationTypeName(item.status),
+          notificationName: mapNotificationName(item.notificationType),
+          applyDate: dayjs(item.date).format('DD/MM/YYYY : HH:mm:ss'),
+          action:
                 (
                     <>
-                        <Button label="Xoá" severity="danger"></Button>
-                        <Button label="Chi tiết" severity="info"></Button>
+                        {item.status === statusType.DRAFT && <Button icon="pi pi-trash" rounded text severity="danger" onClick={ () => doDelete(item.id)}></Button>}
+                        <Button icon="pi pi-eye" rounded text severity="info" onClick={ () => view(item.id)}></Button>
+                        {item.status === statusType.DRAFT && <Button icon="pi pi-pencil" rounded text severity="help" onClick={ () => update(item.id)}></Button>}
                     </>
                 )
         }))
     }
+    const update = (id) => {
+        navigate(`/news/update/${id}`)
+    }
+    const doDelete = (id) => {
+
+    }
+    const view = (id) => {
+        navigate(`/news/${id}`)
+    }
+
     const columnTable = [
         {field: 'index', header: 'STT'},
-        {field: 'building', header: 'Toà nhà'},
-        {field: 'notificationType', header: 'Loại thông báo'},
+        {field: 'buildingName', header: 'Toà nhà'},
+        {field: 'notificationName', header: 'Loại thông báo'},
         {field: 'title', header: 'Tiêu đề'},
-        {field: 'role', header: 'Chức vụ'},
+        {field: 'roleName', header: 'Chức vụ'},
         {field: 'applyDate', header: 'Ngày áp dụng'},
         {field: 'createdBy', header: 'Người tạo'},
         {field: 'approvalBy', header: 'Người duyệt'},
-        {field: 'status', header: 'Trạng thái'},
+        {field: 'statusName', header: 'Trạng thái'},
         {field: 'action', header: 'Hành động '},
     ]
     return (
@@ -148,7 +167,7 @@ const News = () => {
                         <Column key={item.field} field={item.field} header={item.header}></Column>)}
                 </DataTable>
                 <div className="card">
-                    {listNews?.length > 5 && <Paginator first={first} rows={rows} totalRecords={totalRecord}
+                    {totalRecord > 5 && <Paginator first={first} rows={rows} totalRecords={totalRecord}
                                                         rowsPerPageOptions={[10, 20, 30]}
                                                         onPageChange={onPageChange}/>}
                 </div>

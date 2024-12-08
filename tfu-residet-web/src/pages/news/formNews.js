@@ -13,6 +13,7 @@ import {Button} from "primereact/button";
 import {convertObjectToFormData, convertNewObj} from "./BussinessNews";
 import {getDetail, NewsCreate} from "../../services/NewsService";
 import Swal from "sweetalert2";
+import {getRole} from "../../services/RoleService";
 
 const FormNews = () => {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ const FormNews = () => {
     const [newsFormInput, setNewsFormInput] = useState({
         notificationType: NotificationType.MANAGEMENT,
         building: '',
-        role: 'ALL',
+        role: '',
         title: '',
         content: '',
         detailContent: '',
@@ -48,14 +49,20 @@ const FormNews = () => {
         approvalBy: ''
     });
     const [listBuilding, setListBuilding] = useState([]);
-
+    let [listRole, setListRole] = useState([])
     useEffect(() => {
         fetchBuildingData();
     }, []);
     const fetchBuildingData = async () => {
         try {
-            const data = await GetBuildingsByUser();
-            setListBuilding(data.data);
+            const response = {
+                building: await GetBuildingsByUser(),
+                role: await getRole()
+            };
+            setListBuilding(response.building.data);
+            const responseRole: [] = response.role.data;
+            responseRole.unshift({id: '', name: 'Tất cả'});
+            setListRole(responseRole);
             if (id) {
                 await handleUpdateData();
             }
@@ -127,7 +134,7 @@ const FormNews = () => {
             [name]: ''
         }))
     }
-    const submitForm = (isDraft: boolean) => {
+    const submitForm = async (isDraft: boolean) => {
         // console.log(checkValidForm());
         if (!checkValidForm()) {
             setNewsFormInput((prevState) => ({
@@ -136,7 +143,21 @@ const FormNews = () => {
             }))
             let formData = convertObjectToFormData(convertNewObj(newsFormInput));
             try {
-                const response = NewsCreate(formData);
+                const response = await NewsCreate(formData);
+                if (response.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Bản tin đã được tạo mới",
+                        showConfirmButton: true,
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#3085d6",
+                    }).then((result) => {
+                        console.log(result)
+                        if (result.isConfirmed) {
+                            navigate('/news');
+                        }
+                    })
+                }
                 console.log(response)
             } catch (e) {
                 console.log(e)
@@ -159,7 +180,7 @@ const FormNews = () => {
                     ...prevState,
                     applyTime: 'Thời gian tối thiểu là 10 phút'
                 }))
-                isInvalid = true;
+                return isInvalid = true;
             } else {
                 setNullForm(f)
                 isInvalid = false;
@@ -169,18 +190,18 @@ const FormNews = () => {
     }
     const customBase64Uploader = async (event) => {
         // convert file to base64 encoded
-      try  {
+        try {
             const file = event.files[0];
-        const reader = new FileReader();
-        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
-        reader.readAsDataURL(blob);
-        reader.onloadend = function () {
-            const base64data = reader.result;
-        };
-        setNewsFormInput((prevState) => ({...prevState, image: blob}))
-      }catch (e) {
-          console.log(e)
-      }
+            const reader = new FileReader();
+            let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+            reader.readAsDataURL(blob);
+            reader.onloadend = function () {
+                const base64data = reader.result;
+            };
+            setNewsFormInput((prevState) => ({...prevState, image: file}))
+        } catch (e) {
+            console.log(e)
+        }
 
     };
     return (
@@ -204,7 +225,7 @@ const FormNews = () => {
                     <div className="field col-4">
                         <label form="firstname1">Role</label>
                         <Dropdown className="w-full" value={newsFormInput.role} name="role" onChange={handleChangeInput}
-                                  options={RoleList}/>
+                                  options={listRole} optionLabel="name" optionValue="id"/>
                     </div>
                 </div>
                 <h3>Nội dung bản tin</h3>
