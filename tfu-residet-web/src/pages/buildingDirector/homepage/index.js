@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import DashboardInvestor from "../../dashboard/DashboardInvestor";
 
 const StyledTabs = styled(Tabs)({
     '& .MuiTabs-indicator': {
@@ -58,6 +59,7 @@ const DirectorHomepage = () => {
             <StyledTab label="Báo cáo thu chi" />
             <StyledTab label="Tổng kết thu chi" />
           </StyledTabs>
+          <DashboardInvestor/>
         </Box>
       </div>
     );

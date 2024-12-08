@@ -16,7 +16,6 @@ import LoginBuilding from "./pages/LoginBuilding";
 import { authService } from "./services/authService";
 import Cookies from 'js-cookie';
 import DynamicBreadcrumbs from "./common/Breadcrumbs";
-import PostNews from "./pages/news/PostNews";
 
 function App() {
   const { user } = useContext(authService);
@@ -81,7 +80,8 @@ function App() {
                     {renderRoutes(routes)}
                   </Routes>
                 </div>
-                <PostNews/>
+                {/*<PostNews/>*/}
+                {/*<Dashboard/>*/}
               </>
             }
           />

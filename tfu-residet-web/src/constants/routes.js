@@ -58,6 +58,7 @@ import FeedbackPage from "../pages/resident/feedback";
 import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
 import DetailNews from "../pages/news/detailNews";
 import PostNews from "../pages/news/PostNews";
+import DashboardInvestor from "../pages/dashboard/DashboardInvestor";
 export const routeArray = [
     {
         route: "/",
@@ -244,7 +245,7 @@ export const routeDirector = [
     {
         route: "/",
         routeName: "Trang chính",
-        component: <DirectorHomepage/>,
+        component: <DashboardInvestor/>,
         icon: <WidgetsIcon/>,
     },
     // {
@@ -378,6 +379,12 @@ export const routeAccountant = [
 ];
 
 export const routeAdmin = [
+      {
+        route: "/",
+        routeName: "Trang chính",
+        component: <DashboardInvestor/>,
+        icon: <WidgetsIcon/>,
+    },
      {
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",
