@@ -8,6 +8,7 @@ import {getBuilding} from '../../../services/residentService';
 import dayjs from "dayjs";
 import {Calendar} from "primereact/calendar";
 import {getServices} from "../../../services/apartmentService";
+import { getStatusLabel } from '../../../constants/ApproveConstant';
 
 const ViewRequests = () => {
     const navigate = useNavigate();
@@ -24,7 +25,6 @@ const ViewRequests = () => {
     const [typeData, setTypeData] = useState([]);
 
     const handleDateChange = (e) => {
-        console.log(e)
         setSelectedService((prev) => ({
             ...prev,
             startDateFrom: e[0],
@@ -47,7 +47,7 @@ const ViewRequests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const data = await getBuilding(residentId, buildingID);
+                const data = await getBuilding('914b90f1-1d0d-4039-9084-47c10783e058', buildingID);
                 const apartmentIds = data?.data || [];
 
                 const responses = await Promise.all(
@@ -62,7 +62,6 @@ const ViewRequests = () => {
                             buildingName: 'Toà nhà Beta'
                         }
                     });
-                console.log(allItems);
                 const serviceTypes = await getServices();
                 setTypeData(serviceTypes?.data || []);
 
@@ -97,6 +96,7 @@ const ViewRequests = () => {
 
     const paginatedRows = requests && requests.length > 0 ? requests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((request) => ({
         ...request,
+        status: getStatusLabel(request.status),
         details: (
             <Button variant="outlined"
                     onClick={() => navigate(`/xem-chi-tiet-don/${request.serviceContractId}&purpose=${request.purpose}`, {state: {request}})}>

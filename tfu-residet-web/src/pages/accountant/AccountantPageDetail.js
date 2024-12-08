@@ -57,7 +57,6 @@ const AccountantPageDetail = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-    console.log(roomsData);
 
     const paginatedRows = useMemo(() => {
         return roomsData.services;

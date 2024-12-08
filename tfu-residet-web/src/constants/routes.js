@@ -325,13 +325,13 @@ export const routeDirector = [
         hidden: true,
     },
     {
-        route: "/approve",
+        route: "/xem-don",
         routeName: "Phê duyệt",
         component: <ViewRequests/>,
         icon: <LibraryAddCheckIcon/>,
     },
     {
-        route: "/approve/:id",
+        route: "/xem-chi-tiet-don/:id",
         routeName: "Xem đơn",
         component: <RequestDetail/>,
         icon: <SettingsIcon/>,

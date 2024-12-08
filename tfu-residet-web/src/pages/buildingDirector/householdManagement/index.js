@@ -98,7 +98,6 @@ const HouseHold = () => {
       }
     } else {
       try {
-        console.log(houseHoldData);
         const data = await updateOwner({
           floorNumber: houseHoldData.floorNumber,
           id: houseHoldData.id,
