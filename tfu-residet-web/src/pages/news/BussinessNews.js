@@ -29,8 +29,7 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
 export const convertNewObj = (obj) => {
     return {
         notificationType: obj.notificationType,
-        applyTime: obj.applyTime.toLocaleTimeString(),
-        applyDate: obj.applyTime.toLocaleDateString(),
+        applyTime: obj.applyTime,
         BuildingId: obj.building,
         RoleId: obj.role,
         Title: obj.title,

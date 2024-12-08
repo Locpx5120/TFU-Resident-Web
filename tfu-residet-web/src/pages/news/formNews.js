@@ -169,7 +169,8 @@ const FormNews = () => {
     }
     const customBase64Uploader = async (event) => {
         // convert file to base64 encoded
-        const file = event.files[0];
+      try  {
+            const file = event.files[0];
         const reader = new FileReader();
         let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
         reader.readAsDataURL(blob);
@@ -177,6 +178,9 @@ const FormNews = () => {
             const base64data = reader.result;
         };
         setNewsFormInput((prevState) => ({...prevState, image: blob}))
+      }catch (e) {
+          console.log(e)
+      }
 
     };
     return (
