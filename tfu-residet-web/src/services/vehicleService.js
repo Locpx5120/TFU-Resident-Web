@@ -19,6 +19,24 @@ export const addVehicle = async (body) => {
         'content-type': 'application/json',
         'buildingPermalink': Cookies.get('buildingID'),}, endpointUrl.BUILDING_URL)
 }
+export const addRepairReport = async (body) => {
+    return await postData(`/service-contract/add-repair-report`, body, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),}, endpointUrl.BUILDING_URL)
+}
+export const getServiceRepair = async (id) => {
+    return await postData(`/service-contract/deatil-repair-report/${id}`, {}, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID')}, endpointUrl.BUILDING_URL)
+}
+export const updateServiceRepair = async (body) => {
+    return await postData(`/service-contract/update-repair-report`, body, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID')}, endpointUrl.BUILDING_URL)
+}
 export const getServiceRequest = async () => {
     return await getData(`/service-request/get-service-requests`, endpointUrl.BUILDING_URL, {
         'Authorization': `Bearer ${Cookies.get("accessToken")}`,
@@ -43,4 +61,11 @@ export const memeberServiceDetail = async (id) => {
         'Authorization': `Bearer ${Cookies.get("accessToken")}`,
         'content-type': 'application/json',
         'buildingPermalink': Cookies.get('buildingID'),})
+}
+
+export const getKyThuat = async (searchName='') => {
+    return await postData(`/staff/listStaffAssigment?searchName=${searchName}`,{}, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID')}, endpointUrl.BUILDING_URL);
 }

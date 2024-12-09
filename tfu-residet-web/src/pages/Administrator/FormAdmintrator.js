@@ -58,7 +58,6 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
     //    };
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Form Data Submitted:', admin);
         // Add form submission logic here (e.g., send to API)
         if (isUpdate) {
             update();
@@ -69,7 +68,6 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
     const create = async () => {
         try {
             const response = await createAdmin(admin);
-            console.log(response)
             if (response.code === 200) {
                 Swal.fire(
                     'Đã thêm mới!',
@@ -90,9 +88,7 @@ const FormAdministrator = ({isOpen, onClose, isUpdate, item}) => {
     }
     const update = async () => {
         try {
-            console.log('update')
             const response = await updateAdmin(admin);
-            console.log(response)
             if (response.code === 200) {
                 Swal.fire(
                     'Đã cập nhật!',

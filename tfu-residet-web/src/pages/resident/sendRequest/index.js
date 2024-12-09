@@ -11,25 +11,21 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { set } from "lodash";
 import { DatePicker } from "antd";
 import moment from "moment/moment";
-import { getBuilding } from "../../../services/residentService";
 import {
   addMember,
   getServiceName,
-  getServices,
-  listApartment,
-  testApi,
 } from "../../../services/apartmentService";
 import { listAllPackage } from "../../../services/PackageService";
-import { addVehicle, listCategory } from "../../../services/vehicleService";
+import { addRepairReport, addVehicle, listCategory } from "../../../services/vehicleService";
 import { useLocation } from "react-router-dom";
 import { baoCaoSuaChua, themThanhVien, vehicleCode } from "../../../constants";
 import {
   getApartmentByBuilding,
   GetBuildingsByUser,
 } from "../../../services/buildingService";
+import { omit } from "lodash";
 
 const SendRequest = () => {
   const location = useLocation();
@@ -77,13 +73,6 @@ const SendRequest = () => {
   const [building, setBuilding] = useState("");
   const residentId = Cookies.get("residentId");
 
-  const handleChangeBuilding = (event) => {
-    setBuilding(event.target.value);
-  };
-  const handleChangeApartment = (event) => {
-    setApartment(event.target.value);
-  };
-
   const handleReset = (index) => {
     setRequests((prevRequests) => {
       const updatedRequests = [...prevRequests];
@@ -106,8 +95,6 @@ const SendRequest = () => {
       try {
         const data = await GetBuildingsByUser();
         setBuildings(data.data);
-        const responseApartment = await listApartment();
-        setApartments(responseApartment.data.data);
         const packages = await listAllPackage();
         setPackagesArr(packages.data);
         const resServiceTypes = await listCategory();
@@ -147,7 +134,7 @@ const SendRequest = () => {
     label: serviceName.serviceName,
     value: serviceName.id,
   }));
-
+  
   const optionAparments = (apartments.length > 0 ? apartments : [])?.map(
     (apartment) => ({
       label: apartment.roomNumber,
@@ -179,7 +166,6 @@ const SendRequest = () => {
   };
 
   const validateEmail = (email) => {
-    // Regular expression for email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
@@ -249,6 +235,24 @@ const SendRequest = () => {
               birthday: "",
             },
           ]);
+        }
+      } else if (serviceTypes === baoCaoSuaChua) {
+        const services = requests.map(item => ({
+          ...item,
+          apartmentId: apartment,
+          serviceId: serviceNames,
+          residentId
+        }))
+        const data = await addRepairReport({ services });
+        if (!data.data[0].success) {
+          Swal.fire("Thất bại", data.data[0].message, "error");
+          return;
+        }
+        if (data.code !== 200) {
+          Swal.fire("Thất bại", "Gửi đơn thất bại!", "error");
+        } else {
+          Swal.fire("Thành công", "Đã gửi đơn thành công!", "success");
+          setRequests([]);
         }
       } else {
         const services = requests.map((request) => ({
@@ -402,109 +406,129 @@ const SendRequest = () => {
   const addReportFixTemplate = (request, index) => {
     return (
         <>
-            {/* <DatePicker
-                fullWidth
-                placeholder="thời gian"
-                value={
-                    request.startDate ? moment(request.startDate) : null
-                }
-                onChange={(date, dateString) =>
-                    handleChange(index, "startDate", dateString)
-                }
-                required
-                style={{marginRight: '10px',  width: '40%' }}
-            /> */}
         </>
     )
 }
 
-  return (
-    <Box sx={{ padding: "20px" }} className="content">
-      <Typography variant="h5" gutterBottom>
+const formStyles = {
+  container: {
+    padding: "24px",
+    backgroundColor: "#fff",
+    borderRadius: "12px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+  },
+  section: {
+    marginBottom: "32px",
+  },
+  formControl: {
+    margin: "12px 0",
+  },
+  selectField: {
+    width: "48%",
+    marginRight: "2%",
+  },
+  textField: {
+    width: "48%",
+    marginRight: "2%",
+    marginBottom: "16px",
+  },
+  fullWidthField: {
+    width: "98%",
+    marginBottom: "16px",
+  },
+  actionButton: {
+    minWidth: "40px",
+    height: "40px",
+    padding: "0",
+    marginLeft: "8px",
+    alignSelf: "flex-end",
+  },
+};
+
+return (
+  <Box className="content" sx={formStyles.container}>
+    {/* Thông tin căn hộ */}
+    <Box sx={formStyles.section}>
+      <Typography variant="h6" gutterBottom>
         Thông tin căn hộ
       </Typography>
-      <FormControl
-        fullWidth
-        margin="normal"
-        sx={{ marginRight: "10px", width: "50%" }}
-      >
-        <InputLabel id="service-type-label">Toà nhà</InputLabel>
-        <Select
-          labelId="service-type-label"
-          value={building}
-          onChange={(e) => setBuilding(e.target.value)}
-          required
-        >
-          {buildings.map((option) => (
-            <MenuItem key={option} value={option.id}>
-              {option.buildingName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl fullWidth margin="normal" sx={{ width: "45%" }}>
-        <InputLabel id="service-type-label">Căn hộ</InputLabel>
-        <Select
-          labelId="service-type-label"
-          value={apartment}
-          onChange={(e) => setApartment(e.target.value)}
-          required
-        >
-          {apartments.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.roomNumber}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <Box>
-        <Typography variant="h5" gutterBottom>
-          Thông tin đơn
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          {requests.map((request, index) => (
-            <Box key={index} sx={{ marginBottom: "20px" }}>
-              <Box
-                sx={{ display: "flex", flexWrap: "wrap", marginBottom: "10px" }}
-              >
-                <FormControl
-                  fullWidth
-                  margin="normal"
-                  sx={{ marginRight: "10px", width: "50%" }}
+      <Box sx={{ display: "flex", flexWrap: "nowrap", gap: 2 }}>
+        <FormControl sx={formStyles.selectField}>
+          <InputLabel>Toà nhà</InputLabel>
+          <Select
+            value={building}
+            onChange={(e) => setBuilding(e.target.value)}
+            required
+          >
+            {optionBuildings.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl sx={formStyles.selectField}>
+          <InputLabel>Căn hộ</InputLabel>
+          <Select
+            value={apartment}
+            onChange={(e) => setApartment(e.target.value)}
+            required
+            disabled={apartments.length < 1}
+          >
+            {optionAparments.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+    </Box>
+
+    {/* Form đơn */}
+    <Box sx={formStyles.section}>
+      <Typography variant="h6" gutterBottom>
+        Thông tin đơn
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        {requests.map((request, index) => (
+          <Box 
+            key={index} 
+            sx={{
+              padding: "16px",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "8px",
+              marginBottom: "16px",
+            }}
+          >
+            <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start" }}>
+              {/* Loại dịch vụ */}
+              <FormControl sx={formStyles.selectField}>
+                <InputLabel>Loại dịch vụ</InputLabel>
+                <Select
+                  value={request.serviceId}
+                  onChange={(e) => {
+                    setServiceTypes(e.target.value);
+                    handleChange(index, "serviceId", e.target.value);
+                  }}
+                  required
                 >
-                  <InputLabel id="service-type-label">Loại dịch vụ</InputLabel>
+                  {optionServiceTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {/* Tên dịch vụ */}
+              {request.serviceId && (
+                <FormControl sx={formStyles.selectField}>
+                  <InputLabel>Tên dịch vụ</InputLabel>
                   <Select
-                    labelId="service-type-label"
-                    value={request.serviceId}
-                    onChange={(e) => {
-                      setServiceTypes(e.target.value);
-                      handleChange(index, "serviceId", e.target.value);
-                    }}
-                    required
-                  >
-                    {optionServiceTypes.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                {request.serviceId !== baoCaoSuaChua && <FormControl
-                  fullWidth
-                  margin="normal"
-                  sx={{ marginRight: "10px", width: "50%" }}
-                >
-                  <InputLabel id="service-type-label">Tên dịch vụ</InputLabel>
-                  <Select
-                    labelId="service-type-label"
                     value={request.serviceName}
-                    onChange={(e) =>
-                      handleChangeServiceName(
-                        index,
-                        "serviceName",
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleChangeServiceName(index, "serviceName", e.target.value)}
                     required
                     disabled={!serviceTypes}
                   >
@@ -514,64 +538,68 @@ const SendRequest = () => {
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>}
-                {request.serviceId === themThanhVien &&
-                  addMemberTemplate(request, index)}
-                {request.serviceId === baoCaoSuaChua &&
-                  addReportFixTemplate(request, index)}
-                {request.serviceId === vehicleCode &&
-                  addVehicleTemplate(request, index)}
+                </FormControl>
+              )}
 
-                {index === 0 && (
+              {/* Nút thêm/xóa */}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {index === 0 ? (
                   <Button
-                    variant="outlined"
-                    color="success"
+                    variant="contained"
+                    color="primary"
                     onClick={handleAddRequest}
-                    sx={{ alignSelf: "center" }}
+                    sx={formStyles.actionButton}
                   >
                     +
                   </Button>
-                )}
-                {index > 0 && (
+                ) : (
                   <Button
                     variant="outlined"
-                    color="secondary"
+                    color="error"
                     onClick={() => handleRemoveRequest(index)}
-                    sx={{ alignSelf: "center" }}
+                    sx={formStyles.actionButton}
                   >
                     -
                   </Button>
                 )}
               </Box>
-
-              <TextField
-                fullWidth
-                margin="normal"
-                label="Ghi chú"
-                multiline
-                rows={2}
-                value={request.note}
-                onChange={(e) => handleChange(index, "note", e.target.value)}
-                required
-                sx={{ marginRight: "10px", width: "96%" }}
-              />
             </Box>
-          ))}
 
-          <Box sx={{ textAlign: "right", marginTop: "20px" }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ marginLeft: "10px" }}
-            >
-              Gửi đơn
-            </Button>
+            {/* Template theo loại dịch vụ */}
+            <Box sx={{ marginTop: 2 }}>
+              {request.serviceId === themThanhVien && addMemberTemplate(request, index)}
+              {request.serviceId === baoCaoSuaChua && addReportFixTemplate(request, index)}
+              {request.serviceId === vehicleCode && addVehicleTemplate(request, index)}
+            </Box>
+
+            {/* Ghi chú */}
+            <TextField
+              label="Ghi chú"
+              multiline
+              rows={2}
+              value={request.note}
+              onChange={(e) => handleChange(index, "note", e.target.value)}
+              required
+              sx={formStyles.fullWidthField}
+            />
           </Box>
-        </form>
-      </Box>
+        ))}
+
+        {/* Nút gửi đơn */}
+        <Box sx={{ textAlign: "right", marginTop: "24px" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="large"
+          >
+            Gửi đơn
+          </Button>
+        </Box>
+      </form>
     </Box>
-  );
+  </Box>
+);
 };
 
 export default SendRequest;
