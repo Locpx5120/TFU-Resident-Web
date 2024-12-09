@@ -2,61 +2,52 @@ import {useEffect, useState} from "react";
 import {Card} from "primereact/card";
 import {Carousel} from "primereact/carousel";
 import {responsiveOptions} from "./NewsConstant";
-import { Dialog } from 'primereact/dialog';
+import {Dialog} from 'primereact/dialog';
 import "../../styles/News.css";
+import {getUserNoti} from "../../services/NewsService";
+import {getDetailImage} from "./BussinessNews";
+import dayjs from "dayjs";
+import image from './images.png';
 const PostNews = (deepClass = "content") => {
-    const [listNews, setListNews] = useState([
-        {
-            title: 'aasdas',
-            applyDate: '10/12/2024',
-            applyTime: '10:08:00',
-            content: 'content troll Việt Nam',
-            image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:quality(100)/2015_7_8_635719749908307959_game_Virus_Troll_8_7(1).png'
-        },
-        {
-            title: 'aasdas',
-            applyDate: '10/12/2024',
-            applyTime: '10:08:00',
-            content: 'content troll Việt Nam',
-            image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:quality(100)/2015_7_8_635719749908307959_game_Virus_Troll_8_7(1).png'
-        },
-        {
-            title: 'aasdas',
-            applyDate: '10/12/2024',
-            applyTime: '10:08:00',
-            content: 'content troll Việt Nam',
-            image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:quality(100)/2015_7_8_635719749908307959_game_Virus_Troll_8_7(1).png'
-        },
-        {
-            title: 'aasdas',
-            applyDate: '10/12/2024',
-            applyTime: '10:08:00',
-            content: 'content troll Việt Namcontent troll Việt Namcontent troll Việt Namcontent troll Việt Namcontent troll Việt Namcontent troll Việt Namcontent troll Việt Namcontent troll Việt Nam',
-            image: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:quality(100)/2015_7_8_635719749908307959_game_Virus_Troll_8_7(1).png'
-        },
-    ]);
+    const [listNews, setListNews] = useState([]);
     const [visible, setVisible] = useState(false);
     const [chooseNews, setChooseNews] = useState({});
     useEffect(() => {
-
+        fetchListNews();
     }, []);
-    const fetchListNews = () => {
-
+    const fetchListNews = async () => {
+        try {
+            const response = await getUserNoti();
+            const data = await Promise.all(response.data.map(async (item) => {
+                let img = item.imgBaseId ? await getDetailImage(item.imgBaseId, 'base64') : image;
+                return {
+                    ...item,
+                    applyDate: dayjs(item.time).format('DD/MM/YYYY'),
+                    applyTime: dayjs(item.time).format('HH:mm:ss'),
+                    image: img,
+                    content: item.shortContent
+                }
+            }));
+            // console.log( test);
+            setListNews(data);
+        } catch (e) {
+            console.log(e);
+        }
     }
     const newsTemplate = (news) => {
         return (
             <>
                 <div className="col-12">
-                    <img src={news.image} alt={news.title} className="w-full"/>
+                    <img src={news.image} alt={news.title} className="w-full h-30rem"/>
                     <div className="mt-2">
-                       <span className="font-semibold text-sm"> {news.applyTime} - {news.applyDate} </span>
+                        <span className="font-semibold text-sm"> {news.applyTime} - {news.applyDate} </span>
                     </div>
                     <div className="text-lg mt-2" onClick={() => openModal(news)}>
                         <a>{news.title}</a>
                     </div>
                     <div className="text-base mt-2">
                         <p className="text-wrap">
-                        {news.content}
+                            {news.content}
                         </p>
                     </div>
                 </div>
@@ -81,17 +72,24 @@ const PostNews = (deepClass = "content") => {
 
     return (
         <>
-            <Card className={deepClass}>
+            <Card className={deepClass} title="Bản tin">
                 <Carousel value={listNews} numVisible={3} numScroll={3} responsiveOptions={responsiveOptions}
-                          itemTemplate={newsTemplate} circular />
+                          itemTemplate={newsTemplate} circular autoplayInterval={3000}/>
             </Card>
-            <Dialog header={newsHeaderTemplate} visible={visible} style={{ width: '50vw' }} draggable={false}
-                    onHide={() => {if (!visible) return; setVisible(false); }}
+            <Dialog header={newsHeaderTemplate} visible={visible} style={{width: '50vw'}} draggable={false}
+                    onHide={() => {
+                        if (!visible) return;
+                        setVisible(false);
+                    }}
             >
                 <img src={chooseNews.image} alt={chooseNews.title} className="w-full"/>
-                <p className="m-0">
+                 <div className="mt-2">
+                        <span className="font-semibold text-sm"> {chooseNews.applyTime} - {chooseNews.applyDate} </span>
+                    </div>
+                <p className="m-0 font-semibold text-lg">
                     {chooseNews.content}
                 </p>
+                  <div dangerouslySetInnerHTML={{__html: chooseNews.longContent}}/>
             </Dialog>
         </>
     )

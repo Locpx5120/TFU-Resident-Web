@@ -1,4 +1,6 @@
 import {Dayjs} from "dayjs";
+import {NotificationTypeList, statusTypeList} from "./NewsConstant";
+import {getDetailImg} from "../../services/NewsService";
 
 export const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => {
     for (const key in obj) {
@@ -9,15 +11,12 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
                 form.append(formKey, value.toISOString());
             } else if (value instanceof Array) {
                 value.forEach((item, index) => {
-                    convertObjectToFormData({ [index]: item }, form, formKey);
+                    convertObjectToFormData({[index]: item}, form, formKey);
                 });
 
-            }else if (value instanceof Blob) {
-                console.log(value)
+            } else if (value instanceof Blob) {
                 form.append(formKey, value, 'uploadImage.jpg')
-            }
-
-            else if (typeof value === 'object' && value !== null) {
+            } else if (typeof value === 'object' && value !== null) {
                 convertObjectToFormData(value, form, formKey);
             } else {
                 form.append(formKey, value);
@@ -28,14 +27,35 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
 }
 export const convertNewObj = (obj) => {
     return {
-        notificationType: obj.notificationType,
+        id: obj.id,
+        notificationType: obj.notificationType?.value === '' ? 'null' : obj.notificationType,
         applyTime: obj.applyTime,
         BuildingId: obj.building,
         RoleId: obj.role,
         Title: obj.title,
         Image: obj.image,
-        Content: obj.content,
-        DetailContent: obj.detailContent,
+        shortContent: obj.content,
+        longContent: obj.detailContent,
         Status: obj.status
+    }
+}
+export const mapNotificationTypeName = (params) => {
+    // console.log(statusTypeList.find(el => el.value === params).label)
+    return statusTypeList.find(el => el.value === params) ? statusTypeList.find(el => el.value === params).label : '';
+}
+export const mapNotificationName = (params) => {
+    return NotificationTypeList.find(el => el.value === params) ? NotificationTypeList.find(el => el.value === params).label : '';
+}
+
+export const getDetailImage = async (id, type) => {
+    try {
+        const response = await getDetailImg(id);
+        if (type === 'file'){
+        return new File(['data:image/png;base64,' + response.data.base64], response.data.fileName);
+        }else {
+            return 'data:image/png;base64,' + response.data.base64;
+        }
+    }catch (e) {
+        console.log(e)
     }
 }

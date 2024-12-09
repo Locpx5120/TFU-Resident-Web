@@ -44,6 +44,8 @@ const LoginBuilding = () => {
                 Cookies.set('accessToken', result.data.token, {expires: 1});
                 Cookies.set('buildingID', buildingId, {expires: 1});
                 Cookies.set('residentId', decoded.nameid, {expires: 1});
+                Cookies.set('user', decoded.email, {expires: 1});
+
                 dispatch({type: "LOGIN_SUCCESS", payload: decoded.role });
 
                 Swal.fire({

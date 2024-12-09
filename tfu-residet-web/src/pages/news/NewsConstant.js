@@ -5,6 +5,7 @@ export const NotificationType = {
     COMPANY: 'COMPANY'
 };
 export const NotificationTypeList = [
+    {label: 'Tất cả', value: ''},
     {label: 'Phí', value: NotificationType.FEE},
     {label: 'Ban quản lý', value: NotificationType.MANAGEMENT},
     {label: 'Hoạt động nhà thầu', value: NotificationType.CONTRACTOR_ACTIVITY},
@@ -20,6 +21,7 @@ export const statusType = {
 }
 
 export const statusTypeList = [
+    {label: 'Tất cả', value: ''},
     {label: "Chờ phê duyệt", value: statusType.PENDING_APPROVAL},
     {label: "Đang áp dụng", value: statusType.APPLYING},
     {label: "Chưa áp dụng", value: statusType.PENDING_APPLY},
