@@ -16,14 +16,14 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
   };
 
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
       gap: 3,
       padding: '24px',
       backgroundColor: '#f5f5f5',
       borderRadius: '12px',
-      mt: 3 
+      mt: 3
     }}>
       {/* Thông tin cơ bản */}
       <Box sx={{ display: 'flex', gap: 2 }}>
@@ -34,21 +34,18 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           disabled
           sx={textFieldStyle}
         />
+
+        {/* Thời gian và giá tiền */}
+        {requestInfo.startDate ? <TextField placeholder={requestInfo.startDate} readonly /> :
+          (<DatePicker
+            placeholder="Thời gian sửa chữa"
+            disabled
+            value={requestInfo.startDate ? dayjs(requestInfo.startDate, 'YYYY/MM/DD') : null}
+            sx={textFieldStyle}
+          />)}
       </Box>
 
-      {/* Thời gian và giá tiền */}
       <Box sx={{ display: 'flex', gap: 2 }}>
-        <DatePicker
-          placeholder="Thời gian sửa chữa"
-          disabled
-          value={requestInfo.startDate ? dayjs(requestInfo.startDate, 'YYYY/MM/DD') : null}
-          style={{ 
-            width: "100%",
-            height: "56px",
-            borderRadius: "8px",
-            backgroundColor: 'white'
-          }}
-        />
         <TextField
           label="Giá tiền"
           fullWidth
@@ -70,7 +67,18 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           value={requestInfo.note || ""}
           sx={textFieldStyle}
         />
-        
+
+        <TextField
+          label="Ghi chú chi tiết"
+          multiline
+          rows={3}
+          fullWidth
+          disabled
+          value={requestInfo.noteDetail || ""}
+          onChange={(e) => handleChange("noteDetail", e.target.value)}
+          sx={textFieldStyle}
+        />
+
         <TextField
           label="Ghi chú của chủ căn hộ"
           fullWidth
@@ -80,7 +88,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           value={requestInfo.noteFeedbackCuDan || ""}
           sx={textFieldStyle}
         />
-        
+
         <TextField
           label="Ghi chú của hành chính"
           fullWidth
@@ -90,7 +98,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           value={requestInfo.noteFeedbackHanhChinh || ""}
           sx={textFieldStyle}
         />
-        
+
         {/* Trường ghi chú có thể chỉnh sửa */}
         <TextField
           label="Ghi chú của kỹ thuật viên"
