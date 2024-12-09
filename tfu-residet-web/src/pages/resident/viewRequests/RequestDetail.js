@@ -4,12 +4,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BasicInfo from "./BasicInfo";
 import RepairServiceForm from "./RepairServiceForm";
 import RegularServiceForm from "./RegularServiceForm";
-import BanQuanLyActions from "./BanQuanLyActions";
 import ResidentActions from "./ResidentActions";
 import Cookies from "js-cookie";
 import { useRequestDetail } from "../../../hooks/useRequestDetail";
 import TechnicianForm from "./TechnicianForm";
 import TechnicianActions from "./TechnicianActions";
+import HanhChinhActions from "./HanhChinhActions";
 
 const RequestDetail = () => {
   const location = useLocation();
@@ -68,7 +68,7 @@ const RequestDetail = () => {
             />
           )}
 
-          <BanQuanLyActions 
+          <HanhChinhActions 
             requestInfo={requestInfo}
             handleSubmit={handleSubmit}
             navigate={navigate}

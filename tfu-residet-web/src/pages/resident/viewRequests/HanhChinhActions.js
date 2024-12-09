@@ -10,8 +10,8 @@ import {
 } from "../../../constants/ApproveConstant";
 import Swal from "sweetalert2";
 
-const BanQuanLyActions = ({ requestInfo, handleSubmit, navigate }) => {
-  if (Cookies.get("role") !== "BanQuanLy") return null;
+const HanhChinhActions = ({ requestInfo, handleSubmit, navigate }) => {
+  if (Cookies.get("role") !== "HanhChinh") return null;
 
   const validateRequiredFields = () => {
     const requiredFields = {
@@ -124,4 +124,4 @@ const BanQuanLyActions = ({ requestInfo, handleSubmit, navigate }) => {
   );
 }
 
-export default BanQuanLyActions;
+export default HanhChinhActions;
