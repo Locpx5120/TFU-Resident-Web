@@ -59,6 +59,7 @@ import SendRequestHanhChinh from "../pages/HanhChinh/send-request";
 import DetailNews from "../pages/news/detailNews";
 import PostNews from "../pages/news/PostNews";
 import DashboardInvestor from "../pages/dashboard/DashboardInvestor";
+import {Card} from "primereact/card";
 export const routeArray = [
     {
         route: "/",
@@ -134,7 +135,11 @@ export const routeResident = [
     {
         route: "/trang-chu",
         routeName: "Trang chủ",
-        component: <>Chua Co</>,
+        component:
+            <div className="content h-auto p-0">
+                <PostNews/>
+            </div>
+        ,
         icon: <SettingsIcon/>,
     },
     {

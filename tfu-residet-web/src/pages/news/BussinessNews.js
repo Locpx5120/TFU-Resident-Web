@@ -1,5 +1,6 @@
 import {Dayjs} from "dayjs";
 import {NotificationTypeList, statusTypeList} from "./NewsConstant";
+import {getDetailImg} from "../../services/NewsService";
 
 export const convertObjectToFormData = (obj, form = new FormData(), namespace = '') => {
     for (const key in obj) {
@@ -14,7 +15,6 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
                 });
 
             } else if (value instanceof Blob) {
-                console.log(value)
                 form.append(formKey, value, 'uploadImage.jpg')
             } else if (typeof value === 'object' && value !== null) {
                 convertObjectToFormData(value, form, formKey);
@@ -27,7 +27,8 @@ export const convertObjectToFormData = (obj, form = new FormData(), namespace = 
 }
 export const convertNewObj = (obj) => {
     return {
-        notificationType: obj.notificationType,
+        id: obj.id,
+        notificationType: obj.notificationType?.value === '' ? 'null' : obj.notificationType,
         applyTime: obj.applyTime,
         BuildingId: obj.building,
         RoleId: obj.role,
@@ -44,4 +45,17 @@ export const mapNotificationTypeName = (params) => {
 }
 export const mapNotificationName = (params) => {
     return NotificationTypeList.find(el => el.value === params) ? NotificationTypeList.find(el => el.value === params).label : '';
+}
+
+export const getDetailImage = async (id, type) => {
+    try {
+        const response = await getDetailImg(id);
+        if (type === 'file'){
+        return new File(['data:image/png;base64,' + response.data.base64], response.data.fileName);
+        }else {
+            return 'data:image/png;base64,' + response.data.base64;
+        }
+    }catch (e) {
+        console.log(e)
+    }
 }

@@ -2,11 +2,12 @@ import {useEffect, useState} from "react";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {useNavigate, useParams} from "react-router-dom";
-import {getDetail} from "../../services/NewsService";
+import {actionNoti, getDetail} from "../../services/NewsService";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import {mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
+import {getDetailImage, mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
 import {statusType} from "./NewsConstant";
+import Cookies from "js-cookie";
 
 const DetailNews = () => {
     const {id} = useParams();
@@ -25,21 +26,71 @@ const DetailNews = () => {
         approvalBy: '',
         status: ''
     });
+    let [isValidRole, setInvalidRole] = useState(false);
     useEffect(() => {
-        fetchData(id)
-    }, [id]);
+        fetchData(id);
+        setInvalidRole(Cookies.get('role') === 'BanQuanLy');
+        console.log(isValidRole)
+    }, [id, isValidRole]);
     const fetchData = async (id) => {
         try {
             const response = await getDetail(id);
+            response.data.image = await getDetailImage(response?.data.imgBaseId, 'base64');
+            isValidRole = Cookies.get('role') === 'BanQuanLy';
             setData(pipeData(response?.data))
+            console.log(data)
         } catch (e) {
             Swal.fire('Lỗi', 'Không lấy được chi tiết bản tin ', 'error');
 
         }
     }
+
+    const doActionNoti = async (isApprove) => {
+        Swal.fire({
+            icon: "question",
+            title: `Bạn có muốn ${isApprove ? 'duyệt' : 'từ chối'} bản tin`,
+            showConfirmButton: true,
+            showDenyButton: true,
+            confirmButtonText: "Đồng ý",
+            denyButtonText: "Huỷ",
+            confirmButtonColor: "#3085d6",
+        }).then(async result => {
+            if (result.isConfirmed) {
+                await action(isApprove)
+            }
+        })
+    }
+    const action = async (isApprove) => {
+        try {
+            const response = await actionNoti(data.id, isApprove);
+            console.log(response)
+            if (response.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: `Bản tin đã được ${isApprove ? 'duyệt' : 'từ chối'} thành công`,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3085d6",
+                })
+            }
+            fetchData(data.id)
+        } catch (e) {
+            console.log(e)
+              Swal.fire({
+                    icon: "error",
+                    title: `Có lỗi xảy ra`,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3085d6",
+                })
+        }
+    }
     const pipeData = (data) => {
+        // const imageConvert = await getDetailImage(data.imgBaseId, 'base64');
+        // // console.log(imageConvert);
         return {
             ...data,
+            longContent: <div dangerouslySetInnerHTML={{__html: data?.longContent}}/>,
             statusName: mapNotificationTypeName(data.status),
             notificationName: mapNotificationName(data.notificationType),
             applyDate: dayjs(data.time).format('DD/MM/YYYY'),
@@ -53,8 +104,8 @@ const DetailNews = () => {
     );
     return (
         <>
-            <Card className="content" header={header}>
-                <div className="col-12">
+            <Card className="content h-auto" header={header}>
+                {data && <div className="col-12">
                     <div className="grid my-5">
                         <div className="col-3">Loại thông báo</div>
                         <div className="col-9">{data.notificationName}</div>
@@ -79,10 +130,12 @@ const DetailNews = () => {
                         <div className="col-3">Nội dung chi tiết</div>
                         <div className="col-9">{data.longContent}</div>
                     </div>
-                    <div className="grid my-5">
+                    {data.image && <div className="grid my-5">
                         <div className="col-3">Ảnh minh hoạ</div>
-                        <div className="col-9">{data.image}</div>
-                    </div>
+                        <div className="col-9">
+                            <img src={data.image} alt="" height={200} width={200}/>
+                        </div>
+                    </div>}
                     <div className="grid my-5">
                         <div className="col-3">Ngày áp dụng</div>
                         <div className="col-9">{data.applyDate}</div>
@@ -104,11 +157,13 @@ const DetailNews = () => {
                         <div className="col-9">{data.statusName}</div>
                     </div>
                     <div className="grid col justify-content-center">
-                        {data.status === statusType.DRAFT && <Button label="Từ chối" severity="danger"></Button>}
+                        {(data.status === statusType.PENDING_APPROVAL && isValidRole) &&
+                            <Button label="Từ chối" severity="danger" onClick={() => doActionNoti(false)}></Button>}
                         <Button label="Quay lại" outlined className="mx-3" onClick={() => navigate('/news')}></Button>
-                         {data.status === statusType.DRAFT && <Button label="Duyệt" severity="primary"></Button>}
+                        {(data.status === statusType.PENDING_APPROVAL && isValidRole) &&
+                            <Button label="Duyệt" severity="primary" onClick={() => doActionNoti(true)}></Button>}
                     </div>
-                </div>
+                </div>}
             </Card>
         </>
     )

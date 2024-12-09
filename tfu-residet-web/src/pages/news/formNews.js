@@ -6,12 +6,12 @@ import {Dropdown} from "primereact/dropdown";
 import {Editor} from "primereact/editor";
 import {FileUpload} from "primereact/fileupload";
 import {Calendar} from "primereact/calendar";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {GetBuildingsByUser} from "../../services/buildingService";
 import {NotificationType, NotificationTypeList, RoleList, statusType} from "./NewsConstant";
 import {Button} from "primereact/button";
-import {convertObjectToFormData, convertNewObj} from "./BussinessNews";
-import {getDetail, NewsCreate} from "../../services/NewsService";
+import {convertObjectToFormData, convertNewObj, getDetailImage} from "./BussinessNews";
+import {getDetail, NewsCreate, NewsUpdate} from "../../services/NewsService";
 import Swal from "sweetalert2";
 import {getRole} from "../../services/RoleService";
 
@@ -19,7 +19,7 @@ const FormNews = () => {
     const navigate = useNavigate();
     const {id} = useParams();
     const createValidTime = 10 * 60 * 1000;
-
+    const fileUploadRef = useRef(null)
     const imageUploadConfig = {
         empty: (<p className="m-0">Kéo thả ảnh tại đây .</p>),
         size: 1000000
@@ -61,7 +61,7 @@ const FormNews = () => {
             };
             setListBuilding(response.building.data);
             const responseRole: [] = response.role.data;
-            responseRole.unshift({id: '', name: 'Tất cả'});
+            responseRole.unshift({id: null,  name: 'Tất cả'});
             setListRole(responseRole);
             if (id) {
                 await handleUpdateData();
@@ -73,8 +73,24 @@ const FormNews = () => {
     const handleUpdateData = async () => {
         try {
             const response = await getDetail(id);
-            console.log(response)
-            setNewsFormInput(response?.data);
+            const inputForm = response?.data;
+            const imageConvert = await getDetailImage(inputForm.imgBaseId, 'file');
+            customBase64Uploader([imageConvert])
+            if (fileUploadRef.current) {
+                fileUploadRef.current.setUploadedFiles([imageConvert]);
+            }
+            const applyTimeConvert = new Date(inputForm.time).toString() === "Invalid Date"
+            ? new Date() : new Date(inputForm.time);
+            setNewsFormInput({
+                ...inputForm,
+                building: inputForm.buildingId,
+                role: inputForm.roleId,
+                content: inputForm.shortContent,
+                detailContent: inputForm.longContent,
+                applyTime: applyTimeConvert,
+                image: imageConvert
+
+            });
         } catch (e) {
             Swal.fire('Lỗi', 'Không lấy được thông tin bản tin ', 'error');
         }
@@ -135,15 +151,14 @@ const FormNews = () => {
         }))
     }
     const submitForm = async (isDraft: boolean) => {
-        // console.log(checkValidForm());
         if (!checkValidForm()) {
-            setNewsFormInput((prevState) => ({
-                ...prevState,
+            const request = {
+                ...newsFormInput,
                 status: isDraft ? statusType.DRAFT : statusType.PENDING_APPROVAL
-            }))
-            let formData = convertObjectToFormData(convertNewObj(newsFormInput));
+            }
+            let formData = convertObjectToFormData(convertNewObj(request));
             try {
-                const response = await NewsCreate(formData);
+                const response = id ? await NewsUpdate(formData) : await NewsCreate(formData);
                 if (response.success) {
                     Swal.fire({
                         icon: "success",
@@ -152,13 +167,11 @@ const FormNews = () => {
                         confirmButtonText: "OK",
                         confirmButtonColor: "#3085d6",
                     }).then((result) => {
-                        console.log(result)
                         if (result.isConfirmed) {
                             navigate('/news');
                         }
                     })
                 }
-                console.log(response)
             } catch (e) {
                 console.log(e)
             }
@@ -191,7 +204,7 @@ const FormNews = () => {
     const customBase64Uploader = async (event) => {
         // convert file to base64 encoded
         try {
-            const file = event.files[0];
+            const file = event.files ? event.files[0] : event;
             const reader = new FileReader();
             let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
             reader.readAsDataURL(blob);
@@ -251,7 +264,7 @@ const FormNews = () => {
                     </div>
                     <div className="field col-12 mt-5">
                         <label form="firstname1">Ảnh minh hoạ</label>
-                        <FileUpload name="demo[]" url="/api/upload" accept="image/*" onSelect={customBase64Uploader}
+                        <FileUpload ref={fileUploadRef} name="demo[]" accept="image/*" onSelect={customBase64Uploader}
                                     mode="advanced" auto maxFileSize={imageUploadConfig.size}
                                     emptyTemplate={imageUploadConfig.empty}/>
                     </div>
@@ -261,7 +274,7 @@ const FormNews = () => {
                     <div className="field col-12">
                         <label form="firstname1">Thời gian áp dụng</label>
                         <Calendar showTime hourFormat="24" className="w-full" value={newsFormInput.applyTime} showIcon
-                                  name="applyTime" onChange={handleChangeInput}
+                                  name="applyTime" onChange={handleChangeInput} dateFormat="dd/mm/yy"
                                   onBlur={(e) => {
                                       validateBlurRequired('applyTime');
                                       validateCurrentDate(e)
@@ -271,9 +284,9 @@ const FormNews = () => {
                 </div>
                 <div className="col-12 grid justify-content-center">
                     <Button label="Quay lại" outlined onClick={() => navigate('/news')}></Button>
-                    <Button label={id ? 'Cập nhật' : 'Tạo mới'} className="mx-2"
+                    <Button label='Tạo mới' className="mx-2"
                             onClick={() => submitForm(false)}></Button>
-                    <Button label="Lưu nháp" onClick={() => submitForm(true)}></Button>
+                    <Button label={id ? 'Cập nhật' : 'Lưu nháp'} onClick={() => submitForm(true)}></Button>
                 </div>
             </Card>
         </>

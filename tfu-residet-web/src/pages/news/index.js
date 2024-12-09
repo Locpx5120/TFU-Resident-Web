@@ -17,6 +17,7 @@ import {Paginator} from "primereact/paginator";
 import dayjs from "dayjs";
 import {find} from 'lodash';
 import {mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
+import Cookies from "js-cookie";
 const News = () => {
     const initForm = {
         title: '',
@@ -62,7 +63,10 @@ const News = () => {
     );
     const handleSelect = (event) => {
         event.preventDefault();
-        const {name, value} = event?.target;
+        let {name, value} = event?.target;
+        if (value instanceof Object) {
+            value = value.value;
+        }
         const updatedFilterNews = {
             ...filterNews,
             [name]: value,
@@ -95,13 +99,14 @@ const News = () => {
           index: index+1,
           statusName: mapNotificationTypeName(item.status),
           notificationName: mapNotificationName(item.notificationType),
-          applyDate: dayjs(item.date).format('DD/MM/YYYY : HH:mm:ss'),
+          roleName: item.roleName === 'All' ? 'Tất cả' : item.roleName,
+          applyDate: dayjs(item.date).format('DD/MM/YYYY - HH:mm:ss'),
           action:
                 (
                     <>
-                        {item.status === statusType.DRAFT && <Button icon="pi pi-trash" rounded text severity="danger" onClick={ () => doDelete(item.id)}></Button>}
+                        {item.status === statusType.DRAFT && Cookies.get('user') === item.createBy  && <Button icon="pi pi-trash" rounded text severity="danger" onClick={ () => doDelete(item.id)}></Button>}
                         <Button icon="pi pi-eye" rounded text severity="info" onClick={ () => view(item.id)}></Button>
-                        {item.status === statusType.DRAFT && <Button icon="pi pi-pencil" rounded text severity="help" onClick={ () => update(item.id)}></Button>}
+                        {item.status === statusType.DRAFT && Cookies.get('user') === item.createBy && <Button icon="pi pi-pencil" rounded text severity="help" onClick={ () => update(item.id)}></Button>}
                     </>
                 )
         }))
@@ -120,20 +125,20 @@ const News = () => {
         {field: 'index', header: 'STT'},
         {field: 'buildingName', header: 'Toà nhà'},
         {field: 'notificationName', header: 'Loại thông báo'},
-        {field: 'title', header: 'Tiêu đề'},
-        {field: 'roleName', header: 'Chức vụ'},
+        {field: 'title', header: 'Tiêu đề', style: {width: '20rem'}},
+        {field: 'roleName', header: 'Tệp áp dụng'},
         {field: 'applyDate', header: 'Ngày áp dụng'},
         {field: 'createdBy', header: 'Người tạo'},
-        {field: 'approvalBy', header: 'Người duyệt'},
+        {field: 'approvedBy', header: 'Người duyệt'},
         {field: 'statusName', header: 'Trạng thái'},
-        {field: 'action', header: 'Hành động '},
+        {field: 'action', header: 'Hành động ' , style: {textAlign: 'center'}},
     ]
     return (
-        <Box className="content">
-            <Card title="Quản lý bản tin">
+        <Box className="content h-auto">
+            <Card title="Quản lý bản tin" className="">
                 <div className="col grid">
                     <div className="col-3">
-                        <InputText value={filterNews.title} name="title" onChange={handleChange} className=""
+                        <InputText value={filterNews.title} name="title" onChange={handleChange} className="w-full"
                                    placeholder="Nhập tiêu đề"/>
                     </div>
                     <div className="col-3">
@@ -145,7 +150,7 @@ const News = () => {
                     </div>
                     <div className="col-3">
                         <Calendar value={filterNews.applyDate} name="applyDate"
-                                  onChange={handleChange} className=""
+                                  onChange={handleChange} className="w-full"
                                   dateFormat="dd/mm/yy" showIcon/></div>
                     <div className="col-2">
                         <Dropdown value={filterNews.status} name="status"
@@ -164,7 +169,7 @@ const News = () => {
                 <DataTable value={listNews} scrollable tableStyle={{minWidth: '100rem'}}
                            emptyMessage="Không có dữ liệu">
                     {columnTable.map((item) =>
-                        <Column key={item.field} field={item.field} header={item.header}></Column>)}
+                        <Column key={item.field} field={item.field} header={item.header} style={item.style}></Column>)}
                 </DataTable>
                 <div className="card">
                     {totalRecord > 5 && <Paginator first={first} rows={rows} totalRecords={totalRecord}
