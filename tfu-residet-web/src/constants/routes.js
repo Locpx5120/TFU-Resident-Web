@@ -218,32 +218,6 @@ export const routeResident = [
         component: <FeedbackPage />,
         icon: <ThirtyFpsOutlined />,
     },
-    {
-        route: "/news",
-        routeName: "Quản lí bản tin",
-        icon: <SettingsIcon/>,
-        component: <News/>,
-    },
-     {
-        route: "/news/:id",
-        component: <DetailNews/>,
-        hidden: true,
-    },
-     {
-        route: "/news/add",
-        component: <FormNews/>,
-        hidden: true,
-    },
-    {
-        route: "/news/update/:id",
-        component: <FormNews/>,
-        hidden: true,
-    },
-    {
-        route: "/post-news",
-        component: <PostNews/>,
-        hidden: true,
-    }
 ];
 
 export const routeDirector = [
@@ -308,27 +282,6 @@ export const routeDirector = [
         component: <DetailThirdPartyLent />,
     },
     // },
-    {
-        route: "/news",
-        routeName: "Quản lí bản tin",
-        icon: <SettingsIcon/>,
-        component: <News/>,
-    },
-     {
-        route: "/news/:id",
-        component: <DetailNews/>,
-        hidden: true,
-    },
-     {
-        route: "/news/add",
-        component: <FormNews/>,
-        hidden: true,
-    },
-    {
-        route: "/news/update/:id",
-        component: <FormNews/>,
-        hidden: true,
-    },
     // {
     //     route: "/approve",
     //     routeName: "Phê duyệt",
@@ -431,6 +384,25 @@ export const routeAdmin = [
         icon: <SettingsIcon/>,
         hidden: true,
     },
+];
+
+export const routeTechnique = [
+    {
+       route: "/xem-don",
+       routeName: "Danh sách yêu cầu",
+       component: <ViewRequests/>,
+       icon: <SettingsIcon/>,
+   },
+   {
+       route: "/xem-chi-tiet-don/:id",
+       routeName: "Xem đơn",
+       component: <RequestDetail/>,
+       icon: <SettingsIcon/>,
+       hidden: true,
+   },
+];
+export const routeNews = [
+
     {
         route: "/news",
         routeName: "Quản lí bản tin",
@@ -452,20 +424,9 @@ export const routeAdmin = [
         component: <FormNews/>,
         hidden: true,
     },
-];
-
-export const routeTechnique = [
     {
-       route: "/xem-don",
-       routeName: "Danh sách yêu cầu",
-       component: <ViewRequests/>,
-       icon: <SettingsIcon/>,
-   },
-   {
-       route: "/xem-chi-tiet-don/:id",
-       routeName: "Xem đơn",
-       component: <RequestDetail/>,
-       icon: <SettingsIcon/>,
-       hidden: true,
-   },
-];
+        route: "/post-news",
+        component: <PostNews/>,
+        hidden: true,
+    }
+]

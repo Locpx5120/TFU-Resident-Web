@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import {getDetailImage, mapNotificationName, mapNotificationTypeName} from "./BussinessNews";
 import {statusType} from "./NewsConstant";
 import Cookies from "js-cookie";
+import {InputText} from "primereact/inputtext";
 
 const DetailNews = () => {
     const {id} = useParams();
@@ -30,7 +31,6 @@ const DetailNews = () => {
     useEffect(() => {
         fetchData(id);
         setInvalidRole(Cookies.get('role') === 'BanQuanLy');
-        console.log(isValidRole)
     }, [id, isValidRole]);
     const fetchData = async (id) => {
         try {
@@ -41,7 +41,6 @@ const DetailNews = () => {
             console.log(data)
         } catch (e) {
             Swal.fire('Lỗi', 'Không lấy được chi tiết bản tin ', 'error');
-
         }
     }
 
@@ -49,6 +48,8 @@ const DetailNews = () => {
         Swal.fire({
             icon: "question",
             title: `Bạn có muốn ${isApprove ? 'duyệt' : 'từ chối'} bản tin`,
+            input: isApprove ? '' : 'text',
+            inputPlaceholder: 'Nhập lý do từ chối',
             showConfirmButton: true,
             showDenyButton: true,
             confirmButtonText: "Đồng ý",
@@ -56,13 +57,17 @@ const DetailNews = () => {
             confirmButtonColor: "#3085d6",
         }).then(async result => {
             if (result.isConfirmed) {
-                await action(isApprove)
+                await action(isApprove, result.value)
             }
         })
     }
-    const action = async (isApprove) => {
+    const action = async (isApprove, value) => {
         try {
-            const response = await actionNoti(data.id, isApprove);
+            const request = {
+                id: data.id,
+                note: value
+            }
+            const response = await actionNoti(data.id, isApprove, isApprove ? '' : request);
             console.log(response)
             if (response.success) {
                 Swal.fire({

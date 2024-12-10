@@ -36,10 +36,22 @@ export const getUserNoti = async () => {
     }, endpointUrl.BUILDING_URL)
 }
 
-export const actionNoti = async (id, isApprove) => {
-    const endpoint = `/notify/${isApprove ? 'applying-notify' : 'reject-notify'}?id=${id}`;
-    return await postData(endpoint,"", {
+export const actionNoti = async (id, isApprove, body) => {
+    let endpoint = `/notify/${isApprove ? 'applying-notify' : 'reject-notify'}?id=${id}`;
+    if (!isApprove) {
+        endpoint = `/notify/reject-notify`;
+    }
+    return await postData(endpoint, body, {
         Authorization: `Bearer ${Cookies.get("accessToken")}`,
         'Content-Type': 'application/json'
     }, endpointUrl.BUILDING_URL)
 }
+
+export const GetBuildingsForNews = async () => {
+    return await getData('/building/get', endpointUrl.BUILDING_URL, {
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get("buildingID"),
+    })
+}
+

@@ -7,11 +7,10 @@ import {Editor} from "primereact/editor";
 import {FileUpload} from "primereact/fileupload";
 import {Calendar} from "primereact/calendar";
 import {useEffect, useRef, useState} from "react";
-import {GetBuildingsByUser} from "../../services/buildingService";
 import {NotificationType, NotificationTypeList, RoleList, statusType} from "./NewsConstant";
 import {Button} from "primereact/button";
 import {convertObjectToFormData, convertNewObj, getDetailImage} from "./BussinessNews";
-import {getDetail, NewsCreate, NewsUpdate} from "../../services/NewsService";
+import {GetBuildingsForNews, getDetail, NewsCreate, NewsUpdate} from "../../services/NewsService";
 import Swal from "sweetalert2";
 import {getRole} from "../../services/RoleService";
 
@@ -56,12 +55,12 @@ const FormNews = () => {
     const fetchBuildingData = async () => {
         try {
             const response = {
-                building: await GetBuildingsByUser(),
+                building: await GetBuildingsForNews(),
                 role: await getRole()
             };
             setListBuilding(response.building.data);
             const responseRole: [] = response.role.data;
-            responseRole.unshift({id: null,  name: 'Tất cả'});
+            responseRole.unshift({id: '',  name: 'Tất cả'});
             setListRole(responseRole);
             if (id) {
                 await handleUpdateData();
