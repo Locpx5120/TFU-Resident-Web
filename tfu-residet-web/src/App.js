@@ -11,7 +11,17 @@ import PublicRoute from './common/PublicRoute';
 import PrivateRoute from './common/PrivateRoute';
 import OTPInput from './pages/OTPInput';
 import ChangePassword from './pages/ChangePassword';
-import { routeArray, routeResident, routeDirector, routeAccountant, routeAdmin, routeThirdParty, routeTechnique, routeReceptionist } from "./constants/routes";
+import {
+  routeArray,
+  routeResident,
+  routeDirector,
+  routeAccountant,
+  routeAdmin,
+  routeThirdParty,
+  routeTechnique,
+  routeReceptionist,
+  routeNews
+} from "./constants/routes";
 import LoginBuilding from "./pages/LoginBuilding";
 import { authService } from "./services/authService";
 import Cookies from 'js-cookie';
@@ -24,12 +34,12 @@ function App() {
   const getRoutesByRole = useCallback((role) => {
     switch (role) {
       case 'Resident': return routeResident;
-      case 'BanQuanLy': return routeDirector;
-      case 'KeToan': return routeAccountant;
+      case 'BanQuanLy': return routeDirector.concat(routeNews);
+      case 'KeToan': return routeAccountant.concat(routeNews);
       case 'BenThuBa': return routeThirdParty;
-      case 'HanhChinh': return routeAdmin;
+      case 'HanhChinh': return routeAdmin.concat(routeNews);
       case 'KiThuat': return routeTechnique;
-      case 'LeTan': return routeReceptionist;
+      case 'LeTan': return routeReceptionist.concat(routeNews);
       default: return routeArray;
     }
   }, [user]);
