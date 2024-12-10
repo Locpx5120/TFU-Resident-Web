@@ -329,12 +329,12 @@ export const routeDirector = [
         component: <FormNews/>,
         hidden: true,
     },
-    {
-        route: "/approve",
-        routeName: "Phê duyệt",
-        component: <ViewRequests/>,
-        icon: <LibraryAddCheckIcon/>,
-    },
+    // {
+    //     route: "/approve",
+    //     routeName: "Phê duyệt",
+    //     component: <ViewRequests/>,
+    //     icon: <LibraryAddCheckIcon/>,
+    // },
     {
         route: "/approve/:id",
         routeName: "Xem đơn",
@@ -361,16 +361,44 @@ export const routeThirdParty = [
 
 export const routeReceptionist = [
     {
-        route: "/lich-su-gui-don",
-        routeName: "Lịch sử gửi đơn",
-        component: <Receptionist/>,
+        route: "/xem-don",
+        routeName: "Xem đơn",
+        component: <ViewRequests/>,
         icon: <SettingsIcon/>,
     },
     {
-        route: "/lich-su-thanh-toan-2",
-        routeName: "Lịch sử thanh toán 2",
-        component: <HistoryPay/>,
+        route: "/xem-chi-tiet-don/:id",
+        routeName: "Xem đơn",
+        component: <RequestDetail/>,
         icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/lich-su-thanh-toan",
+        routeName: "Lịch sử thanh toán",
+        component: <PaymentHistory/>,
+        icon: <HistoryIcon/>,
+    },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
     },
 ];
 
