@@ -18,7 +18,6 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate }) => {
       'Kỹ thuật viên': requestInfo.staffId,
     //   'Ghi chú của hành chính': requestInfo.noteFeedbackHanhChinh,
       'Thời gian sửa chữa': requestInfo.startDate,
-      'Giá tiền': requestInfo.servicePrice
     };
 
     const missingFields = Object.entries(requiredFields)

@@ -30,30 +30,27 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
         <TextField
           label="Tên kỹ thuật viên"
           fullWidth
-          value={requestInfo.technicianName || ""}
+          value={requestInfo.staffName || ""}
           disabled
-          sx={textFieldStyle}
+          sx={{width: '50%'}}
         />
 
         {/* Thời gian và giá tiền */}
-        {requestInfo.startDate ? <TextField placeholder={requestInfo.startDate} readonly /> :
-          (<DatePicker
+        {<DatePicker
             placeholder="Thời gian sửa chữa"
+            value={
+              requestInfo.startDate
+                ? dayjs(requestInfo.startDate, "MM/DD/YYYY HH:mm:ss")
+                : null
+            }
+            onChange={(date) => handleChange("startDate", date)}
+            style={{
+              width: "100%",
+              borderRadius: "8px",
+              borderColor: "#d9d9d9",
+            }}
             disabled
-            value={requestInfo.startDate ? dayjs(requestInfo.startDate, 'YYYY/MM/DD') : null}
-            sx={textFieldStyle}
-          />)}
-      </Box>
-
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <TextField
-          label="Giá tiền"
-          fullWidth
-          type="number"
-          disabled
-          value={requestInfo.servicePrice || ""}
-          sx={textFieldStyle}
-        />
+          />}
       </Box>
 
       {/* Các trường ghi chú */}

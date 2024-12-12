@@ -26,7 +26,7 @@ export const getStatusLabel = (statusCode) => {
       case 6:
         return "Kỹ thuật đang xử lý";
       case 7:
-        return "Hoàn thành";
+        return "Kỹ thuật xác nhận hoàn thành";
       default:
         return "Không xác định";
     }
