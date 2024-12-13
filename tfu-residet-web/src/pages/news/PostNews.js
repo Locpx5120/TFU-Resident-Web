@@ -7,7 +7,7 @@ import "../../styles/News.css";
 import {getUserNoti} from "../../services/NewsService";
 import {getDetailImage} from "./BussinessNews";
 import dayjs from "dayjs";
-import image from './images.png';
+import image from './image.jpg';
 const PostNews = (deepClass = "content") => {
     const [listNews, setListNews] = useState([]);
     const [visible, setVisible] = useState(false);
@@ -82,7 +82,7 @@ const PostNews = (deepClass = "content") => {
                         setVisible(false);
                     }}
             >
-                <img src={chooseNews.image} alt={chooseNews.title} className="w-full"/>
+                {chooseNews.image !== image && <img src={chooseNews.image} alt={chooseNews.title} className="w-full"/>}
                  <div className="mt-2">
                         <span className="font-semibold text-sm"> {chooseNews.applyTime} - {chooseNews.applyDate} </span>
                     </div>

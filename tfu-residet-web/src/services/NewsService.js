@@ -32,8 +32,9 @@ export const getDetailImg = async (id) => {
 export const getUserNoti = async () => {
     return await postData(`/notify/get-notifies-by-user`,"", {
         Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        'Content-Type': 'application/json'
-    }, endpointUrl.BUILDING_URL)
+        'Content-Type': 'application/json',
+         'buildingPermalink': Cookies.get("buildingID"),
+   }, endpointUrl.BUILDING_URL)
 }
 
 export const actionNoti = async (id, isApprove, body) => {
