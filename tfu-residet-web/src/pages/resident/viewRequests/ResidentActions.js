@@ -1,14 +1,18 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 import Cookies from "js-cookie";
-import { APPROVE_ASSIGN_STAFF, REJECT_ASSIGN_STAFF } from "../../../constants/ApproveConstant";
+import { APPROVE_ASSIGN_STAFF, APPROVE_REQUEST, REJECT_ASSIGN_STAFF, STAFF_PENDING } from "../../../constants/ApproveConstant";
 
 const ResidentActions = ({ requestInfo, handleSubmit, navigate }) => {
   if (Cookies.get("role") !== "Resident") return null;
+  const status = requestInfo.status;
 
   const shouldShowActionButtons = () => {
-    const status = parseInt(requestInfo.status);
-    return status < 3 && status === 1 || status === 2;
+    return  status === 3;
+  };
+
+  const isRepairCompleted = () => {
+    return status === 7;
   };
 
   return (
@@ -40,7 +44,36 @@ const ResidentActions = ({ requestInfo, handleSubmit, navigate }) => {
         </>
       )}
 
-      {!shouldShowActionButtons() && (
+      {isRepairCompleted() && (
+        <>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => handleSubmit(APPROVE_REQUEST)}
+            sx={{ margin: "10px" }}
+          >
+            Kỹ thuật đã hoàn thành sửa chữa
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => handleSubmit(STAFF_PENDING)}
+            sx={{ margin: "10px" }}
+          >
+            Yêu cầu sửa chữa lại
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate("/xem-don")}
+            sx={{ margin: "10px" }}
+          >
+            Đóng
+          </Button>
+        </>
+      )}
+
+      {!shouldShowActionButtons() && !isRepairCompleted() && (
         <Button
           variant="outlined"
           color="secondary"
