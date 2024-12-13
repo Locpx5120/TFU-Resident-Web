@@ -51,6 +51,8 @@ const News = () => {
         const updatedFilterNews = {
             ...filterNews,
             [name]: value,
+            pageSize: 10,
+            pageNumber: 1
         };
         setFilterNews(updatedFilterNews);
         await handleInput(updatedFilterNews);
@@ -70,6 +72,8 @@ const News = () => {
         const updatedFilterNews = {
             ...filterNews,
             [name]: value,
+            pageSize: 10,
+            pageNumber: 1
         };
         setFilterNews(updatedFilterNews);
         fetchListNews(updatedFilterNews);

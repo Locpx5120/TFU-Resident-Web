@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Container, Row, Col, Form, FormGroup, Button} from "react-bootstrap";
 import '../styles/login.css';
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
@@ -23,6 +23,9 @@ const LoginBuilding = () => {
     const {dispatch} = useContext(authService);
     const navigate = useNavigate();
 
+    useEffect(() => {
+                Cookies.set('buildingID', buildingId, {expires: 1});
+    }, []);
     // Hàm thay đổi giá trị input
     const handleChange = e => {
         setCredentials(prev => ({...prev, [e.target.id]: e.target.value}));
@@ -42,7 +45,7 @@ const LoginBuilding = () => {
                 const decoded = jwtDecode(result.data.token);                
                 Cookies.set('role', decoded?.role, {expires: 1});
                 Cookies.set('accessToken', result.data.token, {expires: 1});
-                Cookies.set('buildingID', buildingId, {expires: 1});
+                // Cookies.set('buildingID', buildingId, {expires: 1});
                 Cookies.set('residentId', decoded.nameid, {expires: 1});
                 Cookies.set('user', decoded.email, {expires: 1});
 
