@@ -1,10 +1,13 @@
 import {Card} from "primereact/card";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 
-const RecentTransaction = () => {
+const RecentTransaction = (transactionRecived) => {
     const [transaction, setTransaction] = useState([])
+    useEffect(() => {
+        setTransaction(transactionRecived)
+    }, [transactionRecived]);
     const columnTable = [
         {field: 'index', header: 'STT'},
         {field: 'service', header: 'Dịch vụ'},
