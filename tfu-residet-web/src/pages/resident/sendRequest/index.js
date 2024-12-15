@@ -470,7 +470,7 @@ const SendRequest = () => {
                   </FormControl>
                 )}
                 <TextField
-                  label="Giá"
+                  // label="Giá"
                   variant="outlined"
                   type="text"
                   disabled
