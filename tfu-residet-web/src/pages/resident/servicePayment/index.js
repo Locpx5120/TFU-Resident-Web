@@ -81,27 +81,27 @@ const ServicePayments = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell align="left">
-              <Checkbox
-                indeterminate={
-                  selected.length > 0 &&
-                  selected.length <
-                    services?.data?.filter(
-                      (n) => n.paymentStatus !== "Đã thanh toán"
-                    ).length
-                }
-                checked={
-                  services?.data?.filter(
-                    (n) => n.paymentStatus !== "Đã thanh toán"
-                  ).length > 0 &&
-                  selected.length ===
-                    services?.data?.filter(
-                      (n) => n.paymentStatus !== "Đã thanh toán"
-                    ).length
-                }
-                onChange={handleSelectAll}
-              />{" "}
-            </TableCell>
+            {/*<TableCell align="left">*/}
+            {/*  <Checkbox*/}
+            {/*    indeterminate={*/}
+            {/*      selected.length > 0 &&*/}
+            {/*      selected.length <*/}
+            {/*        services?.data?.filter(*/}
+            {/*          (n) => n.paymentStatus !== "Đã thanh toán"*/}
+            {/*        ).length*/}
+            {/*    }*/}
+            {/*    checked={*/}
+            {/*      services?.data?.filter(*/}
+            {/*        (n) => n.paymentStatus !== "Đã thanh toán"*/}
+            {/*      ).length > 0 &&*/}
+            {/*      selected.length ===*/}
+            {/*        services?.data?.filter(*/}
+            {/*          (n) => n.paymentStatus !== "Đã thanh toán"*/}
+            {/*        ).length*/}
+            {/*    }*/}
+            {/*    onChange={handleSelectAll}*/}
+            {/*  />{" "}*/}
+            {/*</TableCell>*/}
             <TableCell>STT</TableCell>
             <TableCell>Toà nhà</TableCell>
             <TableCell>Căn hộ</TableCell>
@@ -115,14 +115,14 @@ const ServicePayments = () => {
         <TableBody>
           {paginatedRows.map((service, index) => (
             <TableRow key={service.apartmentId}>
-              <TableCell>
-                {service.paymentStatus !== "Đã thanh toán" && (
-                  <Checkbox
-                    checked={selected.indexOf(service.apartmentId) !== -1}
-                    onChange={() => handleSelect(service.apartmentId)}
-                  />
-                )}
-              </TableCell>
+              {/*<TableCell>*/}
+              {/*  {service.paymentStatus !== "Đã thanh toán" && (*/}
+              {/*    <Checkbox*/}
+              {/*      checked={selected.indexOf(service.apartmentId) !== -1}*/}
+              {/*      onChange={() => handleSelect(service.apartmentId)}*/}
+              {/*    />*/}
+              {/*  )}*/}
+              {/*</TableCell>*/}
               <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
             <TableCell>{service.buildingName}</TableCell>
               <TableCell>{service.roomNumber}</TableCell>
