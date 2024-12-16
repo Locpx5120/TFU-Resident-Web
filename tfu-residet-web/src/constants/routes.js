@@ -133,7 +133,7 @@ export const routeOwner = [
 
 export const routeResident = [
     {
-        route: "/trang-chu",
+        route: "/",
         routeName: "Trang chủ",
         component:
             <div className="content h-auto p-0">
