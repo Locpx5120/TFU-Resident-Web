@@ -469,7 +469,7 @@ const SendRequest = () => {
                     </Select>
                   </FormControl>
                 )}
-                <TextField
+                { themThanhVien !== serviceTypes && <TextField
                   // label="Giá"
                   variant="outlined"
                   type="text"
@@ -481,7 +481,7 @@ const SendRequest = () => {
                       <InputAdornment position="end">VNĐ/ngày</InputAdornment>
                     ),
                   }}
-                />
+                /> }
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   {index === 0 ? (
                     <Button

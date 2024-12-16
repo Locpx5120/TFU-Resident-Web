@@ -72,6 +72,7 @@ const RequestDetail = () => {
             requestInfo={requestInfo}
             handleSubmit={handleSubmit}
             navigate={navigate}
+            Purpose={Purpose}
           />
           
           <ResidentActions 

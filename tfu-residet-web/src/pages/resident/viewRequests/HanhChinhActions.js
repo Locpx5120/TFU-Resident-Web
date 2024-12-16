@@ -10,7 +10,7 @@ import {
 } from "../../../constants/ApproveConstant";
 import Swal from "sweetalert2";
 
-const HanhChinhActions = ({ requestInfo, handleSubmit, navigate }) => {
+const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
   if (Cookies.get("role") !== "HanhChinh") return null;
 
   const validateRequiredFields = () => {
@@ -67,40 +67,69 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate }) => {
     }
 
     if (requestInfo.status !== APPROVE_REQUEST && requestInfo.status !== REJECT_REQUEST && requestInfo.status !== APPROVE_ASSIGN_STAFF && requestInfo.status < 3) {
-      return (
-        <>
-          <Button
-            onClick={() => handleSubmit(APPROVE_REQUEST)}
-            variant="contained"
-            color="success"
-          >
-            Hoàn thành
-          </Button>
-          <Button
-            onClick={handleAssignment}
-            variant="contained"
-            color="primary"
-            sx={{ margin: "10px" }}
-          >
-            Phân công
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => navigate("/xem-don")}
-            sx={{ margin: "10px" }}
-          >
-            Đóng
-          </Button>
-          <Button
-            onClick={() => handleSubmit(REJECT_REQUEST)}
-            variant="contained"
-            color="error"
-          >
-            Từ chối
-          </Button>
-        </>
-      );
+      if (Purpose === "Dịch vụ sửa điện nước" || Purpose === "Sửa vấn đề khác") {
+        return (
+          <>
+            <Button
+              onClick={() => handleSubmit(APPROVE_REQUEST)}
+              variant="contained"
+              color="success"
+            >
+              Hoàn thành
+            </Button>
+            <Button
+              onClick={handleAssignment}
+              variant="contained"
+              color="primary"
+              sx={{ margin: "10px" }}
+            >
+              Phân công
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => navigate("/xem-don")}
+              sx={{ margin: "10px" }}
+            >
+              Đóng
+            </Button>
+            <Button
+              onClick={() => handleSubmit(REJECT_REQUEST)}
+              variant="contained"
+              color="error"
+            >
+              Từ chối
+            </Button>
+          </>
+        );
+      }else {
+        return (
+          <>
+            <Button
+              onClick={() => handleSubmit(APPROVE_REQUEST)}
+              variant="contained"
+              color="success"
+            >
+              Xác nhận
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => navigate("/xem-don")}
+              sx={{ margin: "10px" }}
+            >
+              Đóng
+            </Button>
+            <Button
+              onClick={() => handleSubmit(REJECT_REQUEST)}
+              variant="contained"
+              color="error"
+            >
+              Từ chối
+            </Button>
+          </>
+        );
+      }
     }
 
     // Trường hợp còn lại chỉ hiện nút Đóng
