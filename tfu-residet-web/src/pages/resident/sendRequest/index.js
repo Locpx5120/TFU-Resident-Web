@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
   Box,
   Button,
@@ -43,6 +43,7 @@ const SendRequest = () => {
   const [buildings, setBuildings] = useState([]);
   const [apartments, setApartments] = useState([]);
   const [apartment, setApartment] = useState("");
+  const [previewPrice, setPreviewPrice] = useState("");
   const initalRequet =
     serviceTypes === themThanhVien
       ? {
@@ -95,7 +96,6 @@ const SendRequest = () => {
 
     fetchInitialData();
   }, []);
-  console.log(serviceNameArr);
 
   useEffect(() => {
     if (serviceTypes) {
@@ -115,13 +115,45 @@ const SendRequest = () => {
 
   const handleChange = (index, field, value) => {
     setRequests((prev) =>
-      prev.map((req, i) => (i === index ? { ...req, [field]: value } : req))
+        prev.map((req, i) => {
+          if (i === index) {
+            const updatedRequest = { ...req, [field]: value };
+
+            // Recalculate price when service, package, or start date changes
+            if (field === "serviceId" || field === "packageServiceId" || field === "startDate") {
+              updatedRequest.price = calculatePrice(
+                  field === "serviceId" ? value : updatedRequest.serviceId,
+                  field === "packageServiceId" ? value : updatedRequest.packageServiceId,
+                  field === "startDate" ? value : updatedRequest.startDate
+              );
+            }
+            return updatedRequest;
+          }
+          return req;
+        })
     );
   };
 
   const handleChangeServiceName = (index, field, value) => {
     handleChange(index, field, value);
     setServiceName(value);
+
+    setRequests((prev) =>
+        prev.map((req, i) => {
+          if (i === index) {
+            return {
+              ...req,
+              [field]: value,
+              price: calculatePrice(
+                  value,
+                  req.packageServiceId,
+                  req.startDate
+              )
+            };
+          }
+          return req;
+        })
+    );
   };
 
   const handleAddRequest = () => {
@@ -199,7 +231,6 @@ const SendRequest = () => {
         };
     }
   };
-
   const submitMemberRequest = async () => {
     const services = {
       apartmentId: apartment,
@@ -241,6 +272,34 @@ const SendRequest = () => {
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
+
+  const formatCurrencyVND = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND"
+    }).format(amount);
+  }
+
+  const packageDiscount = {
+    "153a51b2-3b37-435f-b59e-cd76476a7459": "10", // Gói tiêu chuẩn
+    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": "20", // Gói mặc định
+    "520e4b8e-8592-4e2d-b2fd-f9a804dee6e9": "30"  // Gói cơ bản
+  };
+
+  const calculatePrice = useCallback((serviceId, packageId, startDate) => {
+    if (!startDate || !packageId || !serviceId) return 0;
+
+    const service = serviceNameArr.find(item => item.id === serviceId);
+    if (!service) return 0;
+
+    const unitPrice = service.unitPrice;
+    const discount = parseFloat(packageDiscount[packageId] || "0");
+    const duration = moment(startDate).diff(moment(), "days");
+
+    if (duration <= 0) return 0;
+
+    return unitPrice * duration * (1 - discount / 100);
+  }, [serviceNameArr, requests]);
 
   const renderMemberFields = (request, index) => (
     <>
@@ -297,8 +356,9 @@ const SendRequest = () => {
         <InputLabel>Gói</InputLabel>
         <Select
           value={request.packageServiceId}
-          onChange={(e) =>
-            handleChange(index, "packageServiceId", e.target.value)
+          onChange={(e) => {
+            handleChange(index, "packageServiceId", e.target.value);
+           }
           }
           required
         >
@@ -317,13 +377,14 @@ const SendRequest = () => {
         }
         style={formStyles.datePicker}
       />
-      <TextField
-        label="Đơn vị"
-        value={request.unit}
-        onChange={(e) => handleChange(index, "unit", e.target.value)}
-        required
-        sx={formStyles.textField}
-      />
+      {/*<TextField*/}
+      {/*  label="Đơn vị"*/}
+      {/*  value={request.unit}*/}
+      {/*  onChange={(e) => handleChange(index, "unit", e.target.value)}*/}
+      {/*  required*/}
+      {/*  sx={formStyles.textField}*/}
+      {/*/>*/}
+      { request.price > 0 && <p>Phí dịch vụ: <strong>{formatCurrencyVND(request.price)}</strong></p> }
     </>
   );
 
@@ -365,8 +426,7 @@ const SendRequest = () => {
       marginLeft: "8px",
     },
   };
- const unitPriceFind = serviceNameArr.find(item => item.id === serviceNames);
- 
+
   return (
     <Box className="content" sx={formStyles.container}>
       <Box sx={formStyles.section}>
@@ -469,19 +529,19 @@ const SendRequest = () => {
                     </Select>
                   </FormControl>
                 )}
-                { themThanhVien !== serviceTypes && <TextField
-                  // label="Giá"
-                  variant="outlined"
-                  type="text"
-                  disabled
-                  value={unitPriceFind?.unitPrice}
-                  sx={formStyles.textField}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">VNĐ/ngày</InputAdornment>
-                    ),
-                  }}
-                /> }
+                {/*{ ("e1445a1d-22b7-4241-8405-3d3198f986b1" === serviceTypes) && <TextField*/}
+                {/*  // label="Giá"*/}
+                {/*  variant="outlined"*/}
+                {/*  type="text"*/}
+                {/*  disabled*/}
+                {/*  value={unitPriceFind?.unitPrice}*/}
+                {/*  sx={formStyles.textField}*/}
+                {/*  InputProps={{*/}
+                {/*    endAdornment: (*/}
+                {/*      <InputAdornment position="end">VNĐ/ngày</InputAdornment>*/}
+                {/*    ),*/}
+                {/*  }}*/}
+                {/*/> }*/}
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   {index === 0 ? (
                     <Button

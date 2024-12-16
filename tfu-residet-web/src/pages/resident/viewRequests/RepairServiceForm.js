@@ -58,13 +58,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
       <Box sx={sectionStyle}>
         <Box sx={{ display: "flex", gap: 2 }}>
           {requestInfo.staffName ? (
-            <TextField
-              type="text"
-              fullWidth
-              placeholder={requestInfo.staffName}
-              sx={{width: '50%'}}
-              inputProps={{ readOnly: true }}
-            />
+              <p style={{width: '50%'}}>Tên kỹ thuật viên: <strong>{requestInfo.staffName}</strong></p>
           ) : (
             <TextField
               label="Tên kỹ thuật viên"
@@ -82,7 +76,9 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             </TextField>
           )}
 
-          <DatePicker
+          {(Cookies.get("role") === "Resident" || Cookies.get("role") === "KiThuat") ? <p>
+            Thời gian sửa chữa <strong>{requestInfo.startDate}</strong>
+          </p> : <DatePicker
             placeholder="Thời gian sửa chữa"
             value={
               requestInfo.startDate
@@ -94,9 +90,10 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
               width: "100%",
               borderRadius: "8px",
               borderColor: "#d9d9d9",
+              color: '#333'
             }}
             disabled={Cookies.get("role") === "Resident" || Cookies.get("role") === "KiThuat"}
-          />
+          />}
         </Box>
       </Box>
 
@@ -114,18 +111,18 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           sx={textFieldStyle}
         />
 
-        <TextField
-          label="Ghi chú của chủ căn hộ"
-          multiline
-          rows={3}
-          fullWidth
-          disabled={Cookies.get("role") !== "Resident"}
-          value={requestInfo.noteFeedbackCuDan || ""}
-          onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}
-          sx={textFieldStyle}
-        />
+        {/*<TextField*/}
+        {/*  label="Ghi chú của chủ căn hộ"*/}
+        {/*  multiline*/}
+        {/*  rows={3}*/}
+        {/*  fullWidth*/}
+        {/*  disabled={Cookies.get("role") !== "Resident"}*/}
+        {/*  value={requestInfo.noteFeedbackCuDan || ""}*/}
+        {/*  onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}*/}
+        {/*  sx={textFieldStyle}*/}
+        {/*/>*/}
 
-        <TextField
+        {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú chi tiết"
           multiline
           rows={3}
@@ -134,9 +131,9 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           value={requestInfo.noteDetail || ""}
           onChange={(e) => handleChange("noteDetail", e.target.value)}
           sx={textFieldStyle}
-        />
+        />}
 
-        <TextField
+        {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú của kỹ thuật viên"
           multiline
           rows={3}
@@ -149,9 +146,9 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
               borderColor: "#1976d2",
             },
           }}
-        />
+        />}
 
-        <TextField
+        {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú của hành chính"
           multiline
           rows={3}
@@ -162,7 +159,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             handleChange("noteFeedbackHanhChinh", e.target.value)
           }
           sx={textFieldStyle}
-        />
+        />}
       </Box>
     </Box>
   );

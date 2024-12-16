@@ -31,3 +31,38 @@ export const getStatusLabel = (statusCode) => {
         return "Không xác định";
     }
   };
+
+export const statusArray = [
+  {
+    value: 0,
+    label: "Đang xử lý"
+  },
+  {
+    value: 1,
+    label: "Đã hoàn thành đơn"
+  },
+  {
+    value: 2,
+    label: "Đã từ chối"
+  },
+  {
+    value: 3,
+    label: "Đã phân công"
+  },
+  {
+    value: 4,
+    label: "Cư dân đã xác nhận"
+  },
+  {
+    value: 5,
+    label: "Cư dân đã từ chối"
+  },
+  {
+    value: 6,
+    label: "Kỹ thuật đang xử lý"
+  },
+  {
+    value: 7,
+    label: "Kỹ thuật xác nhận hoàn thành"
+  }
+];
