@@ -24,7 +24,9 @@ const QRCodeModal = ({isOpen, onRequestClose, transferData}) => {
     };
     useEffect(() => {
         console.log(transferData)
+        if (isOpen) {
         fetchBill();
+        }
     }, [transferData]);
     const fetchBill = async () => {
         try {

@@ -33,6 +33,8 @@ const ServicePaymentsDetail = () => {
     const closeModal = () => setModalIsOpen(false);
 
     useEffect(() => {
+        fetchRooms();
+    }, [])
         const fetchRooms = async () => {
             try {
                 const response = await getDetailServiceUnpaids({
@@ -40,7 +42,6 @@ const ServicePaymentsDetail = () => {
                     serviceType: "",
                     year, month
                 });
-                console.log(response)
                 response.services.map((items) => {
                     items.unitPriceconvert = items?.unitPrice?.toLocaleString('vi-VN', {
                         style: 'currency',
@@ -53,17 +54,14 @@ const ServicePaymentsDetail = () => {
                     items.paymentDate = items?.paymentDate ? dayjs(items?.paymentDate).format('DD/MM/YYYY : HH:mm:ss') : '';
                 })
                 setRoomsData(response);
-                console.log(roomsData)
+                setTotalAmount(handleSelected(roomsData.services?.filter(item => paymeted(item))))
             } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
             }
         }
-        fetchRooms();
-    }, [])
 
-    const handleSelected = (item) => {
-        const total = sumBy(item.value, 'totalPrice');
-        setTotalAmount(total);
+    const handleSelected = (array) => {
+        return sumBy(array, 'totalPrice');
     }
 
     const paginatedRows = useMemo(() => {
@@ -106,7 +104,7 @@ const ServicePaymentsDetail = () => {
                 </DataTable>
 
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-                    <h1>Tổng tiền cần thanh toán: {totalAmount.toLocaleString('vi-VN', {
+                    <h1>Tổng tiền cần thanh toán: {handleSelected(roomsData.services?.filter(item => paymeted(item))).toLocaleString('vi-VN', {
                         style: 'currency',
                         currency: 'VND'
                     })}</h1>
@@ -123,6 +121,14 @@ const ServicePaymentsDetail = () => {
                         <Column field={item.esName} header={item.name}></Column>)
                     }
                 </DataTable>
+                  <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
+                    <h1>Tổng tiền đã thanh toán: {handleSelected(roomsData.services?.filter(item => !paymeted(item))).toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    })}</h1>
+                    {status !== 'Đã thanh toán' &&
+                        <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>}
+                </div>
             </Card>
         </section>
     );
