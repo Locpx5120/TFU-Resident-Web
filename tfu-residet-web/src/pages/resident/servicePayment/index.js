@@ -156,7 +156,7 @@ const ServicePayments = () => {
         }}
         rowsPerPageOptions={[5, 10, 25]}
       />
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => {
@@ -173,7 +173,7 @@ const ServicePayments = () => {
         }}
       >
         Thanh toán
-      </Button>
+      </Button> */}
     </Box>
   );
 };

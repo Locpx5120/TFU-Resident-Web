@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import TableCustom from '../../../components/Table';
 import { useNavigate } from 'react-router-dom';
-import {getSummary} from "../../../services/roomService";
+import { getSummary } from "../../../services/roomService";
 
 const ServiceManage = () => {
     const [sortColumn, setSortColumn] = useState(null);
@@ -70,7 +70,7 @@ const ServiceManage = () => {
     }, [services, sortColumn, sortDirection]);
 
     const paginatedRows = useMemo(() => {
-        if(!services?.data) return [];
+        if (!services?.data) return [];
         return services.data.map((item, index) => ({
             STT: index + 1,
             toaNha: item.buildingName,
@@ -105,7 +105,7 @@ const ServiceManage = () => {
                 margin: '10px 0',
                 fontSize: '22px',
             }}>
-               Danh sách dịch vụ căn hộ
+                Danh sách dịch vụ căn hộ
             </Typography>
             <Box
                 sx={{
@@ -130,7 +130,12 @@ const ServiceManage = () => {
                         Tìm kiếm
                     </Button>
                 </Box>
-                <Button onClick={() => setIsOpenCreate(true)} variant="contained" sx={{ background: "#2ca8a2" }}>
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => navigate('/gui-don')}
+                    sx={{ height: "40px" }}
+                >
                     Thêm mới
                 </Button>
             </Box>
@@ -162,6 +167,6 @@ const columnData = [
     { name: "Căn hộ", align: "left", esName: "canHo", sortable: true },
     { name: "Tổng dịch vụ", align: "left", esName: "tongDichVu" },
     { name: "Chi tiết", align: "left", esName: "chiTiet" },
-  ];
+];
 
 export default ServiceManage;

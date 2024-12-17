@@ -212,12 +212,12 @@ export const routeResident = [
         component: <SendRequest/>,
         icon: <SettingsIcon/>,
     },
-    {
-        route: "/danh-gia",
-        routeName: "Đánh giá dịch vụ",
-        component: <FeedbackPage />,
-        icon: <ThirtyFpsOutlined />,
-    },
+    // {
+    //     route: "/danh-gia",
+    //     routeName: "Đánh giá dịch vụ",
+    //     component: <FeedbackPage />,
+    //     icon: <ThirtyFpsOutlined />,
+    // },
 ];
 
 export const routeDirector = [
