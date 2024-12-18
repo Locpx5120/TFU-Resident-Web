@@ -69,6 +69,20 @@ const DetailThirdPartyLent = () => {
     const modalFields = [
         <TextField
             fullWidth
+            select
+            label="Tòa nhà"
+            name="BuildId"
+            value={selectedThirdParty.building || ''}
+            onChange={(e) => handleFieldChange('building', e.target.value)}
+        >
+            {buildings.map((building) => (
+                <MenuItem key={building.id} value={building.id}>
+                    {building.buildingName}
+                </MenuItem>
+            ))}
+        </TextField>,
+        <TextField
+            fullWidth
             label="Tên dịch vụ"
             name="nameService"
             type="text"
