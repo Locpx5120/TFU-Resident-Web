@@ -84,10 +84,7 @@ const QRCodeModal = ({isOpen, onRequestClose, transferData}) => {
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
             <Toast ref={toast}/>
             <Box sx={{textAlign: 'center'}}>
-                <Typography variant="h6" gutterBottom>
-                    Mã QR Chuyển Tiền
-                </Typography>
-                <QRCodeSVG value={qrData} size={256}/>
+                <img src={qrData} height={256} width={256}/>
                 <Box sx={{marginTop: '20px', textAlign: 'left'}}>
                     <p>
                         <strong>Người nhận:</strong> {bankAccountName}<br/>

@@ -33,7 +33,7 @@ const PayAndTransfer = ({transactionHistories}) => {
         try {
             const res = await getTransaction(req);
             setPayAndTransferInfo(res.data)
-            transactionHistories(res.data.transactionHistories);
+            transactionHistories(res.data.transactionTransferResponseDtos);
             paymentStyle.width = Math.round((res.data.pay /res.data.total) * 100) + '%';
             if (paymentStyle.width === '100%')  {
                 paymentStyle.borderRadius = '16px';
