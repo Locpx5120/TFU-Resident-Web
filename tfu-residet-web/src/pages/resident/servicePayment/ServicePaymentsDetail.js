@@ -17,7 +17,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import dayjs from "dayjs";
 import {Card} from 'primereact/card';
-import {sumBy} from 'lodash';
+import {sum, sumBy} from 'lodash';
 
 const ServicePaymentsDetail = () => {
     const {id, status, year, month} = useParams();
@@ -26,6 +26,7 @@ const ServicePaymentsDetail = () => {
     const [roomsData, setRoomsData] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [totalPayment, setTotalPayment] = useState(0);
     const paymeted = (data) => data.paymentStatus !== 'Đã thanh toán';
     const buildingID = Cookies.get("buildingID");
     const [selectedProducts, setSelectedProducts] = useState(null);
@@ -40,7 +41,6 @@ const ServicePaymentsDetail = () => {
                     serviceType: "",
                     year, month
                 });
-                console.log(response)
                 response.services.map((items) => {
                     items.unitPriceconvert = items?.unitPrice?.toLocaleString('vi-VN', {
                         style: 'currency',
@@ -52,8 +52,9 @@ const ServicePaymentsDetail = () => {
                     });
                     items.paymentDate = items?.paymentDate ? dayjs(items?.paymentDate).format('DD/MM/YYYY : HH:mm:ss') : '';
                 })
+                setTotalPayment(sumBy(response.services.filter(item => !paymeted(item)), 'totalPrice'));
                 setRoomsData(response);
-                console.log(roomsData)
+
             } catch (error) {
                 Swal.fire('Thất bại', 'Xóa thất bại!', 'error');
             }
@@ -123,6 +124,12 @@ const ServicePaymentsDetail = () => {
                         <Column field={item.esName} header={item.name}></Column>)
                     }
                 </DataTable>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
+                    <h1>Tổng tiền đã thanh toán: {totalPayment.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    })}</h1>
+                </div>
             </Card>
         </section>
     );
