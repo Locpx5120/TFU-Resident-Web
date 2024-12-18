@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 
-const RecentTransaction = (transactionRecived) => {
+const RecentTransaction = ({transactionRecived}) => {
     const [transaction, setTransaction] = useState([])
     useEffect(() => {
         setTransaction(transactionRecived)
@@ -15,12 +15,12 @@ const RecentTransaction = (transactionRecived) => {
         {field: 'sentUser', header: 'Người gửi'},
         {field: 'reciveUser', header: 'Người nhận'},
         {field: 'status', header: 'Trạng thái'},
-        {field: 'action', header: 'Hành động'},
+        // {field: 'action', header: 'Hành động'},
 
     ]
     return (
         <>
-            <DataTable value={transaction} scrollable
+            <DataTable value={transaction} scrollable paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
                        emptyMessage="Không có dữ liệu">
                 {columnTable.map((item) =>
                     <Column key={item.field} field={item.field} header={item.header}></Column>)}
