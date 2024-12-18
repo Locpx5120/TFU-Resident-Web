@@ -133,7 +133,7 @@ export const routeOwner = [
 
 export const routeResident = [
     {
-        route: "/trang-chu",
+        route: "/",
         routeName: "Trang chủ",
         component:
             <div className="content h-auto p-0">
@@ -331,27 +331,6 @@ export const routeReceptionist = [
         routeName: "Lịch sử thanh toán",
         component: <PaymentHistory/>,
         icon: <HistoryIcon/>,
-    },
-    {
-        route: "/news",
-        routeName: "Quản lí bản tin",
-        icon: <SettingsIcon/>,
-        component: <News/>,
-    },
-     {
-        route: "/news/:id",
-        component: <DetailNews/>,
-        hidden: true,
-    },
-     {
-        route: "/news/add",
-        component: <FormNews/>,
-        hidden: true,
-    },
-    {
-        route: "/news/update/:id",
-        component: <FormNews/>,
-        hidden: true,
     },
 ];
 
