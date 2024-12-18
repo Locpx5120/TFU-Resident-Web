@@ -110,7 +110,7 @@ const ServicePaymentsDetail = () => {
                         style: 'currency',
                         currency: 'VND'
                     })}</h1>
-                    {status !== 'Đã thanh toán' &&
+                    {totalAmount > 0 &&
                         <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>}
                 </div>
             </Card>

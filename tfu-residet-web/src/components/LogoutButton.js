@@ -5,17 +5,20 @@ import { Box } from '@mui/material';
 import BadgeAvatars from './Avatar';
 import ChangePasswordModal from './ChangePasswordModal';
 import PersonalInfoModal from './PersonalInfoModal';
+import {useNavigate} from "react-router-dom";
 
 const LogoutButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenUser, setIsOpenUser] = useState(false);
+  const navigate = useNavigate();
   const handleLogout = () => {
      Cookies.remove('accessToken');
-     Cookies.remove('buildingID');
-     Cookies.remove('residentId');
-     Cookies.remove('role');
+     // Cookies.remove('buildingID');
+     // Cookies.remove('residentId');
+     // Cookies.remove('role');
      sessionStorage.removeItem('hasReloaded');
-    window.location.href = '/login';
+    // window.location.href = '/login';
+    navigate(`login-building/${Cookies.get('buildingID')}`)
   };
 
   const items = [
