@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { DatePicker } from "antd";
+import { DatePicker, message } from "antd";
 import moment from "moment/moment";
 import { addMember, getServiceName } from "../../../services/apartmentService";
 import { listAllPackage } from "../../../services/PackageService";
@@ -99,7 +99,7 @@ const SendRequest = () => {
 
   useEffect(() => {
     if (serviceTypes) {
-      getServiceName(serviceTypes).then((res) =>
+getServiceName(serviceTypes).then((res) =>
         setServiceNameArr(res?.data || [])
       );
     }
@@ -211,7 +211,7 @@ const SendRequest = () => {
           ownerName: "",
           ownerPhone: "",
           ownerEmail: "",
-          technicianName: "",
+technicianName: "",
           technicianPhone: "",
           startDate: null,
           cost: "",
@@ -282,8 +282,8 @@ const SendRequest = () => {
 
   const packageDiscount = {
     "153a51b2-3b37-435f-b59e-cd76476a7459": "10", // Gói tiêu chuẩn
-    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": "20", // Gói mặc định
-    "520e4b8e-8592-4e2d-b2fd-f9a804dee6e9": "30"  // Gói cơ bản
+    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": "0", // Gói mặc định
+    "520e4b8e-8592-4e2d-b2fd-f9a804dee6e9": "5"  // Gói cơ bản
   };
 
   const calculatePrice = useCallback((serviceId, packageId, startDate) => {
@@ -321,7 +321,7 @@ const SendRequest = () => {
         label="Email"
         type="email"
         value={request.email}
-        onChange={(e) => handleChange(index, "email", e.target.value)}
+onChange={(e) => handleChange(index, "email", e.target.value)}
         required
         sx={formStyles.textField}
       />
@@ -372,9 +372,13 @@ const SendRequest = () => {
       <DatePicker
         placeholder="Ngày gửi xe"
         value={request.startDate ? moment(request.startDate) : null}
-        onChange={(date, dateString) =>
-          handleChange(index, "startDate", dateString)
-        }
+        onChange={(date, dateString) => {
+          if (date && date.isBefore(moment().add(7, 'days'), 'day')) {
+            message.error("Ngày gửi xe phải ít nhất 7 ngày sau ngày hiện tại!");
+          } else {
+            handleChange(index, "startDate", dateString);
+          }
+        }}
         style={formStyles.datePicker}
       />
       {/*<TextField*/}
@@ -424,7 +428,7 @@ const SendRequest = () => {
       height: "40px",
       padding: "0",
       marginLeft: "8px",
-    },
+},
   };
 
   return (
@@ -513,7 +517,7 @@ const SendRequest = () => {
                       value={request.serviceName}
                       onChange={(e) =>
                         handleChangeServiceName(
-                          index,
+index,
                           "serviceName",
                           e.target.value
                         )
@@ -600,5 +604,4 @@ const SendRequest = () => {
     </Box>
   );
 };
-
 export default SendRequest;

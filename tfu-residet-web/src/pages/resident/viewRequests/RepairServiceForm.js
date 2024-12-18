@@ -3,25 +3,8 @@ import { Box, MenuItem, TextField, Divider } from "@mui/material";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
-import {
-  APPROVE_ASSIGN_STAFF,
-  APPROVE_REQUEST,
-  ASSIGNMENT,
-  PENDING_REQUEST,
-  REJECT_REQUEST,
-} from "../../../constants/ApproveConstant";
 
 const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
-  // Helper function to determine if fields should be disabled
-  const isDisabled = (includeAssignment = true) => {
-    const baseCondition =
-      requestInfo.status === APPROVE_REQUEST ||
-      requestInfo.status === PENDING_REQUEST ||
-      requestInfo.status === REJECT_REQUEST;
-    return includeAssignment
-      ? baseCondition || requestInfo.status === ASSIGNMENT
-      : baseCondition;
-  };
 
   // Unified styling for fields
   const textFieldStyle = {
@@ -82,7 +65,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             placeholder="Thời gian sửa chữa"
             value={
               requestInfo.startDate
-                ? dayjs(requestInfo.startDate, "MM/DD/YYYY HH:mm:ss")
+                ? dayjs(requestInfo.startDate, "MM/DD/YYYY")
                 : null
             }
             onChange={(date) => handleChange("startDate", date)}
@@ -111,16 +94,16 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           sx={textFieldStyle}
         />
 
-        {/*<TextField*/}
-        {/*  label="Ghi chú của chủ căn hộ"*/}
-        {/*  multiline*/}
-        {/*  rows={3}*/}
-        {/*  fullWidth*/}
-        {/*  disabled={Cookies.get("role") !== "Resident"}*/}
-        {/*  value={requestInfo.noteFeedbackCuDan || ""}*/}
-        {/*  onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}*/}
-        {/*  sx={textFieldStyle}*/}
-        {/*/>*/}
+        {(requestInfo.status === 7 || requestInfo.status === 1) && <TextField
+          label="Đánh giá sau khi sửa chữa"
+          multiline
+          rows={3}
+          fullWidth
+          disabled={Cookies.get("role") !== "Resident" || requestInfo.status === 1}
+          value={requestInfo.noteFeedbackCuDan || ""}
+          onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}
+          sx={textFieldStyle}
+        />}
 
         {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú chi tiết"

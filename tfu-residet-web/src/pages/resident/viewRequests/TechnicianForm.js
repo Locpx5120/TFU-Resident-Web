@@ -32,25 +32,25 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           fullWidth
           value={requestInfo.staffName || ""}
           disabled
-          sx={{width: '50%'}}
+          sx={{ width: '50%' }}
         />
 
         {/* Thời gian và giá tiền */}
         {<DatePicker
-            placeholder="Thời gian sửa chữa"
-            value={
-              requestInfo.startDate
-                ? dayjs(requestInfo.startDate, "MM/DD/YYYY HH:mm:ss")
-                : null
-            }
-            onChange={(date) => handleChange("startDate", date)}
-            style={{
-              width: "100%",
-              borderRadius: "8px",
-              borderColor: "#d9d9d9",
-            }}
-            disabled
-          />}
+          placeholder="Thời gian sửa chữa"
+          value={
+            requestInfo.startDate
+              ? dayjs(requestInfo.startDate, "MM/DD/YYYY HH:mm:ss")
+              : null
+          }
+          onChange={(date) => handleChange("startDate", date)}
+          style={{
+            width: "100%",
+            borderRadius: "8px",
+            borderColor: "#d9d9d9",
+          }}
+          disabled
+        />}
       </Box>
 
       {/* Các trường ghi chú */}
@@ -76,7 +76,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           sx={textFieldStyle}
         />
 
-        <TextField
+        {/* <TextField
           label="Ghi chú của chủ căn hộ"
           fullWidth
           multiline
@@ -84,7 +84,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           disabled
           value={requestInfo.noteFeedbackCuDan || ""}
           sx={textFieldStyle}
-        />
+        /> */}
 
         <TextField
           label="Ghi chú của hành chính"
@@ -95,6 +95,17 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           value={requestInfo.noteFeedbackHanhChinh || ""}
           sx={textFieldStyle}
         />
+
+        {(requestInfo.status === 7 || requestInfo.status === 1) && <TextField
+          label="Đánh giá sau khi sửa chữa"
+          multiline
+          rows={3}
+          fullWidth
+          disabled={Cookies.get("role") !== "Resident" || requestInfo.status === 1}
+          value={requestInfo.noteFeedbackCuDan || ""}
+          onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}
+          sx={textFieldStyle}
+        />}
 
         {/* Trường ghi chú có thể chỉnh sửa */}
         <TextField
