@@ -336,10 +336,23 @@ export const routeReceptionist = [
 
 export const routeAccountant = [
     {
-        route: "/xem-thanh-toan",
-        routeName: "Xem thanh toán",
-        component: <AccountantPage/>,
-        icon: <HistoryIcon/>,
+        route: "/",
+        routeName: "Trang chính",
+        component: <DashboardInvestor/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/quan-ly-dich-vu",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceManage/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/quan-ly-dich-vu/:id",
+        routeName: "Quản lý dịch vụ",
+        component: <ServiceDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
     },
 ];
 
