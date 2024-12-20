@@ -10,6 +10,7 @@ import { Calendar } from "primereact/calendar";
 import { getServices } from "../../../services/apartmentService";
 import { getStatusLabel, statusArray } from '../../../constants/ApproveConstant';
 import { GetBuildingsByUser } from "../../../services/buildingService";
+import {GetBuildingsForNews} from "../../../services/NewsService";
 
 const ViewRequests = () => {
     const navigate = useNavigate();
@@ -74,7 +75,7 @@ const ViewRequests = () => {
     const fetchRequests = useCallback(async () => {
         setIsLoading(true);
         try {
-            const res = await GetBuildingsByUser();
+            const res = await GetBuildingsForNews();
             const data = await getBuilding('914b90f1-1d0d-4039-9084-47c10783e058', buildingID);
             const apartmentIds = data?.data || [];
 

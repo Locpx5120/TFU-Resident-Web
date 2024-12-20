@@ -24,7 +24,7 @@ const DetailThirdPartyRent = () => {
   });
 
   const columnData = [
-    { esName: "buildingName", name: 'Tòa nhà', width: 150 },
+    // { esName: "buildingName", name: 'Tòa nhà', width: 150 },
     { esName: "companyName", name: "Tên công ty", width: 200 },
     { esName: "nameService", name: 'Tên dịch vụ', width: 150 },
     { esName: "floor", name: "Tầng", width: 100 },

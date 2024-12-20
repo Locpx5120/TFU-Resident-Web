@@ -69,6 +69,9 @@ const QRCodeModal = ({isOpen, onRequestClose, transferData}) => {
                 Swal.fire('Thành công', 'Thanh toán thành công!', 'success');
                 onRequestClose();
                 navigate('/thanh-toan-dich-vu');
+            }else {
+                Swal.fire('Thất bại', 'Thanh toán thất bại!', 'error');
+
             }
         } catch (e) {
             setIsProcessing(false);
@@ -84,25 +87,25 @@ const QRCodeModal = ({isOpen, onRequestClose, transferData}) => {
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
             <Toast ref={toast}/>
             <Box sx={{textAlign: 'center'}}>
-                <img src={qrData} height={256} width={256}/>
+                <img src={qrData} height={500} width={500}/>
                 <Box sx={{marginTop: '20px', textAlign: 'left'}}>
-                    <p>
-                        <strong>Người nhận:</strong> {bankAccountName}<br/>
-                        <strong id="myInput">Số tài khoản:</strong> {bankAccountNumber} <i className="pi pi-clone"
-                                                                                           onClick={myFunction}></i><br/>
-                        <strong>Ngân hàng:</strong> {bankName}<br/>
-                        <strong>Số tiền:</strong> {amount.toLocaleString()} VND<br/>
-                    </p>
-                    <TextField
-                        label="Nội dung chuyển tiền"
-                        value={transactionInput}
-                        onChange={handleTransactionContentChange}
-                        fullWidth
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        sx={{marginTop: '10px'}}
-                    />
+                    {/*<p>*/}
+                    {/*    <strong>Người nhận:</strong> {bankAccountName}<br/>*/}
+                    {/*    <strong id="myInput">Số tài khoản:</strong> {bankAccountNumber} <i className="pi pi-clone"*/}
+                    {/*                                                                       onClick={myFunction}></i><br/>*/}
+                    {/*    <strong>Ngân hàng:</strong> {bankName}<br/>*/}
+                    {/*    <strong>Số tiền:</strong> {amount.toLocaleString()} VND<br/>*/}
+                    {/*</p>*/}
+                    {/*<TextField*/}
+                    {/*    label="Nội dung chuyển tiền"*/}
+                    {/*    value={transactionInput}*/}
+                    {/*    onChange={handleTransactionContentChange}*/}
+                    {/*    fullWidth*/}
+                    {/*    multiline*/}
+                    {/*    rows={4}*/}
+                    {/*    variant="outlined"*/}
+                    {/*    sx={{marginTop: '10px'}}*/}
+                    {/*/>*/}
                 </Box>
                 <Button
                     variant="outlined"
@@ -124,7 +127,7 @@ const customStyles = {
         right: 'auto',
         bottom: 'auto',
         transform: 'translate(-50%, -50%)',
-        width: '300px',
+        width: 'auto',
         padding: '20px',
     },
 };

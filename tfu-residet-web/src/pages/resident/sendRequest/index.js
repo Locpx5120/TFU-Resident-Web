@@ -370,9 +370,9 @@ const SendRequest = () => {
             }}
             style={formStyles.datePicker}
         />
-        <Typography sx={{ width: '100%', marginTop: 2 }}>
+        {/* <Typography sx={{ width: '100%', marginTop: 2 }}>
           Phí dịch vụ: <strong>{formatCurrencyVND(request.price || 0)}</strong>
-        </Typography>
+        </Typography> */}
       </>
   );
 

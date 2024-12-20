@@ -13,8 +13,8 @@ export const addOwner =  async (body) => {
 export const getOwnerShip = async (id) => {
    return await getData(`/ceo/GetOwnerShipById/${id}`, endpointUrl.BUILDING_URL);
 }
-export const getOwnerShipPostMethod =  async (body) => {
-    return await postData(`/resident/GetOwnerShipById`, body, undefined, endpointUrl.BUILDING_URL)
+export const getOwnerShipPostMethod =  async (id) => {
+    return await postData(`/ceo/GetById/${id}`, undefined, endpointUrl.BUILDING_URL)
 }
 
 export const getAllResident = async () => {
