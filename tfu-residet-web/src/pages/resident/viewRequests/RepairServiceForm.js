@@ -38,7 +38,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
       }}
     >
       {/* Technician Information */}
-      <Box sx={sectionStyle}>
+        {requestInfo.status !== 0 && <Box sx={sectionStyle}>
         <Box sx={{ display: "flex", gap: 2 }}>
           {requestInfo.staffName ? (
               <p style={{width: '50%'}}>Tên kỹ thuật viên: <strong>{requestInfo.staffName}</strong></p>
@@ -78,7 +78,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             disabled={Cookies.get("role") === "Resident" || Cookies.get("role") === "KiThuat"}
           />}
         </Box>
-      </Box>
+      </Box>}
 
       <Divider />
 

@@ -117,8 +117,11 @@ const SendRequest = () => {
   const handleChange = (index, field, value) => {
     setRequests((prev) =>
         prev.map((req, i) => {
-          if (i === index) {
+          if (i === index || (index === 0 && field === 'serviceId')) {
             const updatedRequest = { ...req, [field]: value };
+            if (index === 0 && field === 'serviceId') {
+              updatedRequest.serviceName = '';
+            }
             updatedRequest.price = calculatePrice(
                 updatedRequest.serviceId,
                 updatedRequest.packageServiceId,
@@ -129,6 +132,9 @@ const SendRequest = () => {
           return req;
         })
     );
+    if (index === 0 && field === 'serviceId') {
+      setServiceTypes(value);
+    }
   };
 
   const handleChangeServiceName = (index, field, value) => {
@@ -137,7 +143,13 @@ const SendRequest = () => {
   };
 
   const handleAddRequest = () => {
-    setRequests((prev) => [...prev, getInitialRequest(serviceTypes)]);
+    setRequests((prev) => [
+      ...prev,
+      {
+        ...getInitialRequest(serviceTypes),
+        serviceId: prev[0].serviceId,
+      },
+    ]);
   };
 
   const handleRemoveRequest = (index) => {
@@ -263,7 +275,7 @@ const SendRequest = () => {
 
   const packageDiscount = {
     "153a51b2-3b37-435f-b59e-cd76476a7459": 10, // Gói tiêu chuẩn (10% giảm giá)
-    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": 1, // Gói mặc định (không giảm giá)
+    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": 1, // Gói m��c định (không giảm giá)
     "520e4b8e-8592-4e2d-b2fd-f9a804dee6e9": 5  // Gói cơ bản (5% giảm giá)
   };
 
@@ -469,10 +481,10 @@ const SendRequest = () => {
                       <Select
                           value={request.serviceId}
                           onChange={(e) => {
-                            setServiceTypes(e.target.value);
                             handleChange(index, "serviceId", e.target.value);
                           }}
                           required
+                          disabled={index !== 0}
                       >
                         {serviceTypesArr.map((option) => (
                             <MenuItem key={option.id} value={option.id}>
