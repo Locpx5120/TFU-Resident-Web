@@ -283,11 +283,12 @@ const SendRequest = () => {
     if (!serviceId || !packageId) return 0;
 
     const service = serviceNameArr.find(item => item.id === serviceNames);
+    const packageMonth = packageArr.find(item => item.id === packageId).durationInMonth;
     if (!service) return 0;
 
     const servicePrice = service.unitPrice;
     const packageMultiplier = packageDiscount[packageId] || 1;
-    const duration = startDate ? moment(startDate).diff(moment(), "days") : 1;
+    const duration = (packageMonth === 12) ? 12 * 31 : (packageMonth === 1) ? 31 : 6 * 31;
 
     const price = servicePrice * packageMultiplier * (duration <= 0 ? 1 : duration);
     return price;
@@ -370,9 +371,9 @@ const SendRequest = () => {
             }}
             style={formStyles.datePicker}
         />
-        {/* <Typography sx={{ width: '100%', marginTop: 2 }}>
+        <Typography sx={{ width: '100%', marginTop: 2 }}>
           Phí dịch vụ: <strong>{formatCurrencyVND(request.price || 0)}</strong>
-        </Typography> */}
+        </Typography>
       </>
   );
 
