@@ -66,7 +66,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
         />
 
         <TextField
-          label="Ghi chú chi tiết"
+          label="Ghi chú của hành chính"
           multiline
           rows={3}
           fullWidth

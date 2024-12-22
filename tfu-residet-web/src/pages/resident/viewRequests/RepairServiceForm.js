@@ -39,7 +39,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
       }}
     >
       {/* Technician Information */}
-      {Cookies.get("role") === "HanhChinh" && <Box sx={sectionStyle}>
+      {<Box sx={sectionStyle}>
         <Box sx={{ display: "flex", gap: 2 }}>
           {requestInfo.staffName ? (
             <p style={{ width: '50%' }}>Tên kỹ thuật viên: <strong>{requestInfo.staffName}</strong></p>
@@ -100,7 +100,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
         />
 
         {Cookies.get("role") !== "Resident" && <TextField
-          label="Ghi chú chi tiết"
+          label="Ghi chú của hành chính"
           multiline
           rows={3}
           fullWidth

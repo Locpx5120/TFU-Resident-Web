@@ -115,7 +115,6 @@ const HouseHold = () => {
         console.error('Error updating household:', error);
       }
     }
-
     setReload(!reload);
   };
 
@@ -173,7 +172,7 @@ const HouseHold = () => {
 
   return (
     <section className="content">
-      <h1>Tổng số cư dân hiện tại: {totalRecord}</h1>
+      <h1>Tổng số chủ hộ hiện tại: {totalRecord}</h1>
       <Box
         sx={{
           display: "flex",
