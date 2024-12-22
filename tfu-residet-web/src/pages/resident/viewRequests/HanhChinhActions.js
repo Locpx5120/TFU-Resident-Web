@@ -70,13 +70,13 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
       if (Purpose === "Dịch vụ sửa điện nước" || Purpose === "Sửa vấn đề khác") {
         return (
           <>
-            <Button
+            {/* <Button
               onClick={() => handleSubmit(APPROVE_REQUEST)}
               variant="contained"
               color="success"
             >
               Hoàn thành
-            </Button>
+            </Button> */}
             <Button
               onClick={handleAssignment}
               variant="contained"

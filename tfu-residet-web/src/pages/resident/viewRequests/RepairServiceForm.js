@@ -3,6 +3,7 @@ import { Box, MenuItem, TextField, Divider } from "@mui/material";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
+import { ASSIGNMENT, STAFF_PENDING } from "../../../constants/ApproveConstant";
 
 const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
 
@@ -38,10 +39,10 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
       }}
     >
       {/* Technician Information */}
-        {requestInfo.status !== 0 && <Box sx={sectionStyle}>
+      {Cookies.get("role") === "HanhChinh" && <Box sx={sectionStyle}>
         <Box sx={{ display: "flex", gap: 2 }}>
           {requestInfo.staffName ? (
-              <p style={{width: '50%'}}>Tên kỹ thuật viên: <strong>{requestInfo.staffName}</strong></p>
+            <p style={{ width: '50%' }}>Tên kỹ thuật viên: <strong>{requestInfo.staffName}</strong></p>
           ) : (
             <TextField
               label="Tên kỹ thuật viên"
@@ -65,7 +66,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             placeholder="Thời gian sửa chữa"
             value={
               requestInfo.startDate
-                ? dayjs(requestInfo.startDate, "MM/DD/YYYY")
+                ? dayjs(requestInfo.startDate, "MM/DD/YYYY HH:mm:ss")
                 : null
             }
             onChange={(date) => handleChange("startDate", date)}
@@ -73,10 +74,14 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
               width: "100%",
               borderRadius: "8px",
               borderColor: "#d9d9d9",
-              color: '#333'
+              color: "#333",
+            }}
+            disabledDate={(current) => {
+              return current && current < dayjs().startOf("day");
             }}
             disabled={Cookies.get("role") === "Resident" || Cookies.get("role") === "KiThuat"}
-          />}
+          />
+          }
         </Box>
       </Box>}
 
@@ -85,7 +90,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
       {/* Notes Section */}
       <Box sx={sectionStyle}>
         <TextField
-          label="Ghi chú"
+          label="Ghi chú của cư dân"
           multiline
           rows={3}
           fullWidth
@@ -93,17 +98,6 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           onChange={(e) => handleChange("note", e.target.value)}
           sx={textFieldStyle}
         />
-
-        {(requestInfo.status === 7 || requestInfo.status === 1) && <TextField
-          label="Đánh giá sau khi sửa chữa"
-          multiline
-          rows={3}
-          fullWidth
-          disabled={Cookies.get("role") !== "Resident" || requestInfo.status === 1}
-          value={requestInfo.noteFeedbackCuDan || ""}
-          onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}
-          sx={textFieldStyle}
-        />}
 
         {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú chi tiết"
@@ -116,7 +110,18 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           sx={textFieldStyle}
         />}
 
-        {Cookies.get("role") !== "Resident" && <TextField
+        {(requestInfo.status === 7 || requestInfo.status === 1) && <TextField
+          label="Đánh giá sau khi sửa chữa"
+          multiline
+          rows={3}
+          fullWidth
+          disabled={Cookies.get("role") !== "Resident" || requestInfo.status === 1}
+          value={requestInfo.noteFeedbackCuDan || ""}
+          onChange={(e) => handleChange("noteFeedbackCuDan", e.target.value)}
+          sx={textFieldStyle}
+        />}
+
+        {Cookies.get("role") !== "Resident" && requestInfo.status === STAFF_PENDING && <TextField
           label="Ghi chú của kỹ thuật viên"
           multiline
           rows={3}
@@ -131,7 +136,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
           }}
         />}
 
-        {Cookies.get("role") !== "Resident" && <TextField
+        {/* {Cookies.get("role") !== "Resident" && <TextField
           label="Ghi chú của hành chính"
           multiline
           rows={3}
@@ -142,7 +147,7 @@ const RepairServiceForm = ({ requestInfo, handleChange, kyThuats }) => {
             handleChange("noteFeedbackHanhChinh", e.target.value)
           }
           sx={textFieldStyle}
-        />}
+        />} */}
       </Box>
     </Box>
   );
