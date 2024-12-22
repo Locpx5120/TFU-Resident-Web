@@ -116,11 +116,14 @@ const ViewRequests = () => {
             }
 
             if (selectedBuilding.name) {
-                filtered = filtered.filter(request => request.buildingName === selectedBuilding.name);
+                filtered = filtered.filter(request => {
+                    return request.buildingName !== selectedBuilding.name
+                });
             }
 
             if (selectedStatus.id) {
-                filtered = filtered.filter(request => Number(request.status) === selectedStatus.id);
+                console.log(selectedStatus.id)
+                filtered = filtered.filter(request => request.status == selectedStatus.id);
             }
 
             if (dates[0] && dates[1]) {
