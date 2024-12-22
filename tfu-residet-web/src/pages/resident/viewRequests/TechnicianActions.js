@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
 import Cookies from "js-cookie";
-import { STAFF_DONE, STAFF_PENDING, APPROVE_REQUEST } from "../../../constants/ApproveConstant";
+import { APPROVE_REQUEST, STAFF_DONE, STAFF_PENDING } from "../../../constants/ApproveConstant";
 import Swal from "sweetalert2";
 
 const TechnicianActions = ({ requestInfo, handleSubmit, navigate }) => {
@@ -31,7 +31,7 @@ const TechnicianActions = ({ requestInfo, handleSubmit, navigate }) => {
 
   return (
     <Box sx={{ textAlign: "center", marginTop: "20px", width: "100%" }}>
-     {requestInfo.status !== STAFF_DONE && requestInfo.status !== APPROVE_REQUEST &&  <Button
+     {(requestInfo.status !== STAFF_DONE && requestInfo.status !== APPROVE_REQUEST) &&  <Button
         onClick={handleConfirm}
         variant="contained"
         color="primary"

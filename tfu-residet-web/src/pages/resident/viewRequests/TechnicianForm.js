@@ -86,7 +86,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           sx={textFieldStyle}
         /> */}
 
-        <TextField
+        {/* <TextField
           label="Ghi chú của hành chính"
           fullWidth
           multiline
@@ -94,7 +94,7 @@ const TechnicianForm = ({ requestInfo, handleChange }) => {
           disabled
           value={requestInfo.noteFeedbackHanhChinh || ""}
           sx={textFieldStyle}
-        />
+        /> */}
 
         {(requestInfo.status === 7 || requestInfo.status === 1) && <TextField
           label="Đánh giá sau khi sửa chữa"
