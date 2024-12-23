@@ -1,14 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Card, TextField, TablePagination } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import {addOwner, listOwner, updateOwner} from "../../../services/ceoService";
+import { addResident } from "../../../services/residentService";
 
 const HouseHold = () => {
+  const { id } = useParams();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [reload, setReload] = useState(false);
@@ -30,6 +32,7 @@ const HouseHold = () => {
             name: searchCriteria,
             pageSize: rowsPerPage,
             pageNumber: page + 1,
+            buildingId: id
           });
         setBuildings(data.data);
         setTotalRecord(data.totalRecords)
@@ -38,7 +41,7 @@ const HouseHold = () => {
       }
     }
     fetchBuildings();
-  }, [page, rowsPerPage, searchCriteria, reload]);
+  }, [page, rowsPerPage, searchCriteria, reload, id]);
 
   const handleRowClick = (record) => {
     setSelectedHouseHold(record);
@@ -71,11 +74,12 @@ const HouseHold = () => {
     setModalOpen(true);
   };
   
-  const handleEditHouseHold = () => {
+  const handleEditHouseHold = (building) => {
     setModalMode({
       mode: 'edit',
       title: 'Cập nhật chủ căn hộ'
     });
+    setSelectedHouseHold(building);
     setModalOpen(true);
   };
 
@@ -102,7 +106,7 @@ const HouseHold = () => {
           floorNumber: houseHoldData.floorNumber,
           id: houseHoldData.id,
           email: houseHoldData.email,
-          roomNumber: houseHoldData.email,
+          roomNumber: houseHoldData.roomNumber,
           // buildingId: houseHoldData.id,
         });
         if (data.success) {
@@ -116,6 +120,36 @@ const HouseHold = () => {
       }
     }
     setReload(!reload);
+  };
+
+  const handleAddResident = async (building) => {
+    try {
+      const { value: formValues } = await Swal.fire({
+        title: 'Thêm cư dân',
+        html:
+          '<input id="swal-input2" class="swal2-input" placeholder="Email">',
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            email: document.getElementById('swal-input2').value,
+            id: building.id,
+          }
+        }
+      });
+
+      if (formValues) {
+        const data = await updateOwner(formValues);
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã thêm cư dân thành công!', 'success');
+          setReload(!reload);
+        } else {
+          Swal.fire('Thất bại', 'Thêm cư dân thất bại!', 'error');
+        }
+      }
+    } catch (error) {
+      console.error('Error adding resident:', error);
+      Swal.fire('Thất bại', 'Đã xảy ra lỗi khi thêm cư dân!', 'error');
+    }
   };
 
   const modalFields = [
@@ -160,19 +194,24 @@ const HouseHold = () => {
     ...building,
     action: (
       <>
-          <Button onClick={() => handleEditHouseHold(building)}>
-            <EditIcon />
+        <Button onClick={() => handleEditHouseHold(building)}>
+          <EditIcon />
+        </Button>
+        <Button onClick={() => navigate('/chi-tiet-thanh-vien/' + building.apartmentId + `&roomNumber=${building.roomNumber}`)}>
+          Chi tiết
+        </Button>
+        {!building.fullName && (
+          <Button onClick={() => handleAddResident(building)} color="primary">
+            <PersonAddIcon />
           </Button>
-          <Button onClick={() => navigate('/cu-dan/' + building.id)}>
-            Chi tiết
-          </Button>
+        )}
       </>
     ),
-  })), [buildings]);
+  })), [buildings, navigate]);
 
   return (
     <section className="content">
-      <h1>Tổng số chủ hộ hiện tại: {totalRecord}</h1>
+      <h1><span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Tổng số chủ hộ hiện tại: {totalRecord}</h1>
       <Box
         sx={{
           display: "flex",
@@ -215,7 +254,7 @@ const HouseHold = () => {
         />
         <TablePagination
           component="div"
-          count={rows.length}
+          count={totalRecord}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}

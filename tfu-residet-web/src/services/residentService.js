@@ -27,10 +27,18 @@ export const updateOwnerShip = async (body) => {
 }
 
 export const deleteResident = async (data) => {
-   return await postData(`/ceo/deleteResident`, data , endpointUrl.BUILDING_URL);
+   return await postData(`/ceo/deleteResident`, data , {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    }, endpointUrl.BUILDING_URL);
 }
 export const addResident  = async (data) => {
-   return await postData(`/ceo/addResident`, data , endpointUrl.BUILDING_URL);
+   return await postData(`/ceo/addResident`, data , {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    }, endpointUrl.BUILDING_URL);
 }
 
 export const updateMemberResident  = async (data) => {

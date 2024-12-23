@@ -60,6 +60,7 @@ import DetailNews from "../pages/news/detailNews";
 import PostNews from "../pages/news/PostNews";
 import DashboardInvestor from "../pages/dashboard/DashboardInvestor";
 import {Card} from "primereact/card";
+import BuildingManage from "../pages/buildingDirector/householdManagement/BuildingManage";
 export const routeArray = [
     {
         route: "/",
@@ -133,7 +134,7 @@ export const routeOwner = [
 
 export const routeResident = [
     {
-        route: "/",
+        route: "/trang-chu",
         routeName: "Trang chủ",
         component:
             <div className="content h-auto p-0">
@@ -240,13 +241,20 @@ export const routeDirector = [
         icon: <PersonIcon/>,
     },
     {
-        route: "/cu-dan",
-        routeName: "Quản lý cư dân",
+        route: "/cu-dan/:id",
+        routeName: "Quản lý Toà Nhà",
         component: <HouseHold/>,
-        icon: <PersonIcon/>,
+        icon: <PersonIcon />,
+        hidden: true,
     },
     {
-        route: "/cu-dan/:id",
+        route: "/toa-nha",
+        routeName: "Quản lý Toà Nhà",
+        component: <BuildingManage />,
+        icon: <PersonIcon />,
+    },
+    {
+        route: "/chi-tiet-thanh-vien/:id",
         routeName: "Chi tiết cư dân",
         component: <DetailHouseHold/>,
         hidden: true,
@@ -332,27 +340,35 @@ export const routeReceptionist = [
         component: <PaymentHistory/>,
         icon: <HistoryIcon/>,
     },
+    {
+        route: "/news",
+        routeName: "Quản lí bản tin",
+        icon: <SettingsIcon/>,
+        component: <News/>,
+    },
+     {
+        route: "/news/:id",
+        component: <DetailNews/>,
+        hidden: true,
+    },
+     {
+        route: "/news/add",
+        component: <FormNews/>,
+        hidden: true,
+    },
+    {
+        route: "/news/update/:id",
+        component: <FormNews/>,
+        hidden: true,
+    },
 ];
 
 export const routeAccountant = [
     {
-        route: "/",
-        routeName: "Trang chính",
-        component: <DashboardInvestor/>,
-        icon: <WidgetsIcon/>,
-    },
-    {
-        route: "/quan-ly-dich-vu",
-        routeName: "Quản lý dịch vụ",
-        component: <ServiceManage/>,
-        icon: <SettingsIcon/>,
-    },
-    {
-        route: "/quan-ly-dich-vu/:id",
-        routeName: "Quản lý dịch vụ",
-        component: <ServiceDetail/>,
-        icon: <SettingsIcon/>,
-        hidden: true,
+        route: "/xem-thanh-toan",
+        routeName: "Xem thanh toán",
+        component: <AccountantPage/>,
+        icon: <HistoryIcon/>,
     },
 ];
 

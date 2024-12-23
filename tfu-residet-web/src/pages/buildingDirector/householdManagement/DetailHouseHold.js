@@ -11,50 +11,37 @@ import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { getBuilding, getMemberInApartment, updateMemberResident, deleteMemberResident } from "../../../services/residentService";
+import { getMemberInApartment, updateMemberResident, deleteMemberResident } from "../../../services/residentService";
 
 const DetailHouseHold = () => {
-    const { id } = useParams();
+  const { id } = useParams();
+  const roomNumber = id.split("&")[1].slice(-3);
+  const apartmentId = id.split("&")[0];
+  
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [reload, setReload] = useState(false);
     const [searchCriteria, setSearchCriteria] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
-    const [building, setBuilding] = useState(null);
     const [agents, setAgents] = useState({ data: [], totalCount: 0 });
     const navigate = useNavigate();
     const [modalMode, setModalMode] = useState({
         mode: 'edit',
-        title: `Cập nhật thông tin thành viên căn hộ: ${building?.roomNumber || ''}`,
+        title: `Cập nhật thông tin thành viên căn hộ: ${roomNumber}`,
     });
     const [selectedMember, setSelectedMember] = useState(null);
 
     useEffect(() => {
-        const fetchBuilding = async () => {
-            try {
-                const data = await getBuilding('914b90f1-1d0d-4039-9084-47c10783e058');
-                setBuilding(data.data[0]);
-            } catch (error) {
-                console.error("Error fetching building:", error);
-            }
-        }
-        fetchBuilding();
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('apartment_id', building?.apartmentId);
-        const apartmentID = localStorage.getItem('apartment_id');
-        if (!building || !building.apartmentId || !apartmentID) return;
         const fetchAgents = async () => {
             try {
-                const data = await getMemberInApartment(apartmentID || building.apartmentId);
+                const data = await getMemberInApartment(apartmentId);
                 setAgents(data);
             } catch (error) {
                 console.error("Error fetching agents:", error);
             }
         }
         fetchAgents();
-    }, [building, reload]);
+    }, [apartmentId, reload]);
 
     const handleSearchChange = (event) => {
         setSearchCriteria(event.target.value);
@@ -72,7 +59,7 @@ const DetailHouseHold = () => {
     const handleEditMember = (member) => {
         setModalMode({
             mode: 'edit',
-            title: `Cập nhật thông tin thành viên căn hộ: ${building?.roomNumber}`
+            title: `Cập nhật thông tin thành viên căn hộ: ${roomNumber}`
         });
         setSelectedMember(member);
         setModalOpen(true);
@@ -163,14 +150,10 @@ const DetailHouseHold = () => {
             )
         }));
 
-    if (!building) {
-        return <Typography>Loading...</Typography>;
-    }
-
     return (
         <section className="content">
             <Typography variant="h5" gutterBottom>
-                <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {building.roomNumber}
+                <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {roomNumber} 
             </Typography>
             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", alignItems: 'flex-end', mb: 2 }}>
                 <TextField

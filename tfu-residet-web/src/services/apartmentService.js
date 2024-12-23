@@ -21,13 +21,30 @@ export const getServiceName  =  async (serviceTypes) => {
                     'buildingPermalink': Cookies.get("buildingID"),
                   })
 }
-export const getBuildingNew  =  async () => {
-    return await getData(`/building/get`, endpointUrl.BUILDING_URL, {
+export const getBuildingNew  =  async ({name}) => {
+    return await getData(`/building/get?buildingName=${name}`, endpointUrl.BUILDING_URL, {
                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
                     'content-type': 'application/json',
                     'buildingPermalink': Cookies.get("buildingID"),
                   })
 }
+
+export const addBuilding  =  async (body) => {
+    return await postData(`/building/add`, body, {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    } , endpointUrl.BUILDING_URL);
+}
+
+export const updateBuilding  =  async (body) => {
+    return await postData(`/building/edit`, body, {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    } , endpointUrl.BUILDING_URL);
+}
+
 export const addMember = async (body) => {
     return await postData(`/resident/add-members`, body, {
       Authorization: `Bearer ${Cookies.get("accessToken")}`,
