@@ -2,7 +2,10 @@ import {endpointUrl, getData, postData, putData} from "./api";
 import Cookies from 'js-cookie';
 
 export const listOwner =  async (body) => {
-    return await postData(`/ceo/getOwnerShips`, body, undefined,  endpointUrl.BUILDING_URL)
+    return await postData(`/ceo/getOwnerShips`, body, {
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json'
+    },  endpointUrl.BUILDING_URL)
 }
 export const updateOwner = async (body) => {
     return await putData(`/ceo/UpdateOwnerShip`, body, endpointUrl.BUILDING_URL, undefined);
