@@ -17,11 +17,17 @@ const HouseHold = () => {
   const [searchCriteria, setSearchCriteria] = useState("");
   const [buildings, setBuildings] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalResidentOpen, setModalResidentOpen] = useState(false);
   const [modalMode, setModalMode] = useState({
+    mode: 'add',
+    title: 'Thêm căn hộ',
+  });
+  const [modalResidentMode, setModalResidentMode] = useState({
     mode: 'add',
     title: 'Thêm chủ căn hộ',
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
+  const [selectedResident, setSelectedResident] = useState(null);
   const [totalRecord, setTotalRecord] = useState(0);
   const navigate = useNavigate();
 
@@ -68,7 +74,7 @@ const HouseHold = () => {
   const handleCreateHouseHold = () => {
     setModalMode({
       mode: 'add',
-      title: 'Thêm chủ căn hộ'
+      title: 'Thêm căn hộ'
     });
     setSelectedHouseHold(null);
     setModalOpen(true);
@@ -77,14 +83,66 @@ const HouseHold = () => {
   const handleEditHouseHold = (building) => {
     setModalMode({
       mode: 'edit',
-      title: 'Cập nhật chủ căn hộ'
+      title: 'Cập nhật căn hộ'
     });
     setSelectedHouseHold(building);
     setModalOpen(true);
   };
 
+  const handleCreateResident = () => {
+    setModalResidentMode({
+      mode: 'add',
+      title: 'Thêm chủ căn hộ'
+    });
+    setSelectedResident(null);
+    setModalOpen(true);
+  };
+  
+  const handleEditResident = (building) => {
+    setModalResidentMode({
+      mode: 'edit',
+      title: 'Cập nhật chủ căn hộ'
+    });
+    setSelectedResident(building);
+    setModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+
+  const handleSaveResident = async (apartmentData) => {
+    if (modalMode.mode === 'add') {
+      try {
+        const data = await addOwner(apartmentData);
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
+        } else {
+          Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+        console.error('Error fetching projects:', error);
+      }
+    } else {
+      try {
+        const data = await updateOwner({
+          floorNumber: apartmentData.floorNumber,
+          id: apartmentData.id,
+          email: apartmentData.email,
+          roomNumber: apartmentData.roomNumber,
+        });
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+        } else {
+          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        console.error('Error updating household:', error);
+      }
+    }
+    setReload(!reload);
   };
 
   const handleSaveHouseHold = async (houseHoldData) => {
@@ -122,10 +180,10 @@ const HouseHold = () => {
     setReload(!reload);
   };
 
-  const handleAddResident = async (building) => {
+  const handleAddResident =  async (building) => {
     try {
       const { value: formValues } = await Swal.fire({
-        title: 'Thêm cư dân',
+        title: 'Thêm chủ căn hộ',
         html:
           '<input id="swal-input2" class="swal2-input" placeholder="Email">',
         focusConfirm: false,
@@ -152,7 +210,66 @@ const HouseHold = () => {
     }
   };
 
+  const handleAddApartment = async (building) => {
+    try {
+      const { value: formValues } = await Swal.fire({
+        title: 'Thêm căn hộ',
+        html: `
+          '<input id="swal-input2" class="swal2-input" placeholder="Số phòng">',
+          '<input id="swal-input3" class="swal2-input" placeholder="Số tầng">',
+          `,
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            roomNumber: document.getElementById('swal-input2').value,
+            floorNumber: document.getElementById('swal-input3').value,
+            id: building.id,
+          }
+        }
+      });
+
+      if (formValues) {
+        const data = await updateOwner(formValues);
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã thêm cư dân thành công!', 'success');
+          setReload(!reload);
+        } else {
+          Swal.fire('Thất bại', 'Thêm cư dân thất bại!', 'error');
+        }
+      }
+    } catch (error) {
+      console.error('Error adding resident:', error);
+      Swal.fire('Thất bại', 'Đã xảy ra lỗi khi thêm căn hộ!', 'error');
+    }
+  };
+
   const modalFields = [
+    <TextField
+      fullWidth
+      label="Số Phòng"
+      name="roomNumber"
+      type="string"
+      required
+      defaultValue={selectedResident?.roomNumber || ''} // Điền dữ liệu vào
+    />,
+    <TextField
+      fullWidth
+      label="Số tầng"
+      name="floorNumber"
+      type="number"
+      required
+      defaultValue={selectedResident?.floorNumber || ''}
+    />,
+    // <TextField
+    //   fullWidth
+    //   label="Email"
+    //   name="email"
+    //   required
+    //   defaultValue={selectedHouseHold?.email || ''}
+    // />,
+  ];
+
+  const modalResidentFields = [
     <TextField
       fullWidth
       label="Số Phòng"
@@ -243,6 +360,14 @@ const HouseHold = () => {
           onClick={handleCreateHouseHold}
           sx={{ height: "40px" }}
         >
+          Thêm căn hộ
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleCreateResident}
+          sx={{ height: "40px" }}
+        >
           Thêm chủ căn hộ
         </Button>
       </Box>
@@ -266,10 +391,21 @@ const HouseHold = () => {
         open={modalOpen}
         handleClose={handleCloseModal}
         data={selectedHouseHold}
+        handleAdd={handleAddApartment}
         handleSave={handleSaveHouseHold}
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
+      />
+      <CustomModal
+        open={modalResidentOpen}
+        handleClose={handleCloseModal}
+        data={selectedResident}
+        handleAdd={handleAddResident}
+        handleSave={handleSaveResident}
+        mode={modalResidentMode.mode}
+        title={modalResidentMode.title}
+        fields={modalResidentFields}
       />
     </section>
   );

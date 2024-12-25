@@ -11,7 +11,7 @@ import {
   Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SalaryTab from './SalaryTab';
+import ResidentTab from './ResidentTab';
 import ListTab from './ListTab';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
@@ -50,15 +50,15 @@ function SalaryListPage() {
     <Box className="content">
       <Paper elevation={3} sx={{ p: 3 }}>
         <Tabs value={tab} onChange={handleTabChange} aria-label="salary tabs">
-          <Tab label="Danh sách" />
-          {/* <Tab label="Lương" /> */}
+          <Tab label="Danh sách nhân viên" />
+          <Tab label="Danh sách cư dân" />
         </Tabs>
         
         <Box sx={{ mt: 3 }}>
           {tab === 0 ? (
             <ListTab />
         ) : (
-            <SalaryTab />
+            <ResidentTab />
           )}
         </Box>
 
