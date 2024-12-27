@@ -362,13 +362,8 @@ const SendRequest = () => {
         <DatePicker
             placeholder="Ngày gửi xe"
             value={request.startDate ? moment(request.startDate) : null}
-            onChange={(date, dateString) => {
-              if (date && date.isBefore(moment().add(7, 'days'), 'day')) {
-                message.error("Ngày gửi xe phải ít nhất 7 ngày sau ngày hiện tại!");
-              } else {
-                handleChange(index, "startDate", dateString);
-              }
-            }}
+            onChange={(dateString) => {handleChange(index, "startDate", dateString)}}
+            required
             style={formStyles.datePicker}
         />
         <Typography sx={{ width: '100%', marginTop: 2 }}>

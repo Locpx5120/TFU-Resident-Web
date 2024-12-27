@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Box, Button, Card, TextField, TablePagination, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import TableCustom from "../../../components/Table";
-// import { getMemberInApartment } from "../../../services/residentService";
-// import SelectSummary from "../../../common/SelectSummary";
+import { getResident } from "../../../services/residentService";
 
 const ResidentTab = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [employeeName, setEmployeeName] = useState("");
-  const [agents, setAgents] = useState({ data: [], totalCount: 0 });
-  const [reload, setReload] = useState(false);
+  const [residents, setResidents] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchCriteria, setSearchCriteria] = useState("");
 
-  // const { id } = useParams();
-  // const roomNumber = id.split("&")[1].slice(-3);
-  // const apartmentId = id.split("&")[0];
+  useEffect(() => {
+    const fetchResidents = async () => {
+      try {
+        const response = await getResident();
+        setResidents(response.data || []);
+        setTotalCount(response.totalCount || 0);
+      } catch (error) {
+        console.error("Error fetching residents:", error);
+      }
+    };
+    fetchResidents();
+  }, [page, rowsPerPage]);
 
-  // useEffect(() => {
-  //   const fetchAgents = async () => {
-  //     try {
-  //       const data = await getMemberInApartment(apartmentId);
-  //       setAgents(data);
-  //     } catch (error) {
-  //       console.error("Error fetching agents:", error);
-  //     }
-  //   }
-  //   fetchAgents();
-  // }, [apartmentId, reload]);
+  const handleSearchChange = (event) => {
+    setSearchCriteria(event.target.value);
+  };
 
-  const handleSearch = () => {
-    console.log("Searching for:", employeeName);
+  const handleSearch = async () => {
+    const data = await getResident();
+    setResidents(data.data);
+    setTotalCount(data.totalCount);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -41,23 +43,29 @@ const ResidentTab = () => {
     setPage(0);
   };
 
+  const handleRefresh = async () => {
+    const data = await getResident();
+    setResidents(data.data);
+    setTotalCount(data.totalCount);
+  };
+
   return (
     <section>
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          flexWrap: "wrap",
-          alignItems: 'flex-end'
-        }}
+      <Box sx={{
+        display: "flex",
+        gap: 2,
+        flexWrap: "wrap",
+        alignItems: "flex-end",
+        mb: 2,
+      }}
       >
-        <TextField
-          size="small"
-          label="Tên nhân viên"
+        <TextField size="small"
+          label="Tên thành viên"
+          name="name"
           variant="outlined"
-          value={employeeName}
-          onChange={(e) => setEmployeeName(e.target.value)}
-          sx={{ flexGrow: 1, maxWidth: "300px" }}
+          value={searchCriteria}
+          onChange={handleSearchChange}
+          sx={{ flexGrow: 1, maxWidth: "200px" }}
         />
         <Button
           variant="contained"
@@ -67,19 +75,34 @@ const ResidentTab = () => {
         >
           Tìm kiếm
         </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={handleRefresh}
+          sx={{ height: "40px" }}
+        >
+          Làm mới
+        </Button>
       </Box>
       <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
-        <TableCustom columns={columnData} rows={fakeRows} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, py: 1 }}>
+        <TableCustom
+          columns={columnData}
+          rows={residents}
+          onRowClick={() => { }} />
+        <Box sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 2, py: 1,
+        }} >
           <TablePagination
             component="div"
-            count={fakeRows.length}
+            count={totalCount}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
+            rowsPerPageOptions={[5, 10, 25]} />
         </Box>
       </Card>
     </section>
@@ -87,11 +110,10 @@ const ResidentTab = () => {
 };
 
 const columnData = [
-  { name: "Tên cư dân", align: "left", esName: "memberName" },
-  { name: "Điện thoại", align: "left", esName: "phoneNumber" },
+  { name: "Tên cư dân", align: "left", esName: "name" },
   { name: "Email", align: "left", esName: "email" },
+  { name: "Ngày sinh", align: "left", esName: "birthday" },
+  { name: "Điện thoại", align: "left", esName: "phone" },
 ];
-
-const fakeRows = [];
 
 export default ResidentTab;

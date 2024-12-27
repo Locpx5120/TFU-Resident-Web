@@ -309,7 +309,7 @@ export const routeThirdParty = [
     {
         route: "/",
         routeName: "Trang chính",
-        component: <DirectorHomepage/>,
+        component: <DashboardInvestor/>,
         icon: <WidgetsIcon/>,
     },
     {

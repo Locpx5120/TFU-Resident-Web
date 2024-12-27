@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, Card, TextField, TablePagination } from "@mui/material";
+import { Box, Button, Card, TextField, TablePagination, Autocomplete, MenuItem } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TableCustom from "../../../components/Table";
 import CustomModal from "../../../common/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import {addOwner, listOwner, updateOwner} from "../../../services/ceoService";
+import { addOwner, listOwner, updateOwner } from "../../../services/ceoService";
 import { addResident } from "../../../services/residentService";
+import { CreateTypeApartment, getTypeApartment } from "../../../services/apartmentService";
 
 const HouseHold = () => {
   const { id } = useParams();
@@ -29,17 +30,18 @@ const HouseHold = () => {
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
   const [selectedResident, setSelectedResident] = useState(null);
   const [totalRecord, setTotalRecord] = useState(0);
+  const [dataAppart, setDataAppart] = useState([])
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
         const data = await listOwner({
-            name: searchCriteria,
-            pageSize: rowsPerPage,
-            pageNumber: page + 1,
-            buildingId: id
-          });
+          name: searchCriteria,
+          pageSize: rowsPerPage,
+          pageNumber: page + 1,
+          buildingId: id
+        });
         setBuildings(data.data);
         setTotalRecord(data.totalRecords)
       } catch (error) {
@@ -48,6 +50,24 @@ const HouseHold = () => {
     }
     fetchBuildings();
   }, [page, rowsPerPage, searchCriteria, reload, id]);
+
+  useEffect(() => {
+    const fetchBuildings = async () => {
+      try {
+        const dataTypeAppartment = await getTypeApartment();
+        setDataAppart(dataTypeAppartment.data)
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchBuildings();
+  }, []);
+
+  const TypeOptionAppartment = dataAppart.map(item => ({
+    label: item.name,
+    value: item.id
+  }))
 
   const handleRowClick = (record) => {
     setSelectedHouseHold(record);
@@ -79,7 +99,7 @@ const HouseHold = () => {
     setSelectedHouseHold(null);
     setModalOpen(true);
   };
-  
+
   const handleEditHouseHold = (building) => {
     setModalMode({
       mode: 'edit',
@@ -95,20 +115,21 @@ const HouseHold = () => {
       title: 'Thêm chủ căn hộ'
     });
     setSelectedResident(null);
-    setModalOpen(true);
+    setModalResidentOpen(true);
   };
-  
+
   const handleEditResident = (building) => {
     setModalResidentMode({
       mode: 'edit',
       title: 'Cập nhật chủ căn hộ'
     });
     setSelectedResident(building);
-    setModalOpen(true);
+    setModalResidentOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setModalResidentOpen(false);
   };
 
   const handleSaveResident = async (apartmentData) => {
@@ -146,41 +167,53 @@ const HouseHold = () => {
   };
 
   const handleSaveHouseHold = async (houseHoldData) => {
-    if (modalMode.mode === 'add') {
-      try {
-        const data = await addOwner(houseHoldData);
-        if (data.success) {
-          Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
-        } else {
-          Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
-        }
-      } catch (error) {
-        Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
-        console.error('Error fetching projects:', error);
-      }
-    } else {
-      try {
-        const data = await updateOwner({
-          floorNumber: houseHoldData.floorNumber,
-          id: houseHoldData.id,
-          email: houseHoldData.email,
-          roomNumber: houseHoldData.roomNumber,
-          // buildingId: houseHoldData.id,
-        });
-        if (data.success) {
-          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-        } else {
-          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        }
-      } catch (error) {
-        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-        console.error('Error updating household:', error);
-      }
+    console.log(houseHoldData);
+    const payload = {
+      ...houseHoldData,
+      buildingId: id,
     }
+    const data = await CreateTypeApartment(payload);
+    if (data.success) {
+      Swal.fire('Thành công', 'Đã thêm căn hộ thành công!', 'success');
+      setReload(!reload);
+    } else {
+      Swal.fire('Thất bại', 'Thêm căn hộ thất bại!', 'error');
+    }
+    // if (modalMode.mode === 'add') {
+    //   try {
+    //     const data = await addOwner(houseHoldData);
+    //     if (data.success) {
+    //       Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
+    //     } else {
+    //       Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+    //     }
+    //   } catch (error) {
+    //     Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+    //     console.error('Error fetching projects:', error);
+    //   }
+    // } else {
+    //   try {
+    //     const data = await updateOwner({
+    //       floorNumber: houseHoldData.floorNumber,
+    //       id: houseHoldData.id,
+    //       email: houseHoldData.email,
+    //       roomNumber: houseHoldData.roomNumber,
+    //       // buildingId: houseHoldData.id,
+    //     });
+    //     if (data.success) {
+    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+    //     } else {
+    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     }
+    //   } catch (error) {
+    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+    //     console.error('Error updating household:', error);
+    //   }
+    // }
     setReload(!reload);
   };
 
-  const handleAddResident =  async (building) => {
+  const handleAddResident = async (building) => {
     try {
       const { value: formValues } = await Swal.fire({
         title: 'Thêm chủ căn hộ',
@@ -260,13 +293,15 @@ const HouseHold = () => {
       required
       defaultValue={selectedResident?.floorNumber || ''}
     />,
-    // <TextField
-    //   fullWidth
-    //   label="Email"
-    //   name="email"
-    //   required
-    //   defaultValue={selectedHouseHold?.email || ''}
-    // />,
+    <TextField select label="Loại căn hộ"  name="apartmentTypeId"
+        value={selectedResident?.apartmentTypeId || ''}
+    >
+        {TypeOptionAppartment.map((apartment) => (
+            <MenuItem key={apartment.value} value={apartment.value}>
+                {apartment.label}
+            </MenuItem>
+        ))}
+    </TextField>
   ];
 
   const modalResidentFields = [
@@ -328,7 +363,7 @@ const HouseHold = () => {
 
   return (
     <section className="content">
-      <h1><span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Tổng số chủ hộ hiện tại: {totalRecord}</h1>
+      <h1><span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => navigate(-1)}>Trở về</span> Tổng số chủ hộ hiện tại: {totalRecord}</h1>
       <Box
         sx={{
           display: "flex",
