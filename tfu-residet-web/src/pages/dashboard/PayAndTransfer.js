@@ -1,32 +1,34 @@
-import {useEffect, useState} from "react";
-import {Calendar} from "primereact/calendar";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
+import { Calendar } from "primereact/calendar";
 import '../../styles/Dashboard.css';
-import {formatCurrency} from "../../utils/calculatePrice";
-import {CSSProperties} from "react";
-import {getTransaction} from "../../services/PaymentService";
-import {GetBuildingsForNews} from "../../services/NewsService";
-import {getApartmentByBuilding} from "../../services/buildingService";
-import {Dropdown} from "primereact/dropdown";
+import { formatCurrency } from "../../utils/calculatePrice";
+import { getTransaction } from "../../services/PaymentService";
+import { GetBuildingsForNews } from "../../services/NewsService";
+import { getApartmentByBuilding } from "../../services/buildingService";
+import { Dropdown } from "primereact/dropdown";
+// import { getTotalPrice } from "../../services/totalPrice";
+import { Button } from "antd";
 
-const paymentStyle: CSSProperties = {
+const paymentStyle = {
     background: "blue",
     width: "50%",
     height: '20px',
     borderRadius: '16px 0 0 16px'
 }
-const transferStyle: CSSProperties = {
+const transferStyle = {
     background: "green",
     width: "50%",
     height: '20px',
     borderRadius: '0 16px 16px 0'
 }
-const noData: CSSProperties = {
+const noData = {
     background: "#8080802b",
     width: "100%",
     height: '20px',
     borderRadius: '16px'
 }
-const PayAndTransfer = ({transactionHistories}) => {
+const PayAndTransfer = ({ transactionHistories, setType, type }) => {
     const [dates, setDates] = useState([]);
     const [building, setBuilding] = useState('');
     const [apartment, setApartment] = useState('');
@@ -35,9 +37,10 @@ const PayAndTransfer = ({transactionHistories}) => {
     const [apartmentList, setApartmentList] = useState([]);
     const [request, setRequest] = useState({})
     useEffect(() => {
-        fetchTransaction({to: null, from: null, buildingId: null, apartmentId: null})
+        fetchTransaction({ to: null, from: null, buildingId: null, apartmentId: null })
         fetchBuildingList();
     }, [paymentStyle, transferStyle]);
+
     const fetchTransaction = async (req) => {
         try {
             const res = await getTransaction(req);
@@ -73,7 +76,7 @@ const PayAndTransfer = ({transactionHistories}) => {
         }
     }
     const handleDateChange = (event) => {
-        const {value} = event;
+        const { value } = event;
         setDates(value);
         const request = {
             from: value[0],
@@ -83,7 +86,7 @@ const PayAndTransfer = ({transactionHistories}) => {
         fetchTransaction(request);
     }
     const handleChangeInput = (event) => {
-        const {name, value} = event?.target;
+        const { name, value } = event?.target;
         const requestForm = {
             ...request,
             [name]: value
@@ -97,23 +100,33 @@ const PayAndTransfer = ({transactionHistories}) => {
         fetchTransaction(requestForm);
 
     }
+
+    const handleChange = (type) => {
+        if (type === 'A') {
+            setType('A');
+            transactionHistories(payAndTransferInfo.transactionHistories);
+        } else {
+            setType('B');
+            transactionHistories(payAndTransferInfo.transactionTransferResponseDtos);
+        }
+    }
     return (
         <>
             <div className="col-12 flex p-0">
                 <div className="col flex align-items-center">
                     <label htmlFor="">Tổng thu chi</label>
                     <label htmlFor=""
-                           className="ml-2 text-2xl font-semibold"> {formatCurrency(payAndTransferInfo?.total)}</label>
+                        className="ml-2 text-2xl font-semibold"> {formatCurrency(payAndTransferInfo?.total)}</label>
                 </div>
                 <div className="col">
                     <Calendar value={dates} onChange={handleDateChange} selectionMode="range" readOnlyInput
-                              hideOnRangeSelection showIcon className="w-full" dateFormat="dd/mm/yy"/>
+                        hideOnRangeSelection showIcon className="w-full" dateFormat="dd/mm/yy" />
                     <Dropdown className="w-full my-2" value={building} name="buildingId"
-                              onChange={handleChangeInput} options={buildingList} optionValue="id"
-                              optionLabel="buildingName" placeholder="Chọn toà nhà" />
+                        onChange={handleChangeInput} options={buildingList} optionValue="id"
+                        optionLabel="buildingName" placeholder="Chọn toà nhà" />
                     <Dropdown className="w-full" value={apartment} name="apartmentId"
-                              onChange={handleChangeInput} options={apartmentList} optionValue="id"
-                              optionLabel="roomNumber" placeholder="Chọn căn hộ" />
+                        onChange={handleChangeInput} options={apartmentList} optionValue="id"
+                        optionLabel="roomNumber" placeholder="Chọn căn hộ" />
                 </div>
 
             </div>
@@ -129,19 +142,23 @@ const PayAndTransfer = ({transactionHistories}) => {
                     )}
 
             </div>
+            <div className="col-12 px-0">Chọn tab thu hoặc chi để xem theo từng loại</div>
             <div className="col-12 px-0 flex justify-content-between">
-                <div className="col  flex align-items-center">
+                <div onClick={() => handleChange('A')} className="flex align-items-center" style={{background: type === 'A' ? 'blue' : 'transparent', color: type === 'A' ? '#fff' : '#000', borderRadius: '30px', width: '300px', cursor: 'pointer'}}>
                     <p className="dot-chart  transfer-color"></p>
                     <label htmlFor="">Tổng tiền thu</label>
                     <label htmlFor=""
-                           className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.pay)}</label>
+                        className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.pay)}</label>
                 </div>
-                <div className="col flex justify-content-end align-items-center ">
+                <div onClick={() => handleChange('B')} className="flex align-items-center" style={{background: type === 'B' ? 'green': 'transparent', color: type === 'B' ? '#fff': '#000', borderRadius: '30px',  width: '300px', cursor: 'pointer'}}>
                     <p className="dot-chart payment-color"></p>
                     <label htmlFor="">Tổng tiền chi</label>
                     <label htmlFor=""
-                           className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.transfer)}</label>
+                        className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.transfer)}</label>
 
+                </div>
+                <div>
+                    {/* <Button onc>xem</Button> */}
                 </div>
             </div>
         </>

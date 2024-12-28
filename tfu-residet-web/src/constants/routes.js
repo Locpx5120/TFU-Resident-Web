@@ -34,7 +34,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
 import DirectorPage from "../pages/buildingDirector/dashboard";
 import DirectorHomepage from "../pages/buildingDirector/homepage";
-import SalaryListPage from "../pages/buildingDirector/agent";
+import StaffListPage from "../pages/buildingDirector/agent";
 import HouseHold from "../pages/buildingDirector/householdManagement";
 import DetailHouseHold from "../pages/buildingDirector/householdManagement/DetailHouseHold";
 import PaymentHistory from "../pages/buildingDirector/paymentHistory";
@@ -237,19 +237,19 @@ export const routeDirector = [
     {
         route: "/thanh-vien",
         routeName: "Quản lý nhân viên",
-        component: <SalaryListPage/>,
+        component: <StaffListPage/>,
         icon: <PersonIcon/>,
     },
     {
         route: "/cu-dan/:id",
-        routeName: "Quản lý Toà Nhà",
+        routeName: "Quản lý toà nhà",
         component: <HouseHold/>,
         icon: <PersonIcon />,
         hidden: true,
     },
     {
         route: "/toa-nha",
-        routeName: "Quản lý Toà Nhà",
+        routeName: "Quản lý toà nhà",
         component: <BuildingManage />,
         icon: <PersonIcon />,
     },
@@ -365,10 +365,24 @@ export const routeReceptionist = [
 
 export const routeAccountant = [
     {
-        route: "/xem-thanh-toan",
-        routeName: "Xem thanh toán",
-        component: <AccountantPage/>,
-        icon: <HistoryIcon/>,
+        route: "/thanh-toan-dich-vu",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePayments/>,
+        icon: <SettingsIcon/>,
+    },
+    {
+        route: "/thanh-toan-dich-vu/:id/:status/:year/:month",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsDetail/>,
+        icon: <SettingsIcon/>,
+        hidden: true,
+    },
+    {
+        route: "/thanh-toan-dich-vu-hoa-don/:id",
+        routeName: "Thanh toán dịch vụ",
+        component: <ServicePaymentsBill />,
+        icon: <SettingsIcon/>,
+        hidden: true,
     },
 ];
 

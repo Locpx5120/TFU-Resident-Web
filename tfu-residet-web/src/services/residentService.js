@@ -41,6 +41,14 @@ export const addResident  = async (data) => {
     }, endpointUrl.BUILDING_URL);
 }
 
+export const addNewResident  = async (data) => {
+   return await postData(`/resident/addResident`, data , {
+      Authorization: `Bearer ${Cookies.get("accessToken")}`,
+      'content-type': 'application/json',
+      'buildingPermalink':  Cookies.get('buildingID'),
+    }, endpointUrl.BUILDING_URL);
+}
+
 export const getResident = async () => { 
    return await postData('/resident/GetResidents', {}, { 
       Authorization: `Bearer ${Cookies.get("accessToken")}`, 

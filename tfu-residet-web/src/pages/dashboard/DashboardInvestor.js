@@ -6,7 +6,7 @@ import {useState} from "react";
 
 const DashboardInvestor = () => {
     const [transactionHistories, setTransactionHistories] = useState([]);
-
+    const [type, setType] = useState("A");
     // Hàm nhận dữ liệu từ component con
     const handleReceiveData = (data) => {
         data = data.map((items, index) => ({
@@ -20,6 +20,29 @@ const DashboardInvestor = () => {
         )
         setTransactionHistories(data);
     };
+    console.log(transactionHistories);
+    
+
+    const columnTable = type === 'A' ? [
+        {field: 'index', header: 'STT'},
+        {field: 'buildingName', header: 'Tòa nhà'},
+        {field: 'apartmentFloorNumber', header: 'Tầng'},
+        {field: 'apartmentRoomNumber', header: 'Phòng'},
+        {field: 'service', header: 'Dịch vụ'},
+        {field: 'amount', header: 'Số tiền'},
+        {field: 'sentUser', header: 'Người gửi'},
+        {field: 'reciveUser', header: 'Người nhận'},
+        {field: 'createAt', header: 'Ngày tạo'},
+        {field: 'status', header: 'Trạng thái'},
+    ] : [
+        {field: 'index', header: 'STT'},
+        { field: 'buildingName', header: 'Tòa nhà' },
+        {field: 'apartmentFloorNumber', header: 'Tầng'},
+        {field: 'apartmentRoomNumber', header: 'Phòng'},
+        {field: 'type', header: 'Kiểu hợp đồng'},
+        {field: 'price', header: 'Giá'},
+        {field: 'nameService', header: 'Tên dịch vụ'},
+    ]
 
     return (
         <>
@@ -28,11 +51,10 @@ const DashboardInvestor = () => {
                     <PostNews/>
                 </div>
                 <div className="col">
-                    <PayAndTransfer transactionHistories={handleReceiveData}/>
+                    <PayAndTransfer transactionHistories={handleReceiveData} setType={setType} type={type}/>
                 </div>
                 <div className="col">
-                    <RecentTransaction transactionRecived={transactionHistories}/>
-
+                    <RecentTransaction transactionRecived={transactionHistories} columnTable={columnTable} />
                 </div>
             </Card>
         </>

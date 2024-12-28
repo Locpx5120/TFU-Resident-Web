@@ -37,7 +37,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   },
 }));
 
-function SalaryListPage() {
+function StaffListPage() {
   const [tab, setTab] = useState(0);
  
 
@@ -49,7 +49,7 @@ function SalaryListPage() {
   return (
     <Box className="content">
       <Paper elevation={3} sx={{ p: 3 }}>
-        <Tabs value={tab} onChange={handleTabChange} aria-label="salary tabs">
+        <Tabs value={tab} onChange={handleTabChange} aria-label="staff tabs">
           <Tab label="Danh sách nhân viên" />
           <Tab label="Danh sách cư dân" />
         </Tabs>
@@ -67,4 +67,4 @@ function SalaryListPage() {
   );
 }
 
-export default SalaryListPage;
+export default StaffListPage;

@@ -7,8 +7,8 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addOwner, listOwner, updateOwner } from "../../../services/ceoService";
-import { addResident } from "../../../services/residentService";
 import { CreateTypeApartment, getTypeApartment } from "../../../services/apartmentService";
+import { getResident } from "../../../services/residentService";
 
 const HouseHold = () => {
   const { id } = useParams();
@@ -30,7 +30,8 @@ const HouseHold = () => {
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
   const [selectedResident, setSelectedResident] = useState(null);
   const [totalRecord, setTotalRecord] = useState(0);
-  const [dataAppart, setDataAppart] = useState([])
+  const [dataApart, setDataApart] = useState([]);
+  const [residents, setResidents] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,8 +55,8 @@ const HouseHold = () => {
   useEffect(() => {
     const fetchBuildings = async () => {
       try {
-        const dataTypeAppartment = await getTypeApartment();
-        setDataAppart(dataTypeAppartment.data)
+        const dataTypeApartment = await getTypeApartment();
+        setDataApart(dataTypeApartment.data)
 
       } catch (error) {
         console.log(error);
@@ -64,9 +65,28 @@ const HouseHold = () => {
     fetchBuildings();
   }, []);
 
-  const TypeOptionAppartment = dataAppart.map(item => ({
+  const TypeOptionApartment = dataApart.map(item => ({
     label: item.name,
     value: item.id
+  }))
+
+  useEffect(() => {
+    const fetchResidents = async () => {
+      try {
+        const dataResident = await getResident();
+        setResidents(dataResident.data)
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchResidents();
+  }, []);
+
+  const TypeOptionResident = residents.map(item => ({
+    label: item.email,
+    value: item.email,
+    id: item.id
   }))
 
   const handleRowClick = (record) => {
@@ -148,10 +168,9 @@ const HouseHold = () => {
     } else {
       try {
         const data = await updateOwner({
-          floorNumber: apartmentData.floorNumber,
           id: apartmentData.id,
           email: apartmentData.email,
-          roomNumber: apartmentData.roomNumber,
+          buildingId: apartmentData.buildingId
         });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
@@ -217,14 +236,26 @@ const HouseHold = () => {
     try {
       const { value: formValues } = await Swal.fire({
         title: 'Thêm chủ căn hộ',
-        html:
-          '<input id="swal-input2" class="swal2-input" placeholder="Email">',
+        html: `
+          <select id="swal-input-email" class="swal2-input">
+            ${TypeOptionResident.map(
+          (resident) => `<option value="${resident.value}">${resident.label}</option>`
+        ).join('')}
+          </select>
+        `,
         focusConfirm: false,
         preConfirm: () => {
-          return {
-            email: document.getElementById('swal-input2').value,
-            id: building.id,
+          const email = document.getElementById('swal-input-email').value;
+
+          if (!email) {
+            Swal.showValidationMessage('Vui lòng nhập đầy đủ thông tin');
+            return null;
           }
+
+          return {
+            email,
+            id: building.buildingId,
+          };
         }
       });
 
@@ -243,38 +274,38 @@ const HouseHold = () => {
     }
   };
 
-  const handleAddApartment = async (building) => {
-    try {
-      const { value: formValues } = await Swal.fire({
-        title: 'Thêm căn hộ',
-        html: `
-          '<input id="swal-input2" class="swal2-input" placeholder="Số phòng">',
-          '<input id="swal-input3" class="swal2-input" placeholder="Số tầng">',
-          `,
-        focusConfirm: false,
-        preConfirm: () => {
-          return {
-            roomNumber: document.getElementById('swal-input2').value,
-            floorNumber: document.getElementById('swal-input3').value,
-            id: building.id,
-          }
-        }
-      });
+  // const handleAddApartment = async (building) => {
+  //   try {
+  //     const { value: formValues } = await Swal.fire({
+  //       title: 'Thêm căn hộ',
+  //       html: `
+  //         '<input id="swal-input2" class="swal2-input" placeholder="Số phòng">',
+  //         '<input id="swal-input3" class="swal2-input" placeholder="Số tầng">',
+  //         `,
+  //       focusConfirm: false,
+  //       preConfirm: () => {
+  //         return {
+  //           roomNumber: document.getElementById('swal-input2').value,
+  //           floorNumber: document.getElementById('swal-input3').value,
+  //           id: building.id,
+  //         }
+  //       }
+  //     });
 
-      if (formValues) {
-        const data = await updateOwner(formValues);
-        if (data.success) {
-          Swal.fire('Thành công', 'Đã thêm cư dân thành công!', 'success');
-          setReload(!reload);
-        } else {
-          Swal.fire('Thất bại', 'Thêm cư dân thất bại!', 'error');
-        }
-      }
-    } catch (error) {
-      console.error('Error adding resident:', error);
-      Swal.fire('Thất bại', 'Đã xảy ra lỗi khi thêm căn hộ!', 'error');
-    }
-  };
+  //     if (formValues) {
+  //       const data = await updateOwner(formValues);
+  //       if (data.success) {
+  //         Swal.fire('Thành công', 'Đã thêm cư dân thành công!', 'success');
+  //         setReload(!reload);
+  //       } else {
+  //         Swal.fire('Thất bại', 'Thêm cư dân thất bại!', 'error');
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding resident:', error);
+  //     Swal.fire('Thất bại', 'Đã xảy ra lỗi khi thêm căn hộ!', 'error');
+  //   }
+  // };
 
   const modalFields = [
     <TextField
@@ -293,14 +324,14 @@ const HouseHold = () => {
       required
       defaultValue={selectedResident?.floorNumber || ''}
     />,
-    <TextField select label="Loại căn hộ"  name="apartmentTypeId"
-        value={selectedResident?.apartmentTypeId || ''}
+    <TextField select label="Loại căn hộ" name="apartmentTypeId"
+      value={selectedResident?.apartmentTypeId || ''}
     >
-        {TypeOptionAppartment.map((apartment) => (
-            <MenuItem key={apartment.value} value={apartment.value}>
-                {apartment.label}
-            </MenuItem>
-        ))}
+      {TypeOptionApartment.map((apartment) => (
+        <MenuItem key={apartment.value} value={apartment.value}>
+          {apartment.label}
+        </MenuItem>
+      ))}
     </TextField>
   ];
 
@@ -321,13 +352,15 @@ const HouseHold = () => {
       required
       defaultValue={selectedHouseHold?.floorNumber || ''}
     />,
-    <TextField
-      fullWidth
-      label="Email"
-      name="email"
-      required
-      defaultValue={selectedHouseHold?.email || ''}
-    />,
+    <TextField select label="Email" name="email"
+      value={residents?.email || ''}
+    >
+      {TypeOptionResident.map((resident) => (
+        <MenuItem key={resident.value} value={resident.value}>
+          {resident.label}
+        </MenuItem>
+      ))}
+    </TextField>,
   ];
 
   const columnData = [
@@ -426,7 +459,7 @@ const HouseHold = () => {
         open={modalOpen}
         handleClose={handleCloseModal}
         data={selectedHouseHold}
-        handleAdd={handleAddApartment}
+        // handleAdd={handleAddApartment}
         handleSave={handleSaveHouseHold}
         mode={modalMode.mode}
         title={modalMode.title}

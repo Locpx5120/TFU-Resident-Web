@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Card, TextField, TablePagination, MenuItem } from "@mui/material";
 import TableCustom from "../../../components/Table";
-import CustomModal from "../../../common/CustomModal";import Cookies from "js-cookie";
+import CustomModal from "../../../common/CustomModal";
+import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';

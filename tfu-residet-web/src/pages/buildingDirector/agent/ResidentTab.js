@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Box, Button, Card, TextField, TablePagination, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import CustomModal from "../../../common/CustomModal";
 import TableCustom from "../../../components/Table";
-import { getResident } from "../../../services/residentService";
+import { getResident, addNewResident } from "../../../services/residentService";
 
 const ResidentTab = () => {
   const [page, setPage] = useState(0);
@@ -10,6 +12,13 @@ const ResidentTab = () => {
   const [residents, setResidents] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchCriteria, setSearchCriteria] = useState("");
+  const [selectedResident, setSelectedResident] = useState(null);
+  const [modalMode, setModalMode] = useState({
+    mode: 'add',
+    title: 'Thêm cư dân',
+  });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchResidents = async () => {
@@ -49,6 +58,40 @@ const ResidentTab = () => {
     setTotalCount(data.totalCount);
   };
 
+  const handleAddResident = () => {
+    setModalMode({
+      mode: 'add',
+      title: 'Thêm cư dân'
+    });
+    setSelectedResident(null);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleSaveResident = async (residentData) => {
+    try {
+      const data = await addNewResident(residentData);
+      if (data.success) {
+        Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
+      } else {
+        Swal.fire('Thất bại', data.message, 'error');
+      }
+    } catch (error) {
+      Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+    }
+    setReload(!reload);
+  }
+
+  const modalFields = [
+    <TextField fullWidth label="Tên thành viên" name="name" />,
+    <TextField fullWidth label="Email" name="email" />,
+    <TextField fullWidth label="Điện thoại" name="phone" />,
+    <TextField fullWidth label="Ngày sinh" name="birthday" />,
+  ];
+
   return (
     <section>
       <Box sx={{
@@ -83,6 +126,14 @@ const ResidentTab = () => {
         >
           Làm mới
         </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleAddResident}
+          sx={{ height: "40px" }}
+        >
+          Thêm cư dân
+        </Button>
       </Box>
       <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
         <TableCustom
@@ -105,6 +156,15 @@ const ResidentTab = () => {
             rowsPerPageOptions={[5, 10, 25]} />
         </Box>
       </Card>
+      <CustomModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        employee={selectedResident}
+        handleSave={handleSaveResident}
+        mode={modalMode.mode}
+        title={modalMode.title}
+        fields={modalFields}
+      />
     </section>
   );
 };
