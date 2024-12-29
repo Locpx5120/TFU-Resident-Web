@@ -61,6 +61,7 @@ import PostNews from "../pages/news/PostNews";
 import DashboardInvestor from "../pages/dashboard/DashboardInvestor";
 import {Card} from "primereact/card";
 import BuildingManage from "../pages/buildingDirector/householdManagement/BuildingManage";
+import ServicePaymentAccountant from "../pages/resident/servicePayment/ServicePaymentAccountant";
 export const routeArray = [
     {
         route: "/",
@@ -367,7 +368,7 @@ export const routeAccountant = [
     {
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",
-        component: <ServicePayments/>,
+        component: <ServicePaymentAccountant/>,
         icon: <SettingsIcon/>,
     },
     {
