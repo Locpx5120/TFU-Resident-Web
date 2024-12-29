@@ -155,7 +155,7 @@ const HouseHold = () => {
   const handleSaveResident = async (apartmentData) => {
     if (modalMode.mode === 'add') {
       try {
-        const data = await addOwner(apartmentData);
+        const data = await addOwner({...apartmentData, buildingId: id});
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
         } else {
@@ -431,14 +431,14 @@ const HouseHold = () => {
         >
           Thêm căn hộ
         </Button>
-        {/*<Button*/}
-        {/*  variant="contained"*/}
-        {/*  color="success"*/}
-        {/*  onClick={handleCreateResident}*/}
-        {/*  sx={{ height: "40px" }}*/}
-        {/*>*/}
-        {/*  Thêm chủ căn hộ*/}
-        {/*</Button>*/}
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleCreateResident}
+          sx={{ height: "40px" }}
+        >
+          Thêm chủ căn hộ
+        </Button>
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom
