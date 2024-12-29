@@ -158,9 +158,9 @@ const ServicePaymentsBill = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 rowsPerPageOptions={[5, 10, 25]}
             />
-            <Button variant="primary" onClick={openModal}>
+            { Cookies.get('role') !== 'KeToan' && <Button variant="primary" onClick={openModal}>
                 Thanh toán QR code
-            </Button>
+            </Button> }
         </Box>
     );
 };

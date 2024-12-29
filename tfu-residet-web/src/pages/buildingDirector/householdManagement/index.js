@@ -172,7 +172,7 @@ const HouseHold = () => {
           email: apartmentData.email,
           buildingId: apartmentData.buildingId
         });
-        if (data.success) {
+        if (data?.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {
           Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
@@ -186,49 +186,37 @@ const HouseHold = () => {
   };
 
   const handleSaveHouseHold = async (houseHoldData) => {
-    console.log(houseHoldData);
-    const payload = {
-      ...houseHoldData,
-      buildingId: id,
-    }
-    const data = await CreateTypeApartment(payload);
-    if (data.success) {
-      Swal.fire('Thành công', 'Đã thêm căn hộ thành công!', 'success');
-      setReload(!reload);
+    if (modalMode.mode === 'add') {
+      const payload = {
+        ...houseHoldData,
+        buildingId: id,
+      }
+      const data = await CreateTypeApartment(payload);
+      if (data?.success) {
+        Swal.fire('Thành công', 'Đã thêm căn hộ thành công!', 'success');
+        setReload(!reload);
+      } else {
+        Swal.fire('Thất bại', 'Thêm căn hộ thất bại!', 'error');
+      }
     } else {
-      Swal.fire('Thất bại', 'Thêm căn hộ thất bại!', 'error');
+      try {
+        const data = await updateOwner({
+          floorNumber: houseHoldData.floorNumber,
+          id: houseHoldData.id,
+          email: houseHoldData.email,
+          roomNumber: houseHoldData.roomNumber,
+          // buildingId: houseHoldData.id,
+        });
+        if (data.success) {
+          Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
+        } else {
+          Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        }
+      } catch (error) {
+        Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
+        console.error('Error updating household:', error);
+      }
     }
-    // if (modalMode.mode === 'add') {
-    //   try {
-    //     const data = await addOwner(houseHoldData);
-    //     if (data.success) {
-    //       Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
-    //     } else {
-    //       Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
-    //     }
-    //   } catch (error) {
-    //     Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
-    //     console.error('Error fetching projects:', error);
-    //   }
-    // } else {
-    //   try {
-    //     const data = await updateOwner({
-    //       floorNumber: houseHoldData.floorNumber,
-    //       id: houseHoldData.id,
-    //       email: houseHoldData.email,
-    //       roomNumber: houseHoldData.roomNumber,
-    //       // buildingId: houseHoldData.id,
-    //     });
-    //     if (data.success) {
-    //       Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
-    //     } else {
-    //       Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     }
-    //   } catch (error) {
-    //     Swal.fire('Thất bại', 'Cập nhật thất bại!', 'error');
-    //     console.error('Error updating household:', error);
-    //   }
-    // }
     setReload(!reload);
   };
 
@@ -254,13 +242,15 @@ const HouseHold = () => {
 
           return {
             email,
-            id: building.buildingId,
+            buildingId: building.buildingId,
+            floorNumber: building.floorNumber,
+            roomNumber : building.roomNumber
           };
         }
       });
 
       if (formValues) {
-        const data = await updateOwner(formValues);
+        const data = await addOwner(formValues);
         if (data.success) {
           Swal.fire('Thành công', 'Đã thêm cư dân thành công!', 'success');
           setReload(!reload);
@@ -275,6 +265,17 @@ const HouseHold = () => {
   };
 
   // const handleAddApartment = async (building) => {
+  // const payload = {
+  //   ...houseHoldData,
+  //   buildingId: id,
+  // }
+  // const data = await CreateTypeApartment(payload);
+  // if (data?.success) {
+  //   Swal.fire('Thành công', 'Đã thêm căn hộ thành công!', 'success');
+  //   setReload(!reload);
+  // } else {
+  //   Swal.fire('Thất bại', 'Thêm căn hộ thất bại!', 'error');
+  // }
   //   try {
   //     const { value: formValues } = await Swal.fire({
   //       title: 'Thêm căn hộ',
@@ -430,14 +431,14 @@ const HouseHold = () => {
         >
           Thêm căn hộ
         </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleCreateResident}
-          sx={{ height: "40px" }}
-        >
-          Thêm chủ căn hộ
-        </Button>
+        {/*<Button*/}
+        {/*  variant="contained"*/}
+        {/*  color="success"*/}
+        {/*  onClick={handleCreateResident}*/}
+        {/*  sx={{ height: "40px" }}*/}
+        {/*>*/}
+        {/*  Thêm chủ căn hộ*/}
+        {/*</Button>*/}
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom

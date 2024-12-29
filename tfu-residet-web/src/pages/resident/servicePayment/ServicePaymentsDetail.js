@@ -111,7 +111,7 @@ const ServicePaymentsDetail = () => {
                         style: 'currency',
                         currency: 'VND'
                     })}</h1>
-                    {totalAmount > 0 &&
+                    {totalAmount > 0 && Cookies.get('role') !== 'KeToan' &&
                         <Button variant="primary" onClick={openModal}>Thanh toán QR code</Button>}
                 </div>
             </Card>
