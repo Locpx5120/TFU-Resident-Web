@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Box, Button, Card, TextField } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,6 +7,7 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addBuilding, getBuildingNew, updateBuilding } from "../../../services/apartmentService";
+import { debounce as _debounce } from "lodash";
 
 const BuildingManage = () => {
   const [reload, setReload] = useState(false);
@@ -21,30 +22,29 @@ const BuildingManage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBuildings = async () => {
-      try {
-        const data = await getBuildingNew({
-          name: searchCriteria,
-        });
-        setBuildings(data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchBuildings();
-  }, [searchCriteria, reload]);
+    fetchBuildings({ name: searchCriteria });
+  }, [reload]);
 
-  const handleRowClick = (record) => {
-    setSelectedBuilding(record);
+  const fetchBuildings = async (filters) => {
+    try {
+      const data = await getBuildingNew(filters);
+      setBuildings(data.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const handleInput = useCallback(
+    _debounce((updatedCriteria) => {
+      fetchBuildings({ name: updatedCriteria });
+    }, 1000),
+    []
+  );
 
   const handleSearchChange = (event) => {
     const { value } = event.target;
     setSearchCriteria(value);
-  };
-
-  const handleSearch = () => {
-    console.log("Searching for:", searchCriteria);
+    handleInput(value); // Trigger debounced search
   };
 
   const handleCreateBuilding = () => {
@@ -55,7 +55,7 @@ const BuildingManage = () => {
     setSelectedBuilding(null);
     setModalOpen(true);
   };
-  
+
   const handleEditBuilding = (building) => {
     setModalMode({
       mode: 'edit',
@@ -118,16 +118,9 @@ const BuildingManage = () => {
       });
 
       if (result.isConfirmed) {
-        const now = new Date();
-        const isoString = now.toISOString();
         const data = await updateBuilding({
           id: building.id,
-          buildingName: building.buildingName,
-          numberFloor: building.numberFloor,
-          numberApartment: building.numberApartment,
-          address: building.address,
           isActive: false,
-          createAt: isoString
         });
 
         if (data.success) {
@@ -228,14 +221,6 @@ const BuildingManage = () => {
         />
         <Button
           variant="contained"
-          color="primary"
-          onClick={handleSearch}
-          sx={{ height: "40px" }}
-        >
-          Tìm kiếm
-        </Button>
-        <Button
-          variant="contained"
           color="success"
           onClick={handleCreateBuilding}
           sx={{ height: "40px" }}
@@ -247,7 +232,6 @@ const BuildingManage = () => {
         <TableCustom
           columns={columnData}
           rows={rows}
-          onRowClick={handleRowClick}
         />
       </Card>
       <CustomModal
