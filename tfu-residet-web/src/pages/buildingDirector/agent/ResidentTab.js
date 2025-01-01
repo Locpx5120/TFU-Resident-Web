@@ -10,6 +10,7 @@ const ResidentTab = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [residents, setResidents] = useState([]);
+  const [filteredResidents, setFilteredResidents] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [searchCriteria, setSearchCriteria] = useState("");
   const [selectedResident, setSelectedResident] = useState(null);
@@ -31,16 +32,19 @@ const ResidentTab = () => {
       }
     };
     fetchResidents();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, reload]);
+
+  useEffect(() => {
+    const filtered = residents.filter(resident =>
+        resident.name.toLowerCase().includes(searchCriteria.toLowerCase())
+    );
+    setFilteredResidents(filtered);
+    setTotalCount(filtered.length);
+  }, [residents, searchCriteria]);
 
   const handleSearchChange = (event) => {
     setSearchCriteria(event.target.value);
-  };
-
-  const handleSearch = async () => {
-    const data = await getResident();
-    setResidents(data.data);
-    setTotalCount(data.totalCount);
+    setPage(0);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -53,9 +57,8 @@ const ResidentTab = () => {
   };
 
   const handleRefresh = async () => {
-    const data = await getResident();
-    setResidents(data.data);
-    setTotalCount(data.totalCount);
+    setSearchCriteria("");
+    setReload(!reload);
   };
 
   const handleAddResident = () => {
@@ -76,96 +79,94 @@ const ResidentTab = () => {
       const data = await addNewResident(residentData);
       if (data.success) {
         Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
+        setReload(!reload);
       } else {
         Swal.fire('Thất bại', data.message, 'error');
       }
     } catch (error) {
       Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
     }
-    setReload(!reload);
   }
 
   const modalFields = [
     <TextField fullWidth label="Tên thành viên" name="name" />,
     <TextField fullWidth label="Email" name="email" />,
     <TextField fullWidth label="Điện thoại" name="phone" />,
-    <TextField fullWidth label="Ngày sinh" name="birthday" />,
+    <TextField fullWidth label="Ngày sinh" name="birthday" type="date" InputLabelProps={{ shrink: true }} />,
   ];
 
+  const paginatedResidents = useMemo(() => {
+    const startIndex = page * rowsPerPage;
+    return filteredResidents.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredResidents, page, rowsPerPage]);
+
   return (
-    <section>
-      <Box sx={{
-        display: "flex",
-        gap: 2,
-        flexWrap: "wrap",
-        alignItems: "flex-end",
-        mb: 2,
-      }}
-      >
-        <TextField size="small"
-          label="Tên thành viên"
-          name="name"
-          variant="outlined"
-          value={searchCriteria}
-          onChange={handleSearchChange}
-          sx={{ flexGrow: 1, maxWidth: "200px" }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSearch}
-          sx={{ height: "40px" }}
-        >
-          Tìm kiếm
-        </Button>
-        <Button
-          variant="contained"
-          color="warning"
-          onClick={handleRefresh}
-          sx={{ height: "40px" }}
-        >
-          Làm mới
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleAddResident}
-          sx={{ height: "40px" }}
-        >
-          Thêm cư dân
-        </Button>
-      </Box>
-      <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
-        <TableCustom
-          columns={columnData}
-          rows={residents}
-          onRowClick={() => { }} />
+      <section>
         <Box sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          px: 2, py: 1,
-        }} >
-          <TablePagination
-            component="div"
-            count={totalCount}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]} />
+          gap: 2,
+          flexWrap: "wrap",
+          alignItems: "flex-end",
+          mb: 2,
+        }}
+        >
+          <TextField
+              size="small"
+              label="Tên thành viên"
+              name="name"
+              variant="outlined"
+              value={searchCriteria}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1, maxWidth: "200px" }}
+          />
+          <Button
+              variant="contained"
+              color="warning"
+              onClick={handleRefresh}
+              sx={{ height: "40px" }}
+          >
+            Làm mới
+          </Button>
+          <Button
+              variant="contained"
+              color="success"
+              onClick={handleAddResident}
+              sx={{ height: "40px" }}
+          >
+            Thêm cư dân
+          </Button>
         </Box>
-      </Card>
-      <CustomModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        employee={selectedResident}
-        handleSave={handleSaveResident}
-        mode={modalMode.mode}
-        title={modalMode.title}
-        fields={modalFields}
-      />
-    </section>
+        <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
+          <TableCustom
+              columns={columnData}
+              rows={paginatedResidents}
+              onRowClick={() => { }} />
+          <Box sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: 2, py: 1,
+          }} >
+            <TablePagination
+                component="div"
+                count={totalCount}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10, 25]} />
+          </Box>
+        </Card>
+        <CustomModal
+            open={modalOpen}
+            handleClose={handleCloseModal}
+            employee={selectedResident}
+            handleSave={handleSaveResident}
+            mode={modalMode.mode}
+            title={modalMode.title}
+            fields={modalFields}
+        />
+      </section>
   );
 };
 

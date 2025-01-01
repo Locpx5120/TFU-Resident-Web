@@ -12,15 +12,24 @@ const style = {
   p: 4,
 };
 
-const CustomModal = ({ open, handleClose, data, handleSave, title, mode, fields }) => {
+const CustomModal = ({ open, handleClose, employee, handleSave, title, mode, fields }) => {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
-    setFormData(data || {});
-  }, [data]);
+    if (employee) {
+      const initialData = {};
+      fields.forEach(field => {
+        const fieldName = field.props.name;
+        initialData[fieldName] = employee[fieldName] || '';
+      });
+      setFormData(initialData);
+    } else {
+      setFormData({});
+    }
+  }, [employee, fields]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prevData => ({ ...prevData, [e.target.name]: e.target.value }));
   };
 
   const onSave = () => {
@@ -29,26 +38,26 @@ const CustomModal = ({ open, handleClose, data, handleSave, title, mode, fields 
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Box sx={style}>
-        <Typography variant="h6" component="h2" mb={2}>
-          {title}
-        </Typography>
-        {fields.map((field) => (
-          React.cloneElement(field, {
-            key: field.props.name,
-            value: formData[field.props?.name] || '',
-            onChange: handleChange,
-            fullWidth: true,
-            margin: "normal"
-          })
-        ))}
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleClose} sx={{ mr: 1 }}>Hủy</Button>
-          <Button variant="contained" onClick={onSave}>{mode === 'add' ? 'Thêm' : 'Cập nhật'}</Button>
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={style}>
+          <Typography variant="h6" component="h2" mb={2}>
+            {title}
+          </Typography>
+          {fields.map((field) => (
+              React.cloneElement(field, {
+                key: field.props.name,
+                value: formData[field.props.name] || '',
+                onChange: handleChange,
+                fullWidth: true,
+                margin: "normal"
+              })
+          ))}
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Button onClick={handleClose} sx={{ mr: 1 }}>Hủy</Button>
+            <Button variant="contained" onClick={onSave}>{mode === 'add' ? 'Thêm' : 'Cập nhật'}</Button>
+          </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
   );
 };
 

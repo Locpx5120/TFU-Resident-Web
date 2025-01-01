@@ -21,6 +21,7 @@ const ListTab = () => {
   });
   const [roles, setRoles] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState({
     mode: 'add',
@@ -42,6 +43,12 @@ const ListTab = () => {
   }, [])
 
   useEffect(() => {
+    if (roles.length > 0 && !roles.some(role => role.name === "Bên thứ ba")) {
+      setRoles(prevRoles => [...prevRoles, { id: "third-party", name: "Bên thứ ba" }]);
+    }
+  }, [roles]);
+
+  useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const data = await getStaff();
@@ -52,19 +59,28 @@ const ListTab = () => {
     fetchEmployees();
   }, [page, rowsPerPage, searchCriteria, reload]);
 
+  useEffect(() => {
+    const filtered = employees.filter(employee =>
+        (employee.fullName || "").toLowerCase().includes(searchCriteria.employeeName.toLowerCase()) &&
+        (searchCriteria.department === "" || employee.roleId === searchCriteria.department ||
+            (searchCriteria.department === "third-party" && !roles.some(role => role.id === employee.roleId)))
+    );
+    setFilteredEmployees(filtered);
+  }, [employees, searchCriteria, roles]);
+
   const departments = roles.map(role => ({
-    value: role.id,
-    label: role.name,
+    value: role.id || `role-${role.name}`,
+    label: role.name || "Unknown Role",
   }));
 
   const handleSearchChange = (event) => {
     const { name, value } = event.target;
-    setSearchCriteria(value);
+    setSearchCriteria(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const handleSearch = () => {
-    console.log("Searching for:", searchCriteria);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -77,8 +93,8 @@ const ListTab = () => {
 
   const handleCreateAgent = () => {
     setModalMode({
-        mode: 'add',
-        title: 'Thêm nhân viên tòa nhà'
+      mode: 'add',
+      title: 'Thêm nhân viên tòa nhà'
     });
     setSelectedEmployee(null);
     setModalOpen(true);
@@ -86,10 +102,14 @@ const ListTab = () => {
 
   const handleEditAgent = (employee) => {
     setModalMode({
-        mode: 'edit',
-        title: 'Cập nhật nhân viên tòa nhà'
+      mode: 'edit',
+      title: 'Cập nhật nhân viên tòa nhà'
     });
-    setSelectedEmployee(employee);
+    setSelectedEmployee({
+      ...employee,
+      name: employee.fullName, // Map fullName to name for the form
+      phone: employee.phoneNumber // Map phoneNumber to phone for the form
+    });
     setModalOpen(true);
   };
 
@@ -111,7 +131,7 @@ const ListTab = () => {
     setModalOpen(false);
   };
 
-  const handleSaveEmployee = async (employeeData) => {    
+  const handleSaveEmployee = async (employeeData) => {
     if (modalMode.mode === 'add') {
       try {
         const data = await createStaff(employeeData);
@@ -126,9 +146,10 @@ const ListTab = () => {
     } else {
       try {
         const data = await updateStaff({
-            staffId: selectedEmployee.id,
-            roleId: employeeData.roleId,
-          });
+          staffId: selectedEmployee.id,
+          roleId: employeeData.roleId,
+          ...employeeData
+        });
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {
@@ -141,105 +162,116 @@ const ListTab = () => {
     setReload(!reload);
   };
 
-  const employeeDatas = useMemo(() => {
-    return employees;
-  },[employees])
-
-  const modalFields = [
-    <TextField
-      select
-      label="Bộ phận"
-      name="roleId"
-    >
-      {departments.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      ))}
-    </TextField>,
-    <TextField label="Email" name="email" disabled={modalMode.mode === 'edit'} />,
-    <TextField label="Họ và tên" name="name" />,
-    <TextField label="Số điện thoại" name="phone" />,
-  ];
-
-  const rows = employeeDatas.map((employee) => ({
+  const rows = filteredEmployees.map((employee) => ({
     ...employee,
+    fullName: employee.fullName || "N/A",
+    roleName: roles.find(role => role.id === employee.roleId)?.name || "Bên thứ ba",
+    email: employee.email || "N/A",
+    phoneNumber: employee.phoneNumber || "N/A",
+    hireDate: employee.hireDate ? new Date(employee.hireDate).toLocaleDateString() : "N/A",
     action: (
-      <>
+        <>
           <Button onClick={() => handleEditAgent(employee)}>
             <EditIcon />
           </Button>
           <Button onClick={() => handleDelete(employee)}>
             <Delete />
           </Button>
-      </>
+        </>
     ),
   }));
-  
+  console.log(selectedEmployee)
+  const modalFields = [
+    <TextField
+        key="roleId"
+        select
+        label="Bộ phận"
+        name="roleId"
+        defaultValue={selectedEmployee?.roleId || ''}
+    >
+      {departments.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+      ))}
+    </TextField>,
+    <TextField key="email" label="Email" name="email" defaultValue={selectedEmployee?.email || ''} disabled={modalMode.mode === 'edit'} />,
+    <TextField key="name" label="Họ và tên" name="name" defaultValue={selectedEmployee?.name || ''} />,
+    <TextField key="phone" label="Số điện thoại" name="phone" defaultValue={selectedEmployee?.phone || ''} />,
+  ];
   return (
-    <section>
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          flexWrap: "wrap",
-          alignItems: 'flex-end',
-          mb: 2
-        }}
-      >
-        <TextField
-          size="small"
-          label="Tên nhân viên"
-          name="employeeName"
-          variant="outlined"
-          value={searchCriteria.employeeName}
-          onChange={handleSearchChange}
-          sx={{ flexGrow: 1, maxWidth: "200px" }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSearch}
-          sx={{ height: "40px" }}
+      <section>
+        <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              alignItems: 'flex-end',
+              mb: 2
+            }}
         >
-          Tìm kiếm
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleCreateAgent}
-          sx={{ height: "40px" }}
-        >
-          Thêm thành viên
-        </Button>
-      </Box>
-      <Card sx={{ maxHeight: "700px" }}>
-        <TableCustom 
-          columns={columnData} 
-          rows={rows} 
-          onEdit={handleEditAgent}
-          onRowClick={() => {}}
+          <TextField
+              size="small"
+              label="Tên nhân viên"
+              name="employeeName"
+              variant="outlined"
+              value={searchCriteria.employeeName}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1, maxWidth: "200px" }}
+          />
+          <TextField
+              select
+              size="small"
+              label="Bộ phận"
+              name="department"
+              variant="outlined"
+              value={searchCriteria.department}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1, maxWidth: "200px" }}
+          >
+            <MenuItem value="">Tất cả</MenuItem>
+            {departments.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+            ))}
+          </TextField>
+          <Button
+              variant="contained"
+              color="success"
+              onClick={handleCreateAgent}
+              sx={{ height: "40px" }}
+          >
+            Thêm thành viên
+          </Button>
+        </Box>
+        <Card sx={{ maxHeight: "700px" }}>
+          <TableCustom
+              columns={columnData}
+              rows={rows}
+              onEdit={handleEditAgent}
+              onRowClick={() => {}}
+          />
+          <TablePagination
+              component="div"
+              count={filteredEmployees.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25]}
+          />
+        </Card>
+        <CustomModal
+            open={modalOpen}
+            handleClose={handleCloseModal}
+            employee={selectedEmployee}
+            handleSave={handleSaveEmployee}
+            mode={modalMode.mode}
+            title={modalMode.title}
+            fields={modalFields}
         />
-        <TablePagination
-          component="div"
-          count={rows.length}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
-        />
-      </Card>
-      <CustomModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        employee={selectedEmployee}
-        handleSave={handleSaveEmployee}
-        mode={modalMode.mode}
-        title={modalMode.title}
-        fields={modalFields}
-      />
-    </section>
+      </section>
   );
 };
 
@@ -247,7 +279,7 @@ const columnData = [
   { name: "Tên nhân viên", align: "left", esName: "fullName" },
   { name: "Bộ phận", align: "left", esName: "roleName" },
   { name: "Email", align: "left", esName: "email" },
-  { name: "Điện thoại", align: "left", esName: "phone" },
+  { name: "Điện thoại", align: "left", esName: "phoneNumber" },
   { name: "Ngày thuê", align: "left", esName: "hireDate" },
   { name: "Tùy chọn", align: "left", esName: "action" },
 ];

@@ -7,12 +7,12 @@ import CustomModal from "../../../common/CustomModal";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addBuilding, getBuildingNew, updateBuilding } from "../../../services/apartmentService";
-import { debounce as _debounce } from "lodash";
 
 const BuildingManage = () => {
   const [reload, setReload] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState("");
   const [buildings, setBuildings] = useState([]);
+  const [filteredBuildings, setFilteredBuildings] = useState([]); // Added filteredBuildings state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState({
     mode: 'add',
@@ -22,29 +22,33 @@ const BuildingManage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBuildings({ name: searchCriteria });
+    fetchBuildings(); // Updated useEffect
   }, [reload]);
 
-  const fetchBuildings = async (filters) => {
+  const fetchBuildings = async () => { // Updated fetchBuildings function
     try {
-      const data = await getBuildingNew(filters);
+      const data = await getBuildingNew();
       setBuildings(data.data);
+      setFilteredBuildings(data.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleInput = useCallback(
-    _debounce((updatedCriteria) => {
-      fetchBuildings({ name: updatedCriteria });
-    }, 1000),
-    []
-  );
+  // const handleInput = useCallback(
+  //   _debounce((updatedCriteria) => {
+  //     fetchBuildings({ name: updatedCriteria });
+  //   }, 1000),
+  //   []
+  // ); // Removed handleInput function
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = (event) => { // Updated handleSearchChange function
     const { value } = event.target;
     setSearchCriteria(value);
-    handleInput(value); // Trigger debounced search
+    const filtered = buildings.filter(building =>
+        building.buildingName.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredBuildings(filtered);
   };
 
   const handleCreateBuilding = () => {
@@ -138,34 +142,34 @@ const BuildingManage = () => {
 
   const modalFields = [
     <TextField
-      fullWidth
-      label="Tên tòa nhà"
-      name="buildingName"
-      required
-      defaultValue={selectedBuilding?.buildingName || ''}
+        fullWidth
+        label="Tên tòa nhà"
+        name="buildingName"
+        required
+        defaultValue={selectedBuilding?.buildingName || ''}
     />,
     <TextField
-      fullWidth
-      label="Số tầng"
-      name="numberFloor"
-      type="number"
-      required
-      defaultValue={selectedBuilding?.numberFloor || ''}
+        fullWidth
+        label="Số tầng"
+        name="numberFloor"
+        type="number"
+        required
+        defaultValue={selectedBuilding?.numberFloor || ''}
     />,
     <TextField
-      fullWidth
-      label="Số căn hộ"
-      name="numberApartment"
-      type="number"
-      required
-      defaultValue={selectedBuilding?.numberApartment || ''}
+        fullWidth
+        label="Số căn hộ"
+        name="numberApartment"
+        type="number"
+        required
+        defaultValue={selectedBuilding?.numberApartment || ''}
     />,
     <TextField
-      fullWidth
-      label="Địa chỉ"
-      name="address"
-      required
-      defaultValue={selectedBuilding?.address || ''}
+        fullWidth
+        label="Địa chỉ"
+        name="address"
+        required
+        defaultValue={selectedBuilding?.address || ''}
     />,
   ];
 
@@ -182,68 +186,68 @@ const BuildingManage = () => {
     },
   ];
 
-  const rows = useMemo(() => buildings.map((building) => ({
+  const rows = useMemo(() => filteredBuildings.map((building) => ({ // Updated rows to use filteredBuildings
     ...building,
     createAt: building.createAt ? new Date(building.createAt).toLocaleDateString() : 'N/A',
     action: (
-      <>
-        <Button onClick={() => handleEditBuilding(building)}>
-          <EditIcon />
-        </Button>
-        <Button onClick={() => navigate('/cu-dan/' + building.id)}>
-          Chi tiết
-        </Button>
-        <Button onClick={() => handleDeleteBuilding(building)} color="error">
-          <DeleteIcon />
-        </Button>
-      </>
+        <>
+          <Button onClick={() => handleEditBuilding(building)}>
+            <EditIcon />
+          </Button>
+          <Button onClick={() => navigate('/cu-dan/' + building.id)}>
+            Chi tiết
+          </Button>
+          <Button onClick={() => handleDeleteBuilding(building)} color="error">
+            <DeleteIcon />
+          </Button>
+        </>
     ),
-  })), [buildings, navigate]);
+  })), [filteredBuildings, navigate]); // Updated dependency
 
   return (
-    <section className="content">
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          flexWrap: "wrap",
-          alignItems: 'flex-end',
-          mb: 2
-        }}
-      >
-        <TextField
-          size="small"
-          label="Tên tòa nhà"
-          variant="outlined"
-          value={searchCriteria}
-          onChange={handleSearchChange}
-          sx={{ flexGrow: 1, maxWidth: "200px" }}
-        />
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleCreateBuilding}
-          sx={{ height: "40px" }}
+      <section className="content">
+        <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              alignItems: 'flex-end',
+              mb: 2
+            }}
         >
-          Thêm tòa nhà
-        </Button>
-      </Box>
-      <Card sx={{ maxHeight: "700px" }}>
-        <TableCustom
-          columns={columnData}
-          rows={rows}
+          <TextField
+              size="small"
+              label="Tên tòa nhà"
+              variant="outlined"
+              value={searchCriteria}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1, maxWidth: "200px" }}
+          />
+          <Button
+              variant="contained"
+              color="success"
+              onClick={handleCreateBuilding}
+              sx={{ height: "40px" }}
+          >
+            Thêm tòa nhà
+          </Button>
+        </Box>
+        <Card sx={{ maxHeight: "700px" }}>
+          <TableCustom
+              columns={columnData}
+              rows={rows}
+          />
+        </Card>
+        <CustomModal
+            open={modalOpen}
+            handleClose={handleCloseModal}
+            data={selectedBuilding}
+            handleSave={handleSaveBuilding}
+            mode={modalMode.mode}
+            title={modalMode.title}
+            fields={modalFields}
         />
-      </Card>
-      <CustomModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        data={selectedBuilding}
-        handleSave={handleSaveBuilding}
-        mode={modalMode.mode}
-        title={modalMode.title}
-        fields={modalFields}
-      />
-    </section>
+      </section>
   );
 };
 
