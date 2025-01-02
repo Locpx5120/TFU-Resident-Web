@@ -36,11 +36,13 @@ const DashboardInvestor = () => {
         {field: 'status', header: 'Trạng thái'},
     ] : [
         {field: 'index', header: 'STT'},
-        { field: 'buildingName', header: 'Tòa nhà' },
-        {field: 'apartmentFloorNumber', header: 'Tầng'},
-        {field: 'apartmentRoomNumber', header: 'Phòng'},
+        // {field: 'companyName', header: 'Tên công ty'},
+        // {field: 'apartmentFloorNumber', header: 'Tầng'},
+        // {field: 'apartmentRoomNumber', header: 'Phòng'},
         {field: 'type', header: 'Kiểu hợp đồng'},
         {field: 'price', header: 'Giá'},
+        {field: 'sentUser', header: 'Người gửi'},
+        {field: 'reciveUser', header: 'Người nhận'},
         {field: 'nameService', header: 'Tên dịch vụ'},
     ]
 

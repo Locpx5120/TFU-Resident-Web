@@ -122,11 +122,13 @@ const SendRequest = () => {
             if (index === 0 && field === 'serviceId') {
               updatedRequest.serviceName = '';
             }
+            console.log(updatedRequest, 'after');
             updatedRequest.price = calculatePrice(
                 updatedRequest.serviceId,
                 updatedRequest.packageServiceId,
                 updatedRequest.startDate
             );
+            console.log(updatedRequest, 'before');
             return updatedRequest;
           }
           return req;
@@ -259,6 +261,7 @@ const SendRequest = () => {
       serviceId: serviceNames,
       apartmentId: apartment,
     }));
+    console.log(services, 'services');
     return await addVehicle({ services });
   };
 
@@ -361,7 +364,9 @@ const SendRequest = () => {
         </FormControl>
         <DatePicker
             placeholder="Ngày gửi xe"
-            value={request.startDate ? moment(request.startDate) : null}
+            value={request.startDate 
+              // ? moment(request.startDate) : null
+            }
             onChange={(dateString) => {handleChange(index, "startDate", dateString)}}
             required
             style={formStyles.datePicker}
@@ -513,7 +518,7 @@ const SendRequest = () => {
                           </Select>
                         </FormControl>
                     )}
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    {/* <Box sx={{ display: "flex", alignItems: "center" }}>
                       {index === 0 ? (
                           <Button
                               variant="contained"
@@ -533,7 +538,7 @@ const SendRequest = () => {
                             -
                           </Button>
                       )}
-                    </Box>
+                    </Box> */}
                   </Box>
 
                   <Box sx={{ marginTop: 2 }}>

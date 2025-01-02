@@ -237,7 +237,7 @@ export const routeDirector = [
     // },
     {
         route: "/thanh-vien",
-        routeName: "Quản lý nhân viên",
+        routeName: "Quản lý thành viên",
         component: <StaffListPage/>,
         icon: <PersonIcon/>,
     },
@@ -260,18 +260,18 @@ export const routeDirector = [
         component: <DetailHouseHold/>,
         hidden: true,
     },
-    {
-        route: "/thong-bao",
-        routeName: "Thông báo",
-        component: <Notification/>,
-        icon: <NotificationsIcon/>,
-    },
-    {
-        route: "/lich-su-thanh-toan",
-        routeName: "Lịch sử thanh toán",
-        component: <PaymentHistory/>,
-        icon: <HistoryIcon/>,
-    },
+    // {
+    //     route: "/thong-bao",
+    //     routeName: "Thông báo",
+    //     component: <Notification/>,
+    //     icon: <NotificationsIcon/>,
+    // },
+    // {
+    //     route: "/lich-su-thanh-toan",
+    //     routeName: "Lịch sử thanh toán",
+    //     component: <PaymentHistory/>,
+    //     icon: <HistoryIcon/>,
+    // },
     {
         route: "/ben-thu-ba",
         routeName: "Quản lí bên thứ ba",
@@ -335,33 +335,33 @@ export const routeReceptionist = [
         icon: <SettingsIcon/>,
         hidden: true,
     },
-    {
-        route: "/lich-su-thanh-toan",
-        routeName: "Lịch sử thanh toán",
-        component: <PaymentHistory/>,
-        icon: <HistoryIcon/>,
-    },
-    {
-        route: "/news",
-        routeName: "Quản lí bản tin",
-        icon: <SettingsIcon/>,
-        component: <News/>,
-    },
-     {
-        route: "/news/:id",
-        component: <DetailNews/>,
-        hidden: true,
-    },
-     {
-        route: "/news/add",
-        component: <FormNews/>,
-        hidden: true,
-    },
-    {
-        route: "/news/update/:id",
-        component: <FormNews/>,
-        hidden: true,
-    },
+    // {
+    //     route: "/lich-su-thanh-toan",
+    //     routeName: "Lịch sử thanh toán",
+    //     component: <PaymentHistory/>,
+    //     icon: <HistoryIcon/>,
+    // },
+    // {
+    //     route: "/news",
+    //     routeName: "Quản lí bản tin",
+    //     icon: <SettingsIcon/>,
+    //     component: <News/>,
+    // },
+    //  {
+    //     route: "/news/:id",
+    //     component: <DetailNews/>,
+    //     hidden: true,
+    // },
+    //  {
+    //     route: "/news/add",
+    //     component: <FormNews/>,
+    //     hidden: true,
+    // },
+    // {
+    //     route: "/news/update/:id",
+    //     component: <FormNews/>,
+    //     hidden: true,
+    // },
 ];
 
 export const routeAccountant = [
