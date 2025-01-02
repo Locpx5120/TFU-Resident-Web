@@ -191,7 +191,7 @@ const DetailHouseHold = () => {
             <CustomModal
                 open={modalOpen}
                 handleClose={handleCloseModal}
-                data={selectedMember}
+                employee={selectedMember}
                 handleSave={handleSaveMember}
                 mode={modalMode.mode}
                 title={modalMode.title}

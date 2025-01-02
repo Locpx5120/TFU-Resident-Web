@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { addBuilding, getBuildingNew, updateBuilding } from "../../../services/apartmentService";
 import { debounce as _debounce } from "lodash";
+import dayjs from "dayjs";
 
 const BuildingManage = () => {
   const [reload, setReload] = useState(false);
@@ -176,7 +177,7 @@ const BuildingManage = () => {
       type="date"
       required
       InputLabelProps={{ shrink: true }}
-      defaultValue={selectedBuilding?.createAt || ''}
+      defaultValue={dayjs(selectedBuilding?.createAt).format('DD/MM/YYYY') || ''}
     />,
   ];
 
@@ -248,7 +249,7 @@ const BuildingManage = () => {
       <CustomModal
         open={modalOpen}
         handleClose={handleCloseModal}
-        data={selectedBuilding}
+        employee={selectedBuilding}
         handleSave={handleSaveBuilding}
         mode={modalMode.mode}
         title={modalMode.title}

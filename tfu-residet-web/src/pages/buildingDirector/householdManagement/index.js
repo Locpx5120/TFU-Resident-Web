@@ -459,7 +459,7 @@ const HouseHold = () => {
       <CustomModal
         open={modalOpen}
         handleClose={handleCloseModal}
-        data={selectedHouseHold}
+        employee={selectedHouseHold}
         // handleAdd={handleAddApartment}
         handleSave={handleSaveHouseHold}
         mode={modalMode.mode}
@@ -469,7 +469,7 @@ const HouseHold = () => {
       <CustomModal
         open={modalResidentOpen}
         handleClose={handleCloseModal}
-        data={selectedResident}
+        employee={selectedResident}
         handleAdd={handleAddResident}
         handleSave={handleSaveResident}
         mode={modalResidentMode.mode}
