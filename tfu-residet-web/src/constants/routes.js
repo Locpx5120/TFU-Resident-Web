@@ -20,15 +20,16 @@ import Agent from "../components/owner/agent";
 import ReportInvestor from "../components/owner/report";
 import HistoryOnwer from "../components/owner/history";
 // icons  
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import BusinessIcon from "@mui/icons-material/Business";
-import ApartmentIcon from "@mui/icons-material/Apartment";
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import PaymentIcon from '@mui/icons-material/Payment';
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import {ThermostatAutoOutlined, ThirtyFpsOutlined} from "@mui/icons-material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 //building director
@@ -142,7 +143,7 @@ export const routeResident = [
                 <PostNews/>
             </div>
         ,
-        icon: <SettingsIcon/>,
+        icon: <WidgetsIcon/>,
     },
     {
         route: "/cu-dan",
@@ -160,33 +161,33 @@ export const routeResident = [
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePayments/>,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
     },
     {
         route: "/thanh-toan-dich-vu/:id/:status/:year/:month",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
         hidden: true,
     },
     {
         route: "/thanh-toan-dich-vu-hoa-don/:id",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsBill />,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
         hidden: true,
     },
     {
         route: "/quan-ly-dich-vu",
         routeName: "Quản lý dịch vụ",
         component: <ServiceManage/>,
-        icon: <SettingsIcon/>,
+        icon: <RoomServiceIcon/>,
     },
     {
         route: "/quan-ly-dich-vu/:id",
         routeName: "Quản lý dịch vụ",
         component: <ServiceDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <RoomServiceIcon/>,
         hidden: true,
     },
     // {
@@ -199,20 +200,20 @@ export const routeResident = [
         route: "/xem-don",
         routeName: "Xem đơn",
         component: <ViewRequests/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
     },
     {
         route: "/xem-chi-tiet-don/:id",
         routeName: "Xem đơn",
         component: <RequestDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
         hidden: true,
     },
     {
         route: "/gui-don",
         routeName: "Gửi đơn",
         component: <SendRequest/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
     },
     // {
     //     route: "/danh-gia",
@@ -276,13 +277,13 @@ export const routeDirector = [
         route: "/ben-thu-ba",
         routeName: "Quản lí bên thứ ba",
         component: <ThirdPartyList />,
-        icon: <ThirtyFpsOutlined />,
+        icon: <BusinessIcon />,
     },
     {
         route: "/ben-thu-ba/cho-thue/:id",
         routeName: "Quản lí bên thứ ba",
         hidden: true,
-        component: <DetailThirdPartyRent />,
+        component: <BusinessIcon />,
     },
     {
         route: "/ben-thu-ba/thue-dich-vu/:id",
@@ -301,7 +302,7 @@ export const routeDirector = [
         route: "/approve/:id",
         routeName: "Xem đơn",
         component: <RequestDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
         hidden: true,
     },
 ];
@@ -317,7 +318,7 @@ export const routeThirdParty = [
         route: "/ben-thu-ba",
         routeName: "Quản lí bên thứ ba",
         component: <ThirdParty />,
-        icon: <ThirtyFpsOutlined />,
+        icon: <BusinessIcon/>,
     },
 ]
 
@@ -326,13 +327,13 @@ export const routeReceptionist = [
         route: "/xem-don",
         routeName: "Xem đơn",
         component: <ViewRequests/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
     },
     {
         route: "/xem-chi-tiet-don/:id",
         routeName: "Xem đơn",
         component: <RequestDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
         hidden: true,
     },
     // {
@@ -369,20 +370,20 @@ export const routeAccountant = [
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentAccountant/>,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
     },
     {
         route: "/thanh-toan-dich-vu/:id/:status/:year/:month",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
         hidden: true,
     },
     {
         route: "/thanh-toan-dich-vu-hoa-don/:id",
         routeName: "Thanh toán dịch vụ",
         component: <ServicePaymentsBill />,
-        icon: <SettingsIcon/>,
+        icon: <PaymentIcon/>,
         hidden: true,
     },
 ];
@@ -398,13 +399,13 @@ export const routeAdmin = [
         route: "/xem-don",
         routeName: "Danh sách yêu cầu",
         component: <ViewRequests/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
     },
     {
         route: "/xem-chi-tiet-don/:id",
         routeName: "Xem đơn",
         component: <RequestDetail/>,
-        icon: <SettingsIcon/>,
+        icon: <DescriptionIcon/>,
         hidden: true,
     },
 ];
@@ -414,13 +415,13 @@ export const routeTechnique = [
        route: "/xem-don",
        routeName: "Danh sách yêu cầu",
        component: <ViewRequests/>,
-       icon: <SettingsIcon/>,
+       icon: <DescriptionIcon/>,
    },
    {
        route: "/xem-chi-tiet-don/:id",
        routeName: "Xem đơn",
        component: <RequestDetail/>,
-       icon: <SettingsIcon/>,
+       icon: <DescriptionIcon/>,
        hidden: true,
    },
 ];
@@ -429,7 +430,7 @@ export const routeNews = [
     {
         route: "/news",
         routeName: "Quản lí bản tin",
-        icon: <SettingsIcon/>,
+        icon: <NewspaperIcon/>,
         component: <News/>,
     },
      {

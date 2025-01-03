@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -43,38 +43,38 @@ const SendRequest = () => {
   const [apartments, setApartments] = useState([]);
   const [apartment, setApartment] = useState("");
   const initalRequet =
-      serviceTypes === themThanhVien
-          ? {
-            serviceId: "",
-            note: "",
-            name: "",
-            phone: "",
-            email: "",
-            birthday: "",
-          }
-          : serviceTypes === baoCaoSuaChua
-              ? {
-                ownerName: "",
-                ownerPhone: "",
-                ownerEmail: "",
-                technicianName: "",
-                technicianPhone: "",
-                startDate: null,
-                cost: "",
-                note: "",
-              }
-              : {
-                serviceId: "",
-                vehicleType: "",
-                licensePlate: "",
-                packageServiceId: "",
-                note: "",
-                apartmentId: "",
-                startDate: "",
-                unit: "",
-                unitPrice: 0,
-                price: 0,
-              };
+    serviceTypes === themThanhVien
+      ? {
+        serviceId: "",
+        note: "",
+        name: "",
+        phone: "",
+        email: "",
+        birthday: "",
+      }
+      : serviceTypes === baoCaoSuaChua
+        ? {
+          ownerName: "",
+          ownerPhone: "",
+          ownerEmail: "",
+          technicianName: "",
+          technicianPhone: "",
+          startDate: null,
+          cost: "",
+          note: "",
+        }
+        : {
+          serviceId: "",
+          vehicleType: "",
+          licensePlate: "",
+          packageServiceId: "",
+          note: "",
+          apartmentId: "",
+          startDate: null, // Đặt mặc định là null
+          unit: "",
+          unitPrice: 0,
+          price: 0,
+        };
   const [requests, setRequests] = useState([initalRequet]);
   const [building, setBuilding] = useState("");
 
@@ -82,11 +82,11 @@ const SendRequest = () => {
     const fetchInitialData = async () => {
       try {
         const [buildingsData, packagesData, serviceTypesData] =
-            await Promise.all([
-              GetBuildingsByUser(),
-              listAllPackage(),
-              listCategory(),
-            ]);
+          await Promise.all([
+            GetBuildingsByUser(),
+            listAllPackage(),
+            listCategory(),
+          ]);
         setBuildings(buildingsData.data);
         setPackagesArr(packagesData.data);
         setServiceTypesArr(serviceTypesData.data);
@@ -101,7 +101,7 @@ const SendRequest = () => {
   useEffect(() => {
     if (serviceTypes) {
       getServiceName(serviceTypes).then((res) =>
-          setServiceNameArr(res?.data || [])
+        setServiceNameArr(res?.data || [])
       );
     }
   }, [serviceTypes]);
@@ -109,34 +109,35 @@ const SendRequest = () => {
   useEffect(() => {
     if (building) {
       getApartmentByBuilding(building).then((res) =>
-          setApartments(res?.data || [])
+        setApartments(res?.data || [])
       );
     }
   }, [building]);
 
   const handleChange = (index, field, value) => {
     setRequests((prev) =>
-        prev.map((req, i) => {
-          if (i === index || (index === 0 && field === 'serviceId')) {
-            const updatedRequest = { ...req, [field]: value };
-            if (index === 0 && field === 'serviceId') {
-              updatedRequest.serviceName = '';
-            }
-            console.log(updatedRequest, 'after');
-            updatedRequest.price = calculatePrice(
-                updatedRequest.serviceId,
-                updatedRequest.packageServiceId,
-                updatedRequest.startDate
-            );
-            console.log(updatedRequest, 'before');
-            return updatedRequest;
+      prev.map((req, i) => {
+        if (i === index) {
+          const updatedRequest = { ...req };
+
+          if (field === "startDate") {
+            updatedRequest[field] = value; // Lưu giá trị ngày hoặc null
+          } else if (field === "serviceId" && index === 0) {
+            updatedRequest[field] = value;
+            setServiceTypes(value); // Giữ logic dịch vụ
+          } else {
+            updatedRequest[field] = value;
           }
-          return req;
-        })
+          updatedRequest.price = calculatePrice(
+            updatedRequest.serviceId,
+            updatedRequest.packageServiceId,
+            updatedRequest.startDate
+          );
+          return updatedRequest;
+        }
+        return req;
+      })
     );
-    if (index === 0 && field === 'serviceId') {
-      setServiceTypes(value);
-    }
   };
 
   const handleChangeServiceName = (index, field, value) => {
@@ -150,6 +151,7 @@ const SendRequest = () => {
       {
         ...getInitialRequest(serviceTypes),
         serviceId: prev[0].serviceId,
+        startDate: null,
       },
     ]);
   };
@@ -175,9 +177,9 @@ const SendRequest = () => {
         resetForm();
       } else {
         Swal.fire(
-            "Thất bại",
-            data.data[0]?.message || "Gửi đơn thất bại!",
-            "error"
+          "Thất bại",
+          data.data[0]?.message || "Gửi đơn thất bại!",
+          "error"
         );
       }
     } catch (error) {
@@ -256,14 +258,15 @@ const SendRequest = () => {
 
   const submitVehicleRequest = async () => {
     const services = requests.map((request) => ({
-      residentId,
       ...request,
+      startDate: moment(request.startDate, "YYYY-MM-DD").format("YYYY-MM-DD"), // Chuẩn hóa ngày
+      residentId,
       serviceId: serviceNames,
       apartmentId: apartment,
     }));
-    console.log(services, 'services');
     return await addVehicle({ services });
   };
+
 
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -298,83 +301,88 @@ const SendRequest = () => {
   }, [serviceNameArr, packageDiscount]);
 
   const renderMemberFields = (request, index) => (
-      <>
-        <TextField
-            label="Tên thành viên"
-            value={request.name}
-            onChange={(e) => handleChange(index, "name", e.target.value)}
-            required
-            sx={formStyles.textField}
-        />
-        <TextField
-            label="Số điện thoại"
-            value={request.phone}
-            onChange={(e) => handleChange(index, "phone", e.target.value)}
-            required
-            sx={formStyles.textField}
-        />
-        <TextField
-            label="Email"
-            type="email"
-            value={request.email}
-            onChange={(e) => handleChange(index, "email", e.target.value)}
-            required
-            sx={formStyles.textField}
-        />
-        <DatePicker
-            placeholder="Ngày sinh"
-            value={request.birthday ? moment(request.birthday) : null}
-            onChange={(date, dateString) =>
-                handleChange(index, "birthday", dateString)
-            }
-            style={formStyles.datePicker}
-        />
-      </>
+    <>
+      <TextField
+        label="Tên thành viên"
+        value={request.name}
+        onChange={(e) => handleChange(index, "name", e.target.value)}
+        required
+        sx={formStyles.textField}
+      />
+      <TextField
+        label="Số điện thoại"
+        value={request.phone}
+        onChange={(e) => handleChange(index, "phone", e.target.value)}
+        required
+        sx={formStyles.textField}
+      />
+      <TextField
+        label="Email"
+        type="email"
+        value={request.email}
+        onChange={(e) => handleChange(index, "email", e.target.value)}
+        required
+        sx={formStyles.textField}
+      />
+      <DatePicker
+        placeholder="Ngày sinh"
+        value={request.birthday ? moment(request.birthday) : null}
+        onChange={(date, dateString) =>
+          handleChange(index, "birthday", dateString)
+        }
+        style={formStyles.datePicker}
+      />
+    </>
   );
 
   const renderVehicleFields = (request, index) => (
-      <>
-        <TextField
-            label="Loại xe"
-            value={request.vehicleType}
-            onChange={(e) => handleChange(index, "vehicleType", e.target.value)}
-            required
-            sx={formStyles.textField}
-        />
-        <TextField
-            label="Biển số xe"
-            value={request.licensePlate}
-            onChange={(e) => handleChange(index, "licensePlate", e.target.value)}
-            required
-            sx={formStyles.textField}
-        />
-        <FormControl sx={formStyles.selectField}>
-          <InputLabel>Gói</InputLabel>
-          <Select
-              value={request.packageServiceId}
-              onChange={(e) => handleChange(index, "packageServiceId", e.target.value)}
-              required
-          >
-            {packageArr.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.name}
-                </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <DatePicker
-            placeholder="Ngày gửi xe"
-            value={request.startDate 
-              // ? moment(request.startDate) : null
-            }
-            onChange={(dateString) => {handleChange(index, "startDate", dateString)}}
-            required
-            style={formStyles.datePicker}
-        />
-        <Typography sx={{ width: '100%', marginTop: 2 }}>
-          Phí dịch vụ: <strong>{formatCurrencyVND(request.price || 0)}</strong>
-        </Typography>
-      </>
+    <>
+      <TextField
+        label="Loại xe"
+        value={request.vehicleType}
+        onChange={(e) => handleChange(index, "vehicleType", e.target.value)}
+        required
+        sx={formStyles.textField}
+      />
+      <TextField
+        label="Biển số xe"
+        value={request.licensePlate}
+        onChange={(e) => handleChange(index, "licensePlate", e.target.value)}
+        required
+        sx={formStyles.textField}
+      />
+      <FormControl sx={formStyles.selectField}>
+        <InputLabel>Gói</InputLabel>
+        <Select
+          value={request.packageServiceId}
+          onChange={(e) => handleChange(index, "packageServiceId", e.target.value)}
+          required
+        >
+          {packageArr.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <DatePicker
+        placeholder="Ngày gửi xe"
+        value={request.startDate ? moment(request.startDate, "YYYY-MM-DD") : null}
+        onChange={(date) => {
+          if (date) {
+            const localDate = moment(date.toDate()).format("YYYY-MM-DD");
+            handleChange(index, "startDate", localDate);
+          } else {
+            handleChange(index, "startDate", null);
+          }
+        }}
+        required
+        style={formStyles.datePicker}
+      />
+      <Typography sx={{ width: '100%', marginTop: 2 }}>
+        Phí dịch vụ: <strong>{formatCurrencyVND(request.price || 0)}</strong>
+      </Typography>
+    </>
   );
 
   const renderRepairFields = (request, index) => <></>;
@@ -417,108 +425,108 @@ const SendRequest = () => {
   };
 
   return (
-      <Box className="content" sx={formStyles.container}>
-        <Box sx={formStyles.section}>
-          <Typography variant="h6" gutterBottom>
-            Thông tin căn hộ
-          </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-            <FormControl sx={formStyles.selectField}>
-              <InputLabel>Toà nhà</InputLabel>
-              <Select
-                  value={building}
-                  onChange={(e) => setBuilding(e.target.value)}
-                  required
-              >
-                {buildings.map((building) => (
-                    <MenuItem key={building.id} value={building.id}>
-                      {building.buildingName}
-                    </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={formStyles.selectField}>
-              <InputLabel>Căn hộ</InputLabel>
-              <Select
-                  value={apartment}
-                  onChange={(e) => setApartment(e.target.value)}
-                  required
-                  disabled={apartments.length < 1}
-              >
-                {apartments.map((apt) => (
-                    <MenuItem key={apt.id} value={apt.id}>
-                      {apt.roomNumber}
-                    </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+    <Box className="content" sx={formStyles.container}>
+      <Box sx={formStyles.section}>
+        <Typography variant="h6" gutterBottom>
+          Thông tin căn hộ
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+          <FormControl sx={formStyles.selectField}>
+            <InputLabel>Toà nhà</InputLabel>
+            <Select
+              value={building}
+              onChange={(e) => setBuilding(e.target.value)}
+              required
+            >
+              {buildings.map((building) => (
+                <MenuItem key={building.id} value={building.id}>
+                  {building.buildingName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={formStyles.selectField}>
+            <InputLabel>Căn hộ</InputLabel>
+            <Select
+              value={apartment}
+              onChange={(e) => setApartment(e.target.value)}
+              required
+              disabled={apartments.length < 1}
+            >
+              {apartments.map((apt) => (
+                <MenuItem key={apt.id} value={apt.id}>
+                  {apt.roomNumber}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
+      </Box>
 
-        <Box sx={formStyles.section}>
-          <Typography variant="h6" gutterBottom>
-            Thông tin đơn
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            {requests.map((request, index) => (
-                <Box
-                    key={index}
-                    sx={{
-                      padding: "16px",
-                      backgroundColor: "#f5f5f5",
-                      borderRadius: "8px",
-                      marginBottom: "16px",
+      <Box sx={formStyles.section}>
+        <Typography variant="h6" gutterBottom>
+          Thông tin đơn
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          {requests.map((request, index) => (
+            <Box
+              key={index}
+              sx={{
+                padding: "16px",
+                backgroundColor: "#f5f5f5",
+                borderRadius: "8px",
+                marginBottom: "16px",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "flex-start",
+                }}
+              >
+                <FormControl sx={formStyles.selectField}>
+                  <InputLabel>Loại dịch vụ</InputLabel>
+                  <Select
+                    value={request.serviceId}
+                    onChange={(e) => {
+                      handleChange(index, "serviceId", e.target.value);
                     }}
-                >
-                  <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        alignItems: "flex-start",
-                      }}
+                    required
+                    disabled={index !== 0}
                   >
-                    <FormControl sx={formStyles.selectField}>
-                      <InputLabel>Loại dịch vụ</InputLabel>
-                      <Select
-                          value={request.serviceId}
-                          onChange={(e) => {
-                            handleChange(index, "serviceId", e.target.value);
-                          }}
-                          required
-                          disabled={index !== 0}
-                      >
-                        {serviceTypesArr.map((option) => (
-                            <MenuItem key={option.id} value={option.id}>
-                              {option.name}
-                            </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    {serviceTypesArr.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-                    {request.serviceId && (
-                        <FormControl sx={formStyles.selectField}>
-                          <InputLabel>Tên dịch vụ</InputLabel>
-                          <Select
-                              value={request.serviceName}
-                              onChange={(e) =>
-                                  handleChangeServiceName(
-                                      index,
-                                      "serviceName",
-                                      e.target.value
-                                  )
-                              }
-                              required
-                              disabled={!serviceTypes}
-                          >
-                            {serviceNameArr.map((option) => (
-                                <MenuItem key={option.id} value={option.id}>
-                                  {option.serviceName}
-                                </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                    )}
-                    {/* <Box sx={{ display: "flex", alignItems: "center" }}>
+                {request.serviceId && (
+                  <FormControl sx={formStyles.selectField}>
+                    <InputLabel>Tên dịch vụ</InputLabel>
+                    <Select
+                      value={request.serviceName}
+                      onChange={(e) =>
+                        handleChangeServiceName(
+                          index,
+                          "serviceName",
+                          e.target.value
+                        )
+                      }
+                      required
+                      disabled={!serviceTypes}
+                    >
+                      {serviceNameArr.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.serviceName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                {/* <Box sx={{ display: "flex", alignItems: "center" }}>
                       {index === 0 ? (
                           <Button
                               variant="contained"
@@ -539,41 +547,41 @@ const SendRequest = () => {
                           </Button>
                       )}
                     </Box> */}
-                  </Box>
+              </Box>
 
-                  <Box sx={{ marginTop: 2 }}>
-                    {request.serviceId === themThanhVien &&
-                        renderMemberFields(request, index)}
-                    {request.serviceId === baoCaoSuaChua &&
-                        renderRepairFields(request, index)}
-                    {request.serviceId === vehicleCode &&
-                        renderVehicleFields(request, index)}
-                  </Box>
+              <Box sx={{ marginTop: 2 }}>
+                {request.serviceId === themThanhVien &&
+                  renderMemberFields(request, index)}
+                {request.serviceId === baoCaoSuaChua &&
+                  renderRepairFields(request, index)}
+                {request.serviceId === vehicleCode &&
+                  renderVehicleFields(request, index)}
+              </Box>
 
-                  <TextField
-                      label="Ghi chú"
-                      multiline
-                      rows={2}
-                      value={request.note}
-                      onChange={(e) => handleChange(index, "note", e.target.value)}
-                      sx={formStyles.fullWidthField}
-                  />
-                </Box>
-            ))}
-
-            <Box sx={{ textAlign: "right", marginTop: "24px" }}>
-              <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-              >
-                Gửi đơn
-              </Button>
+              <TextField
+                label="Ghi chú"
+                multiline
+                rows={2}
+                value={request.note}
+                onChange={(e) => handleChange(index, "note", e.target.value)}
+                sx={formStyles.fullWidthField}
+              />
             </Box>
-          </form>
-        </Box>
+          ))}
+
+          <Box sx={{ textAlign: "right", marginTop: "24px" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+            >
+              Gửi đơn
+            </Button>
+          </Box>
+        </form>
       </Box>
+    </Box>
   );
 };
 

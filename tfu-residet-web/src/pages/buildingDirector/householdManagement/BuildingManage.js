@@ -107,7 +107,7 @@ const BuildingManage = () => {
     setReload(!reload);
   };
 
-  const handleDeleteBuilding = async (building) => {
+  const handleDeleteBuilding = async (buildingData) => {
     try {
       const result = await Swal.fire({
         title: 'Bạn có chắc chắn?',
@@ -122,7 +122,7 @@ const BuildingManage = () => {
 
       if (result.isConfirmed) {
         const data = await updateBuilding({
-          id: building.id,
+          ...buildingData,
           isActive: false,
         });
 

@@ -1,4 +1,4 @@
-import {deleteData, endpointUrl, getData, postData, putData} from "./api";
+import { endpointUrl, getData, postData } from "./api";
 import Cookies from "js-cookie";
 
 const HEADER_STAFF = {

@@ -11,17 +11,17 @@ import { createStaff, deleteStaff, getStaff, updateStaff } from "../../../servic
 
 // Validation functions
 const validateFullName = (name) => /^[^\d]*$/.test(name);
-const validatePhoneNumber = (phone) => /^\d+$/.test(phone);
+const validatePhoneNumber = (phoneNumber) => /^\d+$/.test(phoneNumber);
 const validateEmail = (email) => email.includes('@') && email.endsWith('.com');
 
 const ListTab = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchCriteria, setSearchCriteria] = useState({
-    employeeName: "",
+    fullName: "",
     department: "",
     email: "",
-    phone: ""
+    phoneNumber: ""
   });
   const [roles, setRoles] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -66,7 +66,7 @@ const ListTab = () => {
 
   useEffect(() => {
     const filtered = employees.filter((employee) =>
-      (employee.fullName || "").toLowerCase().includes(searchCriteria.employeeName.toLowerCase()) &&
+      (employee.fullName || "").toLowerCase().includes(searchCriteria.fullName.toLowerCase()) &&
       (searchCriteria.department === "" || employee.roleId === searchCriteria.department ||
         (searchCriteria.department === "third-party" && !roles.some((role) => role.id === employee.roleId)))
     );
@@ -111,9 +111,9 @@ const ListTab = () => {
     });
     setSelectedEmployee({
       ...employee,
-      name: employee.fullName, // Map fullName to name for the form
-      phone: employee.phoneNumber, // Map phoneNumber to phone for the form
-      isActive: true // Ensure isActive is true
+      name: employee.fullName,
+      phoneNumber: employee.phoneNumber,
+      isActive: true
     });
     setModalOpen(true);
   };
@@ -137,20 +137,22 @@ const ListTab = () => {
   };
 
   const handleSaveEmployee = async (employeeData) => {
-    const validFullName = validateFullName(employeeData.fullName) ? employeeData.fullName : "N/A";
-    const validPhoneNumber = validatePhoneNumber(employeeData.phoneNumber) ? employeeData.phoneNumber : "N/A";
-    const validEmail = validateEmail(employeeData.email) ? employeeData.email : "N/A";
-
-    const updatedEmployeeData = {
-      ...employeeData,
-      fullName: validFullName,
-      phoneNumber: validPhoneNumber,
-      email: validEmail,
-      isActive: true,
-      staffId: selectedEmployee?.id // Add this line to include staffId
-    };
+    let updatedEmployeeData = { ...employeeData };
 
     if (modalMode.mode === 'add') {
+      const validFullName = validateFullName(employeeData.fullName) ? employeeData.fullName : "N/A";
+      const validPhoneNumber = validatePhoneNumber(employeeData.phoneNumber) ? employeeData.phoneNumber : "N/A";
+      const validEmail = validateEmail(employeeData.email) ? employeeData.email : "N/A";
+
+      updatedEmployeeData = {
+        ...updatedEmployeeData,
+        fullName: validFullName,
+        phoneNumber: validPhoneNumber,
+        email: validEmail,
+        isActive: true,
+        staffId: selectedEmployee?.id
+      };
+
       try {
         const data = await createStaff(updatedEmployeeData);
         if (data.success) {
@@ -162,8 +164,14 @@ const ListTab = () => {
         Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
       }
     } else {
+      updatedEmployeeData = {
+        ...updatedEmployeeData,
+        isActive: true,
+        staffId: selectedEmployee?.id
+      };
+
       try {
-        const data = await updateStaff(updatedEmployeeData); // Pass updatedEmployeeData directly
+        const data = await updateStaff(updatedEmployeeData);
         if (data.success) {
           Swal.fire('Thành công', 'Đã cập nhật thành công!', 'success');
         } else {
@@ -217,7 +225,7 @@ const ListTab = () => {
     </TextField>,
     <TextField key="email" label="Email" name="email" defaultValue={selectedEmployee?.email || ''} disabled={modalMode.mode === 'edit'} />,
     <TextField key="name" label="Họ và tên" name="name" defaultValue={selectedEmployee?.name || ''} />,
-    <TextField key="phone" label="Số điện thoại" name="phone" defaultValue={selectedEmployee?.phone || ''} />
+    <TextField key="phoneNumber" label="Số điện thoại" name="phoneNumber" defaultValue={selectedEmployee?.phoneNumber || ''} />
   ];
 
   return (
@@ -234,9 +242,9 @@ const ListTab = () => {
         <TextField
           size="small"
           label="Tên nhân viên"
-          name="employeeName"
+          name="fullName"
           variant="outlined"
-          value={searchCriteria.employeeName}
+          value={searchCriteria.fullName}
           onChange={handleSearchChange}
           sx={{ flexGrow: 1, maxWidth: "200px" }}
         />
