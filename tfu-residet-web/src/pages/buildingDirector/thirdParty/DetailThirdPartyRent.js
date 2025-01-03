@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import TableCustom from "../../../components/Table";
 import { Button, Card, Box, TextField, MenuItem } from "@mui/material";
 import CustomModal from "../../../common/CustomModal";
+import {FileUpload} from "primereact/fileupload";
 import {
     addContractThird,
     getContractDetail,
@@ -23,7 +24,7 @@ const DetailThirdPartyRent = () => {
         mode: "add",
         title: "Thêm hợp đồng",
     });
-
+    const fileUploadRef = useRef(null)
     const columnData = [
         // { esName: "buildingName", name: 'Tòa nhà', width: 150 },
         { esName: "companyName", name: "Tên công ty", width: 200 },
@@ -35,6 +36,10 @@ const DetailThirdPartyRent = () => {
         { esName: "endDateFormat", name: "Ngày hết hạn", width: 150 },
         { esName: "servicePrice", name: "Giá dịch vụ", width: 150 },
     ];
+    const imageUploadConfig = {
+        empty: (<p className="m-0">Kéo thả hợp đồng tại đây .</p>),
+        size: 10000000
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +50,29 @@ const DetailThirdPartyRent = () => {
         };
         fetchData();
     }, [reload]);
+    const customBase64Uploader = async (event) => {
+        // convert file to base64 encoded
+        try {
+            const file = event.files ? event.files[0] : event;
+            if(file && file.type != 'application/pdf'){
+                this.fileUploadRef = null;
+                Swal.fire('Thong bao', 'so tien khong duoc nho hon 1trieu', 'info');
+                return;
+            }
+             
+            const reader = new FileReader();
+            let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+            reader.readAsDataURL(blob);
+            reader.onloadend = function () {
+                const base64data = reader.result;
+                console.log(base64data, 'base64data')
+            };
+            setSelectedThirdParty((prevState) => ({...prevState, file: file}))
+        } catch (e) {
+            console.log(e)
+        }
 
+    };
     const rows = useMemo(() => {
         return data.map((item) => ({
             ...item,
@@ -148,6 +175,11 @@ const DetailThirdPartyRent = () => {
             helperText={errors.servicePrice}
             onChange={(e) => handleFieldChange("servicePrice", e.target.value)}
         />,
+        <FileUpload ref={fileUploadRef} name="demo[]" 
+        accept=".pdf" onSelect={customBase64Uploader}
+                                    mode="advanced" 
+                                    auto maxFileSize={imageUploadConfig.size}
+                                    emptyTemplate={imageUploadConfig.empty}/>
     ];
 
     const handleOpenModal = (mode, title) => {
