@@ -38,26 +38,27 @@ const CustomModal = ({ open, handleClose, employee, handleSave, title, mode, fie
   };
 
   return (
-      <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Typography variant="h6" component="h2" mb={2}>
-            {title}
-          </Typography>
-          {fields.map((field) => (
-              React.cloneElement(field, {
-                key: field.props.name,
-                value: formData[field.props.name] || '',
-                onChange: handleChange,
-                fullWidth: true,
-                margin: "normal"
-              })
-          ))}
-          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Button onClick={handleClose} sx={{ mr: 1 }}>Hủy</Button>
-            <Button variant="contained" onClick={onSave}>{mode === 'add' ? 'Thêm' : 'Cập nhật'}</Button>
-          </Box>
+    <Modal open={open} onClose={handleClose}>
+      <Box sx={style}>
+        <Typography variant="h6" component="h2" mb={2}>
+          {title}
+        </Typography>
+        {fields.map((field) => {
+          if (!field) return null; // Kiểm tra nếu field là null hoặc undefined
+          return React.cloneElement(field, {
+            key: field.props.name,
+            value: formData[field.props.name] || '',
+            onChange: handleChange,
+            fullWidth: true,
+            margin: "normal"
+          });
+        })}
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={handleClose} sx={{ mr: 1 }}>Hủy</Button>
+          <Button variant="contained" onClick={onSave}>{mode === 'add' ? 'Thêm' : 'Cập nhật'}</Button>
         </Box>
-      </Modal>
+      </Box>
+    </Modal>
   );
 };
 

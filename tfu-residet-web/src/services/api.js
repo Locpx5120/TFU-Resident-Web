@@ -3,7 +3,7 @@
 import Cookies from "js-cookie";
 export const endpointUrl = {
     RESIDENT_URL: 'https://nice-sutherland.202-92-7-204.plesk.page/api',
-    BUILDING_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
+    BUILDING_URL: 'https://localhost:7082/api',
 }
 // Hàm GET
 const defaultGetHeader = {
