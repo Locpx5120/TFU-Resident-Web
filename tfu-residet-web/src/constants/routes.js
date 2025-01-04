@@ -283,7 +283,7 @@ export const routeDirector = [
         route: "/ben-thu-ba/cho-thue/:id",
         routeName: "Quản lí bên thứ ba",
         hidden: true,
-        component: <BusinessIcon />,
+        component: <DetailThirdPartyRent />,
     },
     {
         route: "/ben-thu-ba/thue-dich-vu/:id",

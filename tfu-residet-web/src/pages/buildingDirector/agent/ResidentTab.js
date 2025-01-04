@@ -36,7 +36,7 @@ const ResidentTab = () => {
 
   useEffect(() => {
     const filtered = residents.filter(resident =>
-        resident.name.toLowerCase().includes(searchCriteria.toLowerCase())
+      resident.name.toLowerCase().includes(searchCriteria.toLowerCase())
     );
     setFilteredResidents(filtered);
     setTotalCount(filtered.length);
@@ -75,6 +75,28 @@ const ResidentTab = () => {
   };
 
   const handleSaveResident = async (residentData) => {
+    // Regular expressions for validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    const phoneRegex = /^\d{10}$/;
+
+    if (!emailRegex.test(residentData.email)) {
+      return Swal.fire('Thất bại', 'Email không hợp lệ', 'error');
+    }
+
+    if (nameRegex.test(residentData.name) && residentData.name.trim() !== "") {
+      console.log("Tên hợp lệ");
+    } else {
+      console.error("Tên không hợp lệ");
+    }
+
+    if (!phoneRegex.test(residentData.phone)) {
+      console.error("Số điện thoại không hợp lệ");
+      // Xử lý lỗi hoặc logic khác
+    } else {
+      console.log("Số điện thoại hợp lệ");
+    }
+
     try {
       const data = await addNewResident(residentData);
       if (data.success) {
@@ -86,12 +108,12 @@ const ResidentTab = () => {
     } catch (error) {
       Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
     }
-  }
+  };
 
   const modalFields = [
-    <TextField fullWidth label="Tên thành viên" name="name" />,
-    <TextField fullWidth label="Email" name="email" />,
-    <TextField fullWidth label="Điện thoại" name="phone" />,
+    <TextField fullWidth label="Tên thành viên" name="name" required />,
+    <TextField fullWidth label="Email" name="email" required />,
+    <TextField fullWidth label="Điện thoại" name="phone" required />,
     <TextField fullWidth label="Ngày sinh" name="birthday" type="date" InputLabelProps={{ shrink: true }} />,
   ];
 
@@ -101,72 +123,72 @@ const ResidentTab = () => {
   }, [filteredResidents, page, rowsPerPage]);
 
   return (
-      <section>
+    <section>
+      <Box sx={{
+        display: "flex",
+        gap: 2,
+        flexWrap: "wrap",
+        alignItems: "flex-end",
+        mb: 2,
+      }}
+      >
+        <TextField
+          size="small"
+          label="Tên thành viên"
+          name="name"
+          variant="outlined"
+          value={searchCriteria}
+          onChange={handleSearchChange}
+          sx={{ flexGrow: 1, maxWidth: "200px" }}
+        />
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={handleRefresh}
+          sx={{ height: "40px" }}
+        >
+          Làm mới
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleAddResident}
+          sx={{ height: "40px" }}
+        >
+          Thêm cư dân
+        </Button>
+      </Box>
+      <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
+        <TableCustom
+          columns={columnData}
+          rows={paginatedResidents}
+          onRowClick={() => { }} />
         <Box sx={{
           display: "flex",
-          gap: 2,
-          flexWrap: "wrap",
-          alignItems: "flex-end",
-          mb: 2,
-        }}
-        >
-          <TextField
-              size="small"
-              label="Tên thành viên"
-              name="name"
-              variant="outlined"
-              value={searchCriteria}
-              onChange={handleSearchChange}
-              sx={{ flexGrow: 1, maxWidth: "200px" }}
-          />
-          <Button
-              variant="contained"
-              color="warning"
-              onClick={handleRefresh}
-              sx={{ height: "40px" }}
-          >
-            Làm mới
-          </Button>
-          <Button
-              variant="contained"
-              color="success"
-              onClick={handleAddResident}
-              sx={{ height: "40px" }}
-          >
-            Thêm cư dân
-          </Button>
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 2, py: 1,
+        }} >
+          <TablePagination
+            component="div"
+            count={totalCount}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25]} />
         </Box>
-        <Card sx={{ maxHeight: "700px", marginTop: "30px" }}>
-          <TableCustom
-              columns={columnData}
-              rows={paginatedResidents}
-              onRowClick={() => { }} />
-          <Box sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            px: 2, py: 1,
-          }} >
-            <TablePagination
-                component="div"
-                count={totalCount}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 25]} />
-          </Box>
-        </Card>
-        <CustomModal
-            open={modalOpen}
-            handleClose={handleCloseModal}
-            employee={selectedResident}
-            handleSave={handleSaveResident}
-            mode={modalMode.mode}
-            title={modalMode.title}
-            fields={modalFields}
-        />
-      </section>
+      </Card>
+      <CustomModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        employee={selectedResident}
+        handleSave={handleSaveResident}
+        mode={modalMode.mode}
+        title={modalMode.title}
+        fields={modalFields}
+      />
+    </section>
   );
 };
 
