@@ -14,19 +14,20 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getBuildingNew } from "../../../services/apartmentService";
 import moment from "moment";
-import {
-  convertObjectToFormData,
-  convertNewObj,
-} from "../../news/BussinessNews";
+
 
 const DetailThirdPartyRent = () => {
   const { id } = useParams();
   const [reload, setReload] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [openPdf, setOpenPdf] = useState(null);
+  // const [openPdf, setOpenPdf] = useState(null);
+  const openPdfRef = useRef(null); // Sử dụng useRef thay vì useState
+  const fileId = useRef(null); // Sử dụng useRef thay vì useState
   const [buildings, setBuildings] = useState([]);
   const [data, setData] = useState([]);
-  const [selectedThirdParty, setSelectedThirdParty] = useState({});
+  const [selectedThirdParty, setSelectedThirdParty] = useState({
+
+  });
   const [errors, setErrors] = useState({});
   const [modalMode, setModalMode] = useState({
     mode: "add",
@@ -43,10 +44,16 @@ const DetailThirdPartyRent = () => {
     { esName: "startDateFormat", name: "Ngày thuê", width: 150 },
     { esName: "endDateFormat", name: "Ngày hết hạn", width: 150 },
     { esName: "servicePrice", name: "Giá dịch vụ", width: 150 },
+    { esName: "fileId", name: "Hợp đồng", width: 150 },
   ];
   const imageUploadConfig = {
     empty: <p className="m-0">Kéo thả hợp đồng tại đây .</p>,
     size: 10000000,
+  };
+
+  const handleFileRemove = async (event) => {
+    openPdfRef.current = null;
+    fileId.current = null;
   };
 
   useEffect(() => {
@@ -58,51 +65,88 @@ const DetailThirdPartyRent = () => {
     };
     fetchData();
   }, [reload]);
+
   const customBase64Uploader = async (event) => {
     // convert file to base64 encoded
     try {
-      const file = event.files ? event.files[0] : event;
-      // if(file && file.type != 'application/pdf'){
-      //     this.fileUploadRef = null;
-      //     Swal.fire('Thong bao', 'so tien khong duoc nho hon 1trieu', 'info');
-      //     return;
-      // }
+        const file = event.files ? event.files[0] : event;
+        const reader = new FileReader();
+        let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            const base64data = reader.result;
+            openPdfRef.current = base64data;
+        };
 
-      const reader = new FileReader();
-      let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
-      reader.readAsDataURL(blob);
-      reader.onloadend = function () {
-        const base64data = reader.result;
-        // console.log("base64data", base64data);
-        setOpenPdf(base64data)
-        console.log(openPdf, 'openPdf')
-        // setSelectedThirdParty((prevState) => ({
-        //   ...prevState,
-        //   fileBase64: base64data,
-        // }));
-        // console.log(selectedThirdParty, "selectedThirdParty");
-      };
-    //   const formData = new FormData();
-    //   formData.append("file", file); // Gắn file vào formData
-    //   const res = await fileCreate(formData);
-    //   if(res && res.success == true){
-        
-    //     setOpenPdf(res.data.id);
-    //   }
-      setSelectedThirdParty((prevState) => ({ ...prevState, file: file }));
+        const formData = new FormData();
+        formData.append("file", file); 
+
+        const res = await fileCreate(formData);
+        if (res && res.success === true) {
+          fileId.current = res.data.id;
+        }  
     } catch (e) {
-      console.log(e);
+        console.log(e);
     }
-  };
+};
+
+
   const rows = useMemo(() => {
     return data.map((item) => ({
       ...item,
       startDateFormat: moment(item.startDate).format("DD-MM-YYYY"),
       endDateFormat: moment(item.endDate).format("DD-MM-YYYY"),
+      fileId: (
+        <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => openHopDong(item)}
+            >
+                Xem File HĐ
+            </Button>
+        </div>
+    ),
     }));
   }, [data]);
 
+  const openHopDong = async (item) => {
+    const res = await getDetailFile(item.fileId);
+    console.log('res', res)
+    if(res == undefined || res.success == false){
+      return;
+    }
+    openPdfRef.current = "data:" + res.data.contentType + ";base64,"+ res.data.base64;
+    openBase64Pdf();
+    openPdfRef.current = null;
+  }
+
+  const openBase64Pdf = () => {
+
+    console.log('openPdfRef.current', openPdfRef.current)
+    if(openPdfRef.current == null){
+      return ""
+    }
+    // Tạo Blob từ base64
+    const byteCharacters = atob(openPdfRef.current.split(",")[1]);
+    const byteNumbers = Array.from(byteCharacters).map((char) =>
+      char.charCodeAt(0)
+    );
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "application/pdf" });
+
+    // Tạo URL từ Blob
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Mở URL trong tab mới
+    window.open(blobUrl, "_blank");
+
+    // Giải phóng URL Blob sau khi sử dụng (tùy chọn)
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+  };
+
   const handleFieldChange = (fieldName, value) => {
+    console.log('handleFieldChange', fieldName, value)
     if (fieldName === "servicePrice") {
       const price = parseFloat(value);
       if (isNaN(price) || price <= 1000000) {
@@ -201,18 +245,21 @@ const DetailThirdPartyRent = () => {
       name="demo[]"
       accept=".pdf"
       onSelect={customBase64Uploader}
+      onRemove={handleFileRemove} // Gắn sự kiện khi xóa file
       mode="advanced"
       auto
       maxFileSize={imageUploadConfig.size}
       emptyTemplate={imageUploadConfig.empty}
     />,
     // Thêm nút mở file PDF nếu file đã được upload
-    openPdf ? (
+    // (selectedThirdParty && selectedThirdParty.fileId) ? (
+    (openPdfRef) ? (
+
       <Button
         key="view-contract"
         variant="contained"
         color="primary"
-        onClick={() => window.open(openPdf, "_blank")}
+        onClick={openBase64Pdf}
       >
         Xem hợp đồng
       </Button>
@@ -229,17 +276,20 @@ const DetailThirdPartyRent = () => {
   };
 
   const handleSaveThirdParty = async (data) => {
+    console.log(data, 'data')
     try {
       if (data.price < 1000000) {
         Swal.fire("Thong bao", "so tien khong duoc nho hon 1trieu", "info");
         return;
       }
+
       const res = await addContractThird({
         ...data,
         price: Number(data?.price || 0),
         floorNumber: Number(data?.floorNumber || 0),
         roomNumber: Number(data?.roomNumber || 0),
         thirdPartyId: id,
+        fileId: fileId.current
       });
       if (res?.success) {
         setReload(!reload);
@@ -264,7 +314,18 @@ const DetailThirdPartyRent = () => {
           mb: 2,
         }}
       >
-        {data.length < 1 && (
+         <Button
+            variant="contained"
+            color="success"
+            onClick={() =>
+              handleOpenModal("add", "Thêm hợp đồng bên thuê mặt bằng")
+            }
+            sx={{ height: "40px" }}
+          >
+            Thêm hợp đồng bên thuê mặt bằng
+          </Button>
+
+        {/* {data.length < 1 && (
           <Button
             variant="contained"
             color="success"
@@ -287,15 +348,15 @@ const DetailThirdPartyRent = () => {
           >
             Cập nhật hợp đồng bên thuê mặt bằng
           </Button>
-        )}
+        )} */}
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom
           columns={columnData}
           rows={rows}
           onRowClick={(row) => {
-            setSelectedThirdParty(row);
-            handleOpenModal("update", "Cập nhật hợp đồng bên thuê mặt bằng");
+            // setSelectedThirdParty(row);
+            // handleOpenModal("update", "Cập nhật hợp đồng bên thuê mặt bằng");
           }}
         />
       </Card>
