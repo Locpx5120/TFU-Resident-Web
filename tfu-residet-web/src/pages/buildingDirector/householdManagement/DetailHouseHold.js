@@ -15,7 +15,7 @@ import { getMemberInApartment, updateMemberResident, deleteMemberResident } from
 
 const DetailHouseHold = () => {
   const { id } = useParams();
-  const roomNumber = id.split("&")[1].slice(-3);
+  const roomNumber = id.split("&")[1].split("=")[1];
   const apartmentId = id.split("&")[0];
   
     const [page, setPage] = useState(0);
@@ -153,7 +153,7 @@ const DetailHouseHold = () => {
     return (
         <section className="content">
             <Typography variant="h5" gutterBottom>
-                <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ: {roomNumber} 
+                <span style={{color: 'blue', cursor: 'pointer'}} onClick={() => navigate(-1)}>Trở về</span> Danh sách thành viên trong căn hộ {roomNumber} :
             </Typography>
             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", alignItems: 'flex-end', mb: 2 }}>
                 <TextField

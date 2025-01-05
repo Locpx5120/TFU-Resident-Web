@@ -88,7 +88,7 @@ const DetailThirdPartyRent = () => {
     } catch (e) {
         console.log(e);
     }
-};
+  };
 
 
   const rows = useMemo(() => {
