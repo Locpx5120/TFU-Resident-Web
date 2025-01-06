@@ -7,6 +7,8 @@ export const getDetailVehicle = async (apartmentId) => {
         'content-type': 'application/json',
         'buildingPermalink': Cookies.get('buildingID'),})
 }
+
+ 
 export const listCategory =  async () => {
     return await getData(`/servicecategory/GetAll`, endpointUrl.BUILDING_URL, {
         'Authorization': `Bearer ${Cookies.get("accessToken")}`,
@@ -19,6 +21,14 @@ export const addVehicle = async (body) => {
         'content-type': 'application/json',
         'buildingPermalink': Cookies.get('buildingID'),}, endpointUrl.BUILDING_URL)
 }
+
+export const getAllService = async (body) => {
+    return await postData(`/service-contract/get-all-service`, body, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),}, endpointUrl.BUILDING_URL)
+}
+
 export const addRepairReport = async (body) => {
     return await postData(`/service-contract/add-repair-report`, body, {
         'Authorization': `Bearer ${Cookies.get("accessToken")}`,
