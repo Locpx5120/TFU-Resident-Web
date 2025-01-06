@@ -113,11 +113,11 @@ const PayAndTransfer = ({ transactionHistories, setType, type }) => {
     return (
         <>
             <div className="col-12 flex p-0">
-                <div className="col flex align-items-center">
+                {/* <div className="col flex align-items-center">
                     <label htmlFor="">Tổng thu chi</label>
                     <label htmlFor=""
                         className="ml-2 text-2xl font-semibold"> {formatCurrency(payAndTransferInfo?.total)}</label>
-                </div>
+                </div> */}
                 <div className="col">
                     <Calendar value={dates} onChange={handleDateChange} selectionMode="range" readOnlyInput
                         hideOnRangeSelection showIcon className="w-full" dateFormat="dd/mm/yy" />
