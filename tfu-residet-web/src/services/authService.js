@@ -1,6 +1,6 @@
 //API Liên quan đến XÁC THỰC (LOGIN, REGISTER,...)
 import {createContext, useEffect, useReducer, useState} from 'react';
-import {endpointUrl, postData} from "./api";
+import {endpointUrl, postData, getData} from "./api";
 
 const initial_state = {
     user: null,

@@ -1,28 +1,64 @@
-import { useEffect } from "react";
-import { DatePicker, Form, Input, message, Modal, Select, Row, Col } from "antd";
+import { useEffect, useState } from "react";
+import { DatePicker, Form, Input, message, Modal, Row, Col } from "antd";
 import moment from "moment";
+import { getUserLogin, updateUserLogin } from "../services/userService";
 
 const PersonalInfoModal = ({ data, isModalOpen, setIsModalOpen }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
 
+  // Fetch user data
+  const fetchUser = async () => {
+    try {
+      const response = await getUserLogin();
+      setUserData(response.data);
+    } catch (e) {
+      message.error("Không lấy được thông tin người dùng", "error");
+    }
+  };
+
+  // Trigger fetch when modal is opened
   useEffect(() => {
-    if (!data) return;
-    form.setFieldsValue({
-      ...data,
-      dateOfBirth: data.dateOfBirth ? moment(data.dateOfBirth) : null,
-    });
-  }, [data]);
+    if (isModalOpen) {
+      fetchUser();
+    }
+  }, [isModalOpen]);
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        message.success("Thông tin cá nhân đã được cập nhật!");
-        setIsModalOpen(false);
-        form.resetFields();
-      })
-      .catch((error) => {
+  // Update form when userData is available
+  useEffect(() => {
+    if (userData) {
+      form.setFieldsValue({
+        fullName: userData.fullName || "",
+        birthday: userData.birthday ? moment(userData.birthday) : null,
+        email: userData.email || "",
+        phoneNumber: userData.phoneNumber || "",
       });
+    }
+  }, [userData, form]);
+
+  // Handle form submission
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      setLoading(true);
+
+      // Send the form data to the postUser API
+      await updateUserLogin({
+        birthday: values.birthday,
+        fullName: values.fullName,
+        phoneNumber: values.phoneNumber,
+      });
+
+      message.success("Thông tin cá nhân đã được cập nhật!");
+      setIsModalOpen(false);
+      form.resetFields();
+    } catch (error) {
+      console.error("Validation failed:", error);
+      message.error("Lỗi khi lưu thông tin!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -31,123 +67,93 @@ const PersonalInfoModal = ({ data, isModalOpen, setIsModalOpen }) => {
   };
 
   return (
-    <>
-      <Modal
-        title="Thông tin cá nhân"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Lưu"
-        cancelText="Hủy"
+    <Modal
+      title="Thông tin cá nhân"
+      open={isModalOpen}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      okText="Lưu"
+      cancelText="Hủy"
+      confirmLoading={loading}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        name="personalInfoForm"
+        initialValues={{
+          fullName: "",
+          dateOfBirth: null,
+          email: "",
+        }}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          name="personalInfoForm"
-          initialValues={{
-            fullName: "",
-            dateOfBirth: null,
-            gender: "",
-            email: "",
-            hometown: "",
-            building: "",
-            floor: "",
-            apartment: "",
-          }}
-        >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Họ và tên"
-                name="fullName"
-                rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
-              >
-                <Input placeholder="Nhập họ và tên" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Ngày sinh"
-                name="dateOfBirth"
-                rules={[{ required: true, message: "Vui lòng chọn ngày sinh!" }]}
-              >
-                <DatePicker placeholder="Chọn ngày sinh" style={{ width: "100%", height: '30px' }} />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Giới tính"
-                name="gender"
-                rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
-              >
-                <Select placeholder="Chọn giới tính">
-                  <Select.Option value="male">Nam</Select.Option>
-                  <Select.Option value="female">Nữ</Select.Option>
-                  <Select.Option value="other">Khác</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  { required: true, message: "Vui lòng nhập email!" },
-                  { type: "email", message: "Vui lòng nhập địa chỉ email hợp lệ!" },
-                ]}
-              >
-                <Input placeholder="Nhập email" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Quê quán"
-                name="hometown"
-                rules={[{ required: true, message: "Vui lòng nhập quê quán!" }]}
-              >
-                <Input placeholder="Nhập quê quán" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Tòa nhà"
-                name="building"
-                rules={[{ required: true, message: "Vui lòng nhập tòa nhà!" }]}
-              >
-                <Input placeholder="Nhập tên tòa nhà" />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Số tầng"
-                name="floor"
-                rules={[{ required: true, message: "Vui lòng nhập số tầng!" }]}
-              >
-                <Input placeholder="Nhập số tầng" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Số căn hộ"
-                name="apartment"
-                rules={[{ required: true, message: "Vui lòng nhập số căn hộ!" }]}
-              >
-                <Input placeholder="Nhập số căn hộ" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
-    </>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="Họ và tên"
+              name="fullName"
+              rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+            >
+              <Input placeholder="Nhập họ và tên" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Ngày sinh"
+              name="birthday"
+              rules={[{ required: true, message: "Vui lòng chọn ngày sinh!" }]}
+            >
+              <DatePicker
+                placeholder="Chọn ngày sinh"
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                { required: true, message: "Vui lòng nhập email!" },
+                {
+                  type: "email",
+                  message: "Vui lòng nhập địa chỉ email hợp lệ!",
+                },
+                {
+                  validator: async (_, value) => {
+                    if (!value && !form.getFieldValue("email")) {
+                      return Promise.resolve();
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <Input
+                placeholder="Nhập email"
+                disabled={true} // Disable the email field
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Số điện thoại"
+              name="phoneNumber"
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại!" },
+                {
+                  pattern: /^[0-9]{10,11}$/,
+                  message: "Vui lòng nhập số điện thoại hợp lệ!",
+                },
+              ]}
+            >
+              <Input placeholder="Nhập số điện thoại" />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    </Modal>
   );
 };
 

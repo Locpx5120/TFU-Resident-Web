@@ -3,7 +3,7 @@
 import Cookies from "js-cookie";
 export const endpointUrl = {
     RESIDENT_URL: 'https://nice-sutherland.202-92-7-204.plesk.page/api',
-    BUILDING_URL: 'https://funny-banach.202-92-7-204.plesk.page/api',
+    BUILDING_URL: 'https://localhost:7082/api',
 }
 // Hàm GET
 const defaultGetHeader = {
@@ -26,6 +26,20 @@ export const getData = async (endpoint, baseURL = endpointUrl.RESIDENT_URL, head
     }
 };
 
+export const getData2 = async (endpoint, baseURL = endpointUrl.BUILDING_URL, header = defaultGetHeader) => {
+    try {
+        const response = await fetch(`${baseURL}${endpoint}`, {
+        method: 'GET',
+        headers: header,
+    });
+        if (!response.ok) throw new Error("Network response was not ok");
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
+};
+
+
 // Hàm POST
 const defaultHeader = {
     method: 'POST',
@@ -34,6 +48,22 @@ const defaultHeader = {
     'buildingPermalink': Cookies.get('buildingID'),
 }
 export const postData = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.RESIDENT_URL) => {
+    try {
+        const response = await fetch(`${baseURL}${endpoint}`, {
+            method: "POST",
+            headers: header,
+            body: JSON.stringify(data),
+        });
+
+        // Nếu response không thành công, ném lỗi để vào catch
+        if (!response.ok) throw new Error("Network response was not ok");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error posting data:", error);
+    }
+};
+export const postData2 = async (endpoint, data, header = defaultHeader, baseURL = endpointUrl.BUILDING_URL) => {
     try {
         const response = await fetch(`${baseURL}${endpoint}`, {
             method: "POST",
