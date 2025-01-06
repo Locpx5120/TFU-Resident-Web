@@ -52,7 +52,7 @@ const ThirdParty = () => {
         }));
     }, [data]);
 
-    const optionServiceName = serviceNameArr?.filter(item => item.serviceName === 'Gia hạn hợp đồng').map((serviceName) => (
+    const optionServiceName = serviceNameArr?.map((serviceName) => (
         {
             label: serviceName.serviceName,
             value: serviceName.id

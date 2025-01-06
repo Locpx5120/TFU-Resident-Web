@@ -309,12 +309,12 @@ export const routeDirector = [
 ];
 
 export const routeThirdParty = [
-    {
-        route: "/",
-        routeName: "Trang chính",
-        component: <DashboardInvestor/>,
-        icon: <WidgetsIcon/>,
-    },
+    // {
+    //     route: "/",
+    //     routeName: "Trang chính",
+    //     component: <DashboardInvestor/>,
+    //     icon: <WidgetsIcon/>,
+    // },
     {
         route: "/ben-thu-ba",
         routeName: "Quản lí bên thứ ba",

@@ -195,7 +195,7 @@ const ViewRequests = () => {
                     sx={{ margin: "20px 10px 10px" }}
                 >
                     <MenuItem value="">Tất cả dịch vụ</MenuItem>
-                    {typeData.filter(service => service.serviceName !== "Gia hạn hợp đồng").map((service) => (
+                    {typeData.map((service) => (
                         <MenuItem
                             key={service.id}
                             value={service.serviceName}
