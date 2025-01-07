@@ -8,7 +8,7 @@ export const listOwner =  async (body) => {
     },  endpointUrl.BUILDING_URL)
 }
 export const updateOwner = async (body) => {
-    return await putData(`/ceo/UpdateOwnerShip`, body, endpointUrl.BUILDING_URL, undefined);
+    return await postData(`/ceo/UpdateOwnerShip`, body,  undefined, endpointUrl.BUILDING_URL);
 }
 export const addOwner =  async (body) => {
     return await postData(`/ceo/addOwnerShip`, body, undefined, endpointUrl.BUILDING_URL)

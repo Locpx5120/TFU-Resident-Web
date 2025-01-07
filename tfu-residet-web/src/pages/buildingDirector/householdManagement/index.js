@@ -36,7 +36,7 @@ const HouseHold = () => {
   });
   const [modalResidentMode, setModalResidentMode] = useState({
     mode: "add",
-    title: "Thêm chủ căn hộ",
+    title: "Sửa chủ căn hộ",
   });
   const [selectedHouseHold, setSelectedHouseHold] = useState(null);
   const [selectedResident, setSelectedResident] = useState(null);
@@ -135,7 +135,7 @@ const HouseHold = () => {
       mode: "edit",
       title: "Cập nhật căn hộ",
     });
-    console.log(building, "building");
+    console.log(selectedHouseHold, "edit");
     setSelectedHouseHold(building);
     setModalOpen(true);
   };
@@ -143,8 +143,10 @@ const HouseHold = () => {
   const handleCreateResident = () => {
     setModalResidentMode({
       mode: "add",
-      title: "Thêm chủ căn hộ",
+      title: "Sửa chủ căn hộ",
     });
+    console.log(selectedHouseHold, "add");
+    modalMode.mode = "add"
     setSelectedResident(null);
     setModalResidentOpen(true);
   };
@@ -164,6 +166,7 @@ const HouseHold = () => {
   };
 
   const handleSaveResident = async (apartmentData) => {
+    console.log('handleSaveResident_' + modalMode.mode)
     if (modalMode.mode === "add") {
       try {
         const data = await addOwner({ ...apartmentData, buildingId: id });
@@ -197,6 +200,7 @@ const HouseHold = () => {
   };
 
   const handleSaveHouseHold = async (houseHoldData) => {
+    console.log(modalMode.mode + "___save")
     if (modalMode.mode === "add") {
       const payload = {
         ...houseHoldData,
@@ -485,7 +489,7 @@ const HouseHold = () => {
           onClick={handleCreateResident}
           sx={{ height: "40px" }}
         >
-          Thêm / Sửa chủ căn hộ
+          Sửa chủ căn hộ
         </Button>
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
