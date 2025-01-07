@@ -239,7 +239,7 @@ const HouseHold = () => {
           <select id="swal-input-email" class="swal2-input">
             ${TypeOptionResident.map(
               (resident) =>
-                `<option value="${resident.value}">${resident.label}</option>`
+                `<option value="${resident.id}">${resident.label}</option>`
             ).join("")}
           </select>
         `,
