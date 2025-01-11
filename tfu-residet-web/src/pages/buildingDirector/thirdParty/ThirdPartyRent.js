@@ -20,7 +20,7 @@ const ThirdPartyRent = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
 
     const columnData = [
-        { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
+        // { esName: 'buildingName', name: 'Tòa nhà', width: 150 },
         { esName: 'companyName', name: 'Tên công ty', width: 200 },
         { esName: 'contactInfo', name: 'Thông tin liên hệ', width: 200 },
         { esName: 'storeType', name: 'Loại cửa hàng', width: 200 },
