@@ -2,7 +2,9 @@ import {Card} from "primereact/card";
 import PayAndTransfer from "./PayAndTransfer";
 import RecentTransaction from "./RecentTransaction";
 import PostNews from "../news/PostNews";
+import { format } from "date-fns";
 import {useState} from "react";
+import { create } from "lodash";
 
 const DashboardInvestor = () => {
     const [transactionHistories, setTransactionHistories] = useState([]);
@@ -15,6 +17,7 @@ const DashboardInvestor = () => {
                     style: 'currency',
                     currency: 'VND'
                 }),
+                createAt: format(new Date(items.createAt), 'dd/MM/yyyy'),
             index: index + 1
             })
         )

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Box, Button, Card, TextField, TablePagination, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { format } from "date-fns";
 import CustomModal from "../../../common/CustomModal";
 import TableCustom from "../../../components/Table";
 import { getResident, addNewResident } from "../../../services/residentService";
@@ -119,7 +120,10 @@ const ResidentTab = () => {
 
   const paginatedResidents = useMemo(() => {
     const startIndex = page * rowsPerPage;
-    return filteredResidents.slice(startIndex, startIndex + rowsPerPage);
+    return filteredResidents.slice(startIndex, startIndex + rowsPerPage).map(resident => ({
+      ...resident,
+      birthday: format(new Date(resident.birthday), 'dd/MM/yyyy'),
+    }));
   }, [filteredResidents, page, rowsPerPage]);
 
   return (

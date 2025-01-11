@@ -30,7 +30,7 @@ const DynamicBreadcrumbs = ({ routes }) => {
     <div className="containerr">
     <Breadcrumbs aria-label="breadcrumb">
       <Link to="/" underline="hover" color="#2e8b57" style={{textDecoration: 'none'}}>
-        Home
+        Trang chủ
       </Link>
       {breadcrumbs.map((breadcrumb, index) => {
         // const isLast = index === breadcrumbs.length - 1;

@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="user-info">
-        <h2>TFU Building</h2>
+        <h2>Hệ thống Quản lý Tòa nhà TFU</h2>
         {/* <img src="vietnam-flag.png" alt="Vietnam Flag" className="flag" /> */}
         <LogoutButton />
       </div>
