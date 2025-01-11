@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import { addBuilding, getBuildingNew, updateBuilding } from "../../../services/apartmentService";
 import { debounce as _debounce } from "lodash";
 import dayjs from "dayjs";
+import * as yup from 'yup';
 
 const BuildingManage = () => {
   const [reload, setReload] = useState(false);
@@ -23,13 +24,16 @@ const BuildingManage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBuildings({ name: searchCriteria });
+    fetchBuildings(searchCriteria);
   }, [reload]);
 
   const fetchBuildings = async (filters) => {
     try {
       const data = await getBuildingNew(filters);
-      setBuildings(data.data);
+      setBuildings(data.data.map((b) => ({
+        ...b,
+        numberOfCitizen: b.numberOfCitizen || 0
+      })));
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +41,7 @@ const BuildingManage = () => {
 
   const handleInput = useCallback(
     _debounce((updatedCriteria) => {
-      fetchBuildings({ name: updatedCriteria });
+      fetchBuildings(updatedCriteria);
     }, 1000),
     []
   );
@@ -62,13 +66,24 @@ const BuildingManage = () => {
       mode: 'edit',
       title: 'Cập nhật tòa nhà'
     });
-    setSelectedBuilding(building);
+    setSelectedBuilding({
+      ...building,
+      createAt: building.createAt ? dayjs(building.createAt).format("YYYY-MM-DD") : null
+    });
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+  const schema = yup.object({
+    buildingName: yup.string().trim().required('Tên tòa nhà không được để trống'),
+    numberFloor: yup.number().typeError("Vui lòng nhập số").integer("Chỉ được nhập số nguyên").required('Số tầng không được để trống').positive('Số tầng phải lớn hơn 0'),
+    numberApartment: yup.number().typeError("Vui lòng nhập số").integer("Chỉ được nhập số nguyên").required('Số căn hộ không được để trống').positive('Số căn hộ phải lớn hơn 0'),
+    address: yup.string().trim().required('Địa chỉ không được để trống'),
+    createAt: yup.date().required('Ngày xây dựng không được để trống'),
+  })
 
   const handleSaveBuilding = async (buildingData) => {
     const updatedBuildingData = {
@@ -177,7 +192,7 @@ const BuildingManage = () => {
       type="date"
       required
       InputLabelProps={{ shrink: true }}
-      defaultValue={dayjs(selectedBuilding?.createAt).format('DD/MM/YYYY') || ''}
+      disabled={modalMode.mode === 'edit'}
     />,
   ];
 
@@ -185,6 +200,7 @@ const BuildingManage = () => {
     { name: "Tên tòa nhà", align: "left", esName: "buildingName" },
     { name: "Số tầng", align: "left", esName: "numberFloor" },
     { name: "Số căn hộ", align: "left", esName: "numberApartment" },
+    { name: "Số cư dân", align: "left", esName: "numberOfCitizen" },
     { name: "Địa chỉ", align: "left", esName: "address" },
     { name: "Ngày tạo", align: "left", esName: "createAt" },
     {
@@ -196,7 +212,7 @@ const BuildingManage = () => {
 
   const rows = useMemo(() => buildings.map((building) => ({
     ...building,
-    createAt: building.createAt ? new Date(building.createAt).toLocaleDateString() : 'N/A',
+    createAt: building.createAt ? dayjs(building.createAt).format("DD/MM/YYYY") : 'N/A',
     action: (
       <>
         <Button onClick={() => handleEditBuilding(building)}>
@@ -214,6 +230,7 @@ const BuildingManage = () => {
 
   return (
     <section className="content">
+      <h4 class="text-left">Tổng số tòa nhà: {rows.length}</h4>
       <Box
         sx={{
           display: "flex",
@@ -240,6 +257,7 @@ const BuildingManage = () => {
           Thêm tòa nhà
         </Button>
       </Box>
+
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom
           columns={columnData}
@@ -254,6 +272,7 @@ const BuildingManage = () => {
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
+        validateSchema={schema}
       />
     </section>
   );

@@ -20,7 +20,7 @@ import {
   getTypeApartment,
 } from "../../../services/apartmentService";
 import { getResident } from "../../../services/residentService";
-
+import * as yup from 'yup';
 const HouseHold = () => {
   const { id } = useParams();
   const [page, setPage] = useState(0);
@@ -211,7 +211,7 @@ const HouseHold = () => {
         Swal.fire("Thành công", "Đã thêm căn hộ thành công!", "success");
         setReload(!reload);
       } else {
-       
+
         Swal.fire("Thất bại", "Thêm căn hộ thất bại!", "error");
       }
     } else {
@@ -242,9 +242,9 @@ const HouseHold = () => {
         html: `
           <select id="swal-input-email" class="swal2-input">
             ${TypeOptionResident.map(
-              (resident) =>
-                `<option value="${resident.id}">${resident.label}</option>`
-            ).join("")}
+          (resident) =>
+            `<option value="${resident.id}">${resident.label}</option>`
+        ).join("")}
           </select>
         `,
         focusConfirm: false,
@@ -418,8 +418,8 @@ const HouseHold = () => {
               onClick={() =>
                 navigate(
                   "/chi-tiet-thanh-vien/" +
-                    building.apartmentId +
-                    `&roomNumber=${building.roomNumber}`
+                  building.apartmentId +
+                  `&roomNumber=${building.roomNumber}`
                 )
               }
             >
@@ -438,6 +438,26 @@ const HouseHold = () => {
       })),
     [buildings, navigate]
   );
+
+  const schema = yup.object({
+    roomNumber: yup
+      .number()
+      .required("Vui lòng nhập số phòng")
+      .typeError("Số phòng phải là số")
+      .integer("Số phòng phải là số nguyên")
+      .positive("Số phòng phải lớn hơn 0"),
+    floorNumber: yup
+      .number()
+      .required("Vui lòng nhập số tầng")
+      .typeError("Số tầng phải là số")
+      .integer("Số tầng phải là số nguyên")
+      .positive("Số tầng phải lớn hơn 0"),
+    apartmentTypeId: yup.string().required("Vui lòng chọn loại căn hộ")
+    
+
+
+  })
+  
 
   return (
     <section className="content">
@@ -483,14 +503,14 @@ const HouseHold = () => {
         >
           Thêm căn hộ
         </Button>
-        <Button
+        {/* <Button
           variant="contained"
           color="success"
           onClick={handleCreateResident}
           sx={{ height: "40px" }}
         >
           Sửa chủ căn hộ
-        </Button>
+        </Button> */}
       </Box>
       <Card sx={{ maxHeight: "700px" }}>
         <TableCustom
@@ -517,6 +537,7 @@ const HouseHold = () => {
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
+        validateSchema={schema}
       />
       <CustomModal
         open={modalResidentOpen}
@@ -527,6 +548,7 @@ const HouseHold = () => {
         mode={modalResidentMode.mode}
         title={modalResidentMode.title}
         fields={modalResidentFields}
+
       />
     </section>
   );
