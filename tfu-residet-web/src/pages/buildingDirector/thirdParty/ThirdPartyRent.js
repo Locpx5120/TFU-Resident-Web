@@ -179,7 +179,7 @@ const ThirdPartyRent = () => {
                         fetchData();
                     }}
                 >
-                    Reset
+                    Đặt lại
                 </Button>
 
                 <Button

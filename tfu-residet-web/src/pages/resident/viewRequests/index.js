@@ -254,7 +254,7 @@ const ViewRequests = () => {
                     ))}
                 </Select>
                 <Button variant="outlined" className="ml-2" color="primary" size="large" onClick={resetForm}>
-                    Reset
+                    Đặt lại
                 </Button>
             </Box>
 
