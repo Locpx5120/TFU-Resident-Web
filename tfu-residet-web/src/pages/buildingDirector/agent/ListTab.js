@@ -259,7 +259,7 @@ const ListTab = () => {
           sx={{ flexGrow: 1, maxWidth: "200px" }}
         >
           <MenuItem value="">Tất cả</MenuItem>
-          {departments.map((option) => (
+          {departments.filter(x => x.label !== 'Bên thứ ba').map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>

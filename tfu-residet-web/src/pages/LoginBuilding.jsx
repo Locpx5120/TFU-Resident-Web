@@ -11,8 +11,7 @@ import PostNews from "./news/PostNews";
 const LoginBuilding = () => {
     const location = useLocation();
     const currentPath = location.pathname.split('/')[2]?.split('&');
-    const buildingId = currentPath[0];
-    const residentId = currentPath[1]?.slice(11, currentPath[1].length) || '';
+    const buildingId = 'daa830ab-d653-48ca-a82b-03c0d6f4ee5c';
 
     const [credentials, setCredentials] = useState({
         email: '',

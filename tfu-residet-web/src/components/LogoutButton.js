@@ -18,7 +18,7 @@ const LogoutButton = () => {
      // Cookies.remove('role');
      sessionStorage.removeItem('hasReloaded');
     // window.location.href = '/login';
-    navigate(`login-building/${Cookies.get('buildingID')}`)
+    navigate(`login-building`)
   };
 
   const items = [

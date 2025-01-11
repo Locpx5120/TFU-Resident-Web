@@ -71,7 +71,7 @@ function App() {
         {/* Public Routes */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/login-building/:buildingId" element={<LoginBuilding />} />
+          <Route path="/login-building" element={<LoginBuilding />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/otp/:id" element={<OTPInput />} />
