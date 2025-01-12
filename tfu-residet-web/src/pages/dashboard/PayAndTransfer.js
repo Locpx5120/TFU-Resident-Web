@@ -28,7 +28,7 @@ const noData = {
     height: '20px',
     borderRadius: '16px'
 }
-const PayAndTransfer = ({ transactionHistories, setType, type }) => {
+const PayAndTransfer = ({ transactionHistories, setType, type, haveHouseFilter = true }) => {
     const [dates, setDates] = useState(new Date());
     const [building, setBuilding] = useState('');
     const [apartment, setApartment] = useState('');
@@ -136,9 +136,9 @@ const PayAndTransfer = ({ transactionHistories, setType, type }) => {
                     <Dropdown className="w-full" value={building} name="buildingId"
                         onChange={handleChangeInput} options={buildingList} optionValue="id"
                         optionLabel="buildingName" placeholder="Chọn toà nhà" />
-                    <Dropdown className="w-full" value={apartment} name="apartmentId"
+                    {haveHouseFilter && <Dropdown className="w-full" value={apartment} name="apartmentId"
                         onChange={handleChangeInput} options={apartmentList} optionValue="id"
-                        optionLabel="roomNumber" placeholder="Chọn căn hộ" />
+                        optionLabel="roomNumber" placeholder="Chọn căn hộ" />}
                 </div>
 
             </div>
