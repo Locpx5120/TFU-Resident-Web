@@ -176,7 +176,8 @@ const ServicePaymentAccountant = () => {
               <TableCell>Tổng dịch vụ</TableCell>
               <TableCell>Tháng</TableCell>
               <TableCell>Năm</TableCell>
-              <TableCell>Trạng thái</TableCell>
+              <TableCell>Tiền đã thanh toán</TableCell>
+              <TableCell>Tiền chưa thanh toán</TableCell>
               <TableCell>Xem chi tiết</TableCell>
             </TableRow>
           </TableHead>
@@ -197,7 +198,8 @@ const ServicePaymentAccountant = () => {
                   <TableCell>{service.totalServices}</TableCell>
                   <TableCell>{service.month}</TableCell>
                   <TableCell>{service.year}</TableCell>
-                  <TableCell>{service.paymentStatus}</TableCell>
+                  <TableCell>{service.priceTT}</TableCell>
+                  <TableCell>{service.priceNotTT}</TableCell>
                   <TableCell>
                     <Button
                         style={{ fontSize: 12, textTransform: "lowercase" }}

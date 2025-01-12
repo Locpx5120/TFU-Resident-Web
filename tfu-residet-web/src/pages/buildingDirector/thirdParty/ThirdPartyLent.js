@@ -168,7 +168,7 @@ const ThirdPartyLent = () => {
                         fetchData();
                     }}
                 >
-                    Reset
+                    Đặt lại
                 </Button>
 
                 <Button

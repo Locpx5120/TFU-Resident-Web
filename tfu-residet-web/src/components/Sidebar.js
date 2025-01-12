@@ -57,7 +57,7 @@ const Sidebar = ({routes}) => {
         {/* <Box className="profile-img">
           <BadgeAvatars src="https://avatar-ex-swe.nixcdn.com/song/2020/08/06/6/0/8/0/1596682420038.jpg" />
         </Box> */}
-        <h3>TFU Building</h3>
+        {/* <h3>Hệ thống Quản lý Tòa nhà TFU</h3> */}
       </div>
       <nav style={{marginBottom: 40}}>
         <StyledUl>
