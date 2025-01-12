@@ -63,6 +63,8 @@ import DashboardInvestor from "../pages/dashboard/DashboardInvestor";
 import {Card} from "primereact/card";
 import BuildingManage from "../pages/buildingDirector/householdManagement/BuildingManage";
 import ServicePaymentAccountant from "../pages/resident/servicePayment/ServicePaymentAccountant";
+import DashboardAccountant from "../pages/dashboard/DashboardAccountant";
+import ThirdPartyStatistic from "../pages/dashboard/ThirdPartyStatistic";
 export const routeArray = [
     {
         route: "/",
@@ -367,6 +369,18 @@ export const routeReceptionist = [
 ];
 
 export const routeAccountant = [
+    {
+        route: "/",
+        routeName: "Trang chính",
+        component: <DashboardAccountant/>,
+        icon: <WidgetsIcon/>,
+    },
+    {
+        route: "/thong-ke-ben-thu-3",
+        routeName: "Thống kê bên thứ 3",
+        component: <ThirdPartyStatistic/>,
+        icon: <BusinessIcon/>,
+    },
     {
         route: "/thanh-toan-dich-vu",
         routeName: "Thanh toán dịch vụ",

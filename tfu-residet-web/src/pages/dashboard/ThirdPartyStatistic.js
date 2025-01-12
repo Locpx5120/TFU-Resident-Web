@@ -1,12 +1,11 @@
 import {Card} from "primereact/card";
 import PayAndTransfer from "./PayAndTransfer";
 import RecentTransaction from "./RecentTransaction";
-import PostNews from "../news/PostNews";
 import { format } from "date-fns";
 import {useState} from "react";
 import { create } from "lodash";
 
-const DashboardInvestor = () => {
+const ThirdPartyStatistic = () => {
     const [transactionHistories, setTransactionHistories] = useState([]);
     const [type, setType] = useState("A");
     // Hàm nhận dữ liệu từ component con
@@ -58,8 +57,8 @@ const DashboardInvestor = () => {
     return (
         <>
             <Card className="content h-auto">
-                <div className="col">
-                    <PostNews/>
+                <div className="col font-semibold" style={{textAlign: "center"}}>
+                    <h2>Thống kê thu chi bên thứ 3</h2>
                 </div>
                 <div className="col">
                     <PayAndTransfer transactionHistories={handleReceiveData} setType={setType} type={type}/>
@@ -71,4 +70,4 @@ const DashboardInvestor = () => {
         </>
     )
 }
-export default DashboardInvestor;
+export default ThirdPartyStatistic;
