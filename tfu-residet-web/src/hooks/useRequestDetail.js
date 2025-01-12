@@ -66,7 +66,7 @@ export const useRequestDetail = (Purpose, paramSplit, navigate) => {
       body.noteKyThuat = requestInfo.noteKyThuat;
       body.staffId = requestInfo.staffId;
       body.servicePrice = requestInfo.servicePrice;
-      body.startDate = dayjs(requestInfo.startDate, 'YYYY/MM/DD');
+      body.startDate = dayjs(requestInfo.startDate, 'YYYY/MM/DD').add(7, 'hour');
       body.noteDetail = requestInfo.noteDetail;
     }
 

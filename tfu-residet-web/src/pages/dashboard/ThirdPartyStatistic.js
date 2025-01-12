@@ -61,7 +61,7 @@ const ThirdPartyStatistic = () => {
                     <h2>Thống kê thu chi bên thứ 3</h2>
                 </div>
                 <div className="col">
-                    <PayAndTransfer transactionHistories={handleReceiveData} setType={setType} type={type}/>
+                    <PayAndTransfer transactionHistories={handleReceiveData} setType={setType} type={type} haveHouseFilter={false}/>
                 </div>
                 <div className="col">
                     <RecentTransaction transactionRecived={transactionHistories} columnTable={columnTable} />

@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import CustomModal from "../../../common/CustomModal";
 import TableCustom from "../../../components/Table";
 import { getResident, addNewResident } from "../../../services/residentService";
+import * as yup from 'yup';
+import dayjs from "dayjs";
 
 const ResidentTab = () => {
   const [page, setPage] = useState(0);
@@ -110,7 +112,40 @@ const ResidentTab = () => {
       Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
     }
   };
+  const schema = yup.object({
+    name: yup.string().trim().required("Vui lòng nhập họ tên").matches(/^[^\d]*$/, "Họ tên không hợp lệ"),
+    email: yup.string().trim().required("Vui lòng nhập email").email("Email không hợp lệ"),
+    phone: yup.string()
+      .trim()
+      .required("Vui lòng nhập số điện thoại")
+      .test("validPhone", "Số điện thoại không hợp lệ", (value) => {
+        if (!value) return true;
+        const vietnamPhoneNumberRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+        return vietnamPhoneNumberRegex.test(value);
+      }),
+    birthday: yup.string().trim().required("Vui lòng chọn ngày sinh")
+      .test("validBirthday", "Ngày sinh không hợp lệ", (value) => {
+        if (!value) return true;
+        try {
+          const bd = dayjs(value, "YYYY-MM-DD")
+          if (!bd.isValid()) return false;
+          return true;
+        } catch (error) {
+          return false;
+        }
+      })
+      .test("18yearold", "Chủ căn hộ phải lớn hơn 18 tuổi", (value) => {
+        if (!value) return true;
+        const birthDate = dayjs(value, "YYYY-MM-DD");
+        const today = dayjs();
+        const age = today.diff(birthDate, 'year');
+        console.log(age);
+        console.log(birthDate);
+        console.log(value);
 
+        return age >= 18;
+      })
+  })
   const modalFields = [
     <TextField fullWidth label="Tên thành viên" name="name" required />,
     <TextField fullWidth label="Email" name="email" required />,
@@ -120,9 +155,9 @@ const ResidentTab = () => {
 
   const paginatedResidents = useMemo(() => {
     const startIndex = page * rowsPerPage;
-    return filteredResidents.slice(startIndex, startIndex + rowsPerPage).map(resident => ({
-      ...resident,
-      birthday: format(new Date(resident.birthday), 'dd/MM/yyyy'),
+    return filteredResidents.slice(startIndex, startIndex + rowsPerPage).map(x => ({
+      ...x,
+      birthday: x.birthday ? dayjs(x.birthday).format("DD/MM/YYYY") : ''
     }));
   }, [filteredResidents, page, rowsPerPage]);
 
@@ -191,6 +226,7 @@ const ResidentTab = () => {
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
+        validateSchema={schema}
       />
     </section>
   );

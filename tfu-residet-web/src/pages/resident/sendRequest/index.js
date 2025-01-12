@@ -26,7 +26,8 @@ import {
   getApartmentByBuilding,
   GetBuildingsByUser,
 } from "../../../services/buildingService";
-
+import * as yup from 'yup';
+import dayjs from 'dayjs'
 const SendRequest = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -293,13 +294,52 @@ const SendRequest = () => {
     if (!service) return 0;
 
     const servicePrice = service.unitPrice;
-    const packageMultiplier = packageDiscount[packageId] || 1;
-    const duration = (packageMonth === 12) ? 12 * 31 : (packageMonth === 1) ? 31 : 6 * 31;
+    const packageMultiplier = (packageDiscount[packageId] || 1) / 100;
+    const duration = (packageMonth === 12) ? 12 * 30 : (packageMonth === 1) ? 30 : 6 * 30;
 
-    const price = servicePrice * packageMultiplier * (duration <= 0 ? 1 : duration);
+    let price = servicePrice * (duration <= 0 ? 1 : duration);
+    price -= price * packageMultiplier;
     return price;
   }, [serviceNameArr, packageDiscount]);
 
+  const [fieldErrors, setFieldErrors] = useState({})
+  const validateForm = async (formData, fieldName) => {
+    if (!validateSchema) return true;
+    try {
+      if (fieldName) {
+        if (!Object.keys(validateSchema.fields).some(x => x === fieldName)) {
+          setFieldErrors(prev => ({
+            ...prev,
+            [fieldName]: undefined
+          }))
+          return;
+        }
+        await validateSchema.validateAt(fieldName, formData, { abortEarly: false, disableStackTrace: true });
+        setFieldErrors(prev => ({
+          ...prev,
+          [fieldName]: undefined
+        }))
+      } else {
+        await validateSchema.validate(formData, { abortEarly: false, disableStackTrace: true });
+        setFieldErrors({})
+      }
+
+      return true;
+    } catch (error) {
+      setFieldErrors(JSON.parse(JSON.stringify(error.inner)).reduce((prev, nxt) => {
+        if (nxt.message) {
+          prev[nxt.path] = nxt.message;
+
+        }
+        return prev;
+      }, {}))
+      return false;
+
+    }
+  }
+  const validateSchema = yup.object({
+
+  })
   const renderMemberFields = (request, index) => (
     <>
       <TextField
@@ -307,6 +347,8 @@ const SendRequest = () => {
         value={request.name}
         onChange={(e) => handleChange(index, "name", e.target.value)}
         required
+        error={fieldErrors.name}
+        helperText={fieldErrors.name}
         sx={formStyles.textField}
       />
       <TextField
@@ -314,6 +356,8 @@ const SendRequest = () => {
         value={request.phone}
         onChange={(e) => handleChange(index, "phone", e.target.value)}
         required
+        error={fieldErrors.phone}
+        helperText={fieldErrors.phone}
         sx={formStyles.textField}
       />
       <TextField
@@ -322,6 +366,8 @@ const SendRequest = () => {
         value={request.email}
         onChange={(e) => handleChange(index, "email", e.target.value)}
         required
+        error={fieldErrors.email}
+        helperText={fieldErrors.email}
         sx={formStyles.textField}
       />
       <DatePicker
@@ -342,6 +388,8 @@ const SendRequest = () => {
         value={request.vehicleType}
         onChange={(e) => handleChange(index, "vehicleType", e.target.value)}
         required
+        error={fieldErrors.vehicleType}
+        helperText={fieldErrors.vehicleType}
         sx={formStyles.textField}
       />
       <TextField
@@ -349,12 +397,16 @@ const SendRequest = () => {
         value={request.licensePlate}
         onChange={(e) => handleChange(index, "licensePlate", e.target.value)}
         required
+        error={fieldErrors.licensePlate}
+        helperText={fieldErrors.licensePlate}
         sx={formStyles.textField}
       />
       <FormControl sx={formStyles.selectField}>
         <InputLabel>Gói</InputLabel>
         <Select
           value={request.packageServiceId}
+          error={fieldErrors.packageServiceId}
+          helperText={fieldErrors.packageServiceId}
           onChange={(e) => handleChange(index, "packageServiceId", e.target.value)}
           required
         >
@@ -367,6 +419,7 @@ const SendRequest = () => {
       </FormControl>
       <DatePicker
         placeholder="Ngày gửi xe"
+        disabledDate={(v) => v.isBefore(dayjs(), 'day')}
         value={request.startDate ? moment(request.startDate, "YYYY-MM-DD") : null}
         onChange={(date) => {
           if (date) {
@@ -493,6 +546,8 @@ const SendRequest = () => {
                       handleChange(index, "serviceId", e.target.value);
                     }}
                     required
+                    error={fieldErrors.serviceId}
+                    helperText={fieldErrors.serviceId}
                     disabled={index !== 0}
                   >
                     {serviceTypesArr.map((option) => (
