@@ -8,6 +8,7 @@ import { Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import { getRole } from "../../../services/RoleService";
 import { createStaff, deleteStaff, getStaff, updateStaff } from "../../../services/staffService";
+import * as yup from 'yup'
 
 // Validation functions
 const validateFullName = (name) => /^[^\d]*$/.test(name);
@@ -77,6 +78,7 @@ const ListTab = () => {
     value: role.id || `role-${role.name}`,
     label: role.name || "Unknown Role"
   }));
+
 
   const handleSearchChange = (event) => {
     const { name, value } = event.target;
@@ -208,7 +210,19 @@ const ListTab = () => {
       )
     };
   });
-
+  const schema = yup.object({
+    roleId: yup.string().trim().required("Vui lòng chọn bộ phận"),
+    email: yup.string().trim().required("Vui lòng nhập email").email("Email không hợp lệ"),
+    name: yup.string().trim().required("Vui lòng nhập họ tên").matches(/^[^\d]*$/, "Họ tên không hợp lệ"),
+    phoneNumber: yup.string()
+      .trim()
+      .required("Vui lòng nhập số điện thoại")
+      .test("validPhone", "Số điện thoại không hợp lệ", (value) => {
+        if(!value) return true;
+        const vietnamPhoneNumberRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+        return vietnamPhoneNumberRegex.test(value);
+      })
+  });
   const modalFields = [
     <TextField
       key="roleId"
@@ -299,6 +313,7 @@ const ListTab = () => {
         mode={modalMode.mode}
         title={modalMode.title}
         fields={modalFields}
+        validateSchema={schema}
       />
     </section>
   );

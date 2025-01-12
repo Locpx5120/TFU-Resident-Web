@@ -29,7 +29,7 @@ const noData = {
     borderRadius: '16px'
 }
 const PayAndTransfer = ({ transactionHistories, setType, type }) => {
-    const [dates, setDates] = useState([]);
+    const [dates, setDates] = useState(new Date());
     const [building, setBuilding] = useState('');
     const [apartment, setApartment] = useState('');
     const [payAndTransferInfo, setPayAndTransferInfo] = useState({});
@@ -76,11 +76,23 @@ const PayAndTransfer = ({ transactionHistories, setType, type }) => {
         }
     }
     const handleDateChange = (event) => {
+        if (!event.value) {
+            setDates(new Date())
+            const request = {
+                from: null,
+                to: null
+            }
+            setRequest(request);
+            fetchTransaction(request);
+            return;
+        }
         const { value } = event;
+        const startDate = new Date(value.getFullYear(), value.getMonth(), 1);
+        const endDate = new Date(value.getFullYear(), value.getMonth() + 1, 0);
         setDates(value);
         const request = {
-            from: value[0],
-            to: value[1]
+            from: startDate,
+            to: endDate
         }
         setRequest(request);
         fetchTransaction(request);
@@ -118,10 +130,10 @@ const PayAndTransfer = ({ transactionHistories, setType, type }) => {
                     <label htmlFor=""
                         className="ml-2 text-2xl font-semibold"> {formatCurrency(payAndTransferInfo?.total)}</label>
                 </div> */}
-                <div className="col">
-                    <Calendar value={dates} onChange={handleDateChange} selectionMode="range" readOnlyInput
-                        hideOnRangeSelection showIcon className="w-full" dateFormat="dd/mm/yy" />
-                    <Dropdown className="w-full my-2" value={building} name="buildingId"
+                <div className="col flex gap-4">
+                    <Calendar value={dates} onChange={handleDateChange} selectionMode="single" readOnlyInput
+                        onClearButtonClick={handleDateChange} showIcon className="w-full" dateFormat="mm/yy" view="month" />
+                    <Dropdown className="w-full" value={building} name="buildingId"
                         onChange={handleChangeInput} options={buildingList} optionValue="id"
                         optionLabel="buildingName" placeholder="Chọn toà nhà" />
                     <Dropdown className="w-full" value={apartment} name="apartmentId"
@@ -144,18 +156,13 @@ const PayAndTransfer = ({ transactionHistories, setType, type }) => {
             </div>
             <div className="col-12 px-0">Chọn tab thu hoặc chi để xem theo từng loại</div>
             <div className="col-12 px-0 flex justify-content-between">
-                <div onClick={() => handleChange('A')} className="flex align-items-center" style={{background: type === 'A' ? 'blue' : 'transparent', color: type === 'A' ? '#fff' : '#000', borderRadius: '30px', width: '300px', cursor: 'pointer'}}>
+                <div onClick={() => handleChange('A')} className="flex align-items-center px-4" style={{ background: type === 'A' ? 'blue' : 'transparent', color: type === 'A' ? '#fff' : '#000', borderRadius: '16px', cursor: 'pointer' }}>
                     <p className="dot-chart  transfer-color"></p>
-                    <label htmlFor="">Tổng tiền thu</label>
-                    <label htmlFor=""
-                        className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.pay)}</label>
+                    <label htmlFor="">Tổng tiền thu: <span className="text-lg font-semibold">{formatCurrency(payAndTransferInfo?.pay)}</span></label>
                 </div>
-                <div onClick={() => handleChange('B')} className="flex align-items-center" style={{background: type === 'B' ? 'green': 'transparent', color: type === 'B' ? '#fff': '#000', borderRadius: '30px',  width: '300px', cursor: 'pointer'}}>
+                <div onClick={() => handleChange('B')} className="flex align-items-center px-4" style={{ background: type === 'B' ? 'green' : 'transparent', color: type === 'B' ? '#fff' : '#000', borderRadius: '16px', cursor: 'pointer' }}>
                     <p className="dot-chart payment-color"></p>
-                    <label htmlFor="">Tổng tiền chi</label>
-                    <label htmlFor=""
-                        className="ml-2 text-lg font-semibold"> {formatCurrency(payAndTransferInfo?.transfer)}</label>
-
+                    <label htmlFor="">Tổng tiền chi: <span className="text-lg font-semibold">{formatCurrency(payAndTransferInfo?.transfer)}</span></label>
                 </div>
                 <div>
                     {/* <Button onc>xem</Button> */}
