@@ -17,7 +17,9 @@ const DashboardInvestor = () => {
                     style: 'currency',
                     currency: 'VND'
                 }),
-                createAt: format(new Date(items.createAt), 'dd/MM/yyyy'),
+                createAt: items.createAt 
+                ? format(new Date(items.createAt), 'dd/MM/yyyy') 
+                : 'N/A', // Hoặc bất kỳ giá trị mặc định nào khác bạn muốn
             index: index + 1
             })
         )
