@@ -295,7 +295,7 @@ const SendRequest = () => {
 
     const servicePrice = service.unitPrice;
     const packageMultiplier = (packageDiscount[packageId] || 1) / 100;
-    const duration = (packageMonth === 12) ? 12 * 31 : (packageMonth === 1) ? 31 : 6 * 31;
+    const duration = (packageMonth === 12) ? 12 * 30 : (packageMonth === 1) ? 30 : 6 * 30;
 
     let price = servicePrice * (duration <= 0 ? 1 : duration);
     price -= price * packageMultiplier;
