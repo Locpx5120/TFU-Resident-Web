@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Box, Button, Card, TextField, TablePagination, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Box, Button, Card, TextField, TablePagination } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import Swal from "sweetalert2";
-import { format } from "date-fns";
 import CustomModal from "../../../common/CustomModal";
 import TableCustom from "../../../components/Table";
-import { getResident, addNewResident } from "../../../services/residentService";
+import { getResident, addNewResident, updateOwnerShip, updateMemberResident } from "../../../services/residentService";
 import * as yup from 'yup';
 import dayjs from "dayjs";
 
@@ -78,6 +77,7 @@ const ResidentTab = () => {
   };
 
   const handleSaveResident = async (residentData) => {
+
     // Regular expressions for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const nameRegex = /^[a-zA-Z\s]*$/;
@@ -99,17 +99,27 @@ const ResidentTab = () => {
     } else {
       console.log("Số điện thoại hợp lệ");
     }
-
+ const SaveStr = modalMode.mode === 'add' ? 'Thêm' : "Cập nhật"
     try {
-      const data = await addNewResident(residentData);
+     
+      let data = {};
+      if (modalMode.mode === 'add') {
+        data = await addNewResident(residentData);
+      } else {
+        data = await updateMemberResident({
+        
+          ...residentData,
+          id: selectedResident.id,
+        });
+      }
       if (data.success) {
-        Swal.fire('Thành công', 'Đã thêm thành công!', 'success');
+        Swal.fire('Thành công', `Đã ${SaveStr} thành công!`, 'success');
         setReload(!reload);
       } else {
         Swal.fire('Thất bại', data.message, 'error');
       }
     } catch (error) {
-      Swal.fire('Thất bại', 'Thêm thất bại!', 'error');
+      Swal.fire('Thất bại', `${SaveStr} thất bại!`, 'error');
     }
   };
   const schema = yup.object({
@@ -152,12 +162,29 @@ const ResidentTab = () => {
     <TextField fullWidth label="Điện thoại" name="phone" required />,
     <TextField fullWidth label="Ngày sinh" name="birthday" type="date" InputLabelProps={{ shrink: true }} />,
   ];
-
+  const handleEditResident = (resident) => {
+    setModalMode({
+      mode: 'edit',
+      title: 'Cập nhật cư dân'
+    });
+    setSelectedResident({
+      ...resident,
+      birthday: resident.birthday ? dayjs(resident.birthday).format("YYYY-MM-DD") : null
+    });
+    setModalOpen(true);
+  };
   const paginatedResidents = useMemo(() => {
     const startIndex = page * rowsPerPage;
     return filteredResidents.slice(startIndex, startIndex + rowsPerPage).map(x => ({
       ...x,
-      birthday: x.birthday ? dayjs(x.birthday).format("DD/MM/YYYY") : ''
+      birthday: x.birthday ? dayjs(x.birthday).format("DD/MM/YYYY") : '',
+      action: (
+        <>
+          <Button onClick={() => handleEditResident(x)}>
+            <EditIcon />
+          </Button>
+        </>
+      )
     }));
   }, [filteredResidents, page, rowsPerPage]);
 
@@ -237,6 +264,12 @@ const columnData = [
   { name: "Email", align: "left", esName: "email" },
   { name: "Ngày sinh", align: "left", esName: "birthday" },
   { name: "Điện thoại", align: "left", esName: "phone" },
+  {
+    name: "Tùy chọn",
+    align: "left",
+    esName: "action",
+  }
+
 ];
 
 export default ResidentTab;
