@@ -152,10 +152,7 @@ const ViewRequests = () => {
           return request.buildingName === selectedBuilding.name;
         });
       }
-     
-      if (selectedStatus.id && selectedStatus.id != '-1') {
-        console.log('sdd', filtered)
-        console.log('selectedStatus.id', selectedStatus.id)
+      if ((selectedStatus.id || selectedStatus.id == 0) && selectedStatus.id !== -1) {
         filtered = filtered.filter(
           (request) => request.status == selectedStatus.id
         );
@@ -303,7 +300,7 @@ const ViewRequests = () => {
           sx={{ margin: "20px 10px 10px" }}
         >
           <MenuItem value="-1"
-        //    onClick={() => handleBuildingSelect({value: -1, label: '-1'})}
+           onClick={() => handleStatusSelect({value: -1, label: '-1'})}
           >Tất cả trạng thái</MenuItem>
           {statusArray.map((status) => (
             <MenuItem
