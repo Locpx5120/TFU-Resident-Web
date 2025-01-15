@@ -282,7 +282,7 @@ const SendRequest = () => {
 
   const packageDiscount = {
     "153a51b2-3b37-435f-b59e-cd76476a7459": 10, // Gói tiêu chuẩn (10% giảm giá)
-    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": 1, // Gói m��c định (không giảm giá)
+    "520e4b8e-8592-4e2d-b2fd-f3a804dee6e9": 0, // Gói mặc định (không giảm giá)
     "520e4b8e-8592-4e2d-b2fd-f9a804dee6e9": 5  // Gói cơ bản (5% giảm giá)
   };
 
@@ -294,8 +294,16 @@ const SendRequest = () => {
     if (!service) return 0;
 
     const servicePrice = service.unitPrice;
-    const packageMultiplier = (packageDiscount[packageId] || 1) / 100;
-    const duration = (packageMonth === 12) ? 12 * 30 : (packageMonth === 1) ? 30 : 6 * 30;
+    const packageMultiplier = (packageDiscount[packageId] || 0) / 100;
+    if (startDate === null || startDate === undefined || startDate === '')
+      return 0;
+    const initialDate = new Date(startDate);
+    const newDate = new Date(startDate);
+    newDate.setMonth(newDate.getMonth() + packageMonth); // Add 6 months
+
+    // Calculate difference in days
+    const timeDifference = newDate - initialDate;
+    const duration = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
 
     let price = servicePrice * (duration <= 0 ? 1 : duration);
     price -= price * packageMultiplier;

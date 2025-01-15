@@ -101,7 +101,7 @@ const ServicePaymentsDetail = () => {
                     <Column
                         selectionMode="multiple"
                     ></Column>
-                    {columnData.map(item =>
+                    {columnDataUnpaid.map(item =>
                         <Column field={item.esName} header={item.name}></Column>)
                     }
                 </DataTable>
@@ -135,13 +135,21 @@ const ServicePaymentsDetail = () => {
     );
 };
 
+const columnDataUnpaid = [
+    {name: "Tên dịch vụ", align: "left", esName: "serviceName"},
+    {name: "Số lượng/m2", align: "left", esName: "quantityOrArea"},
+    {name: "Giá tiền", align: "left", esName: "unitPriceconvert"},
+    {name: "Tổng tiền", align: "left", esName: "totalPriceConvent"},
+    {name: "Trạng thái", align: "left", esName: "paymentStatus"},
+];
+
 const columnData = [
     {name: "Tên dịch vụ", align: "left", esName: "serviceName"},
     {name: "Số lượng/m2", align: "left", esName: "quantityOrArea"},
     {name: "Giá tiền", align: "left", esName: "unitPriceconvert"},
     {name: "Tổng tiền", align: "left", esName: "totalPriceConvent"},
     {name: "Trạng thái", align: "left", esName: "paymentStatus"},
-    {name: "Ngày bắt đầu", align: "left", esName: "paymentDate"},
+    {name: "Ngày thanh toán", align: "left", esName: "paymentDate"},
 ];
 
 export default ServicePaymentsDetail;
