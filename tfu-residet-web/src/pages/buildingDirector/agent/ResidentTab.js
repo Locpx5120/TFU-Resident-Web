@@ -101,13 +101,13 @@ const ResidentTab = () => {
     }
  const SaveStr = modalMode.mode === 'add' ? 'Thêm' : "Cập nhật"
     try {
-     
+
       let data = {};
       if (modalMode.mode === 'add') {
         data = await addNewResident(residentData);
       } else {
         data = await updateMemberResident({
-        
+
           ...residentData,
           id: selectedResident.id,
         });
@@ -149,10 +149,6 @@ const ResidentTab = () => {
         const birthDate = dayjs(value, "YYYY-MM-DD");
         const today = dayjs();
         const age = today.diff(birthDate, 'year');
-        console.log(age);
-        console.log(birthDate);
-        console.log(value);
-
         return age >= 18;
       })
   })
@@ -169,7 +165,7 @@ const ResidentTab = () => {
     });
     setSelectedResident({
       ...resident,
-      birthday: resident.birthday ? dayjs(resident.birthday).format("YYYY-MM-DD") : null
+      birthday: resident.birthday || ''
     });
     setModalOpen(true);
   };
