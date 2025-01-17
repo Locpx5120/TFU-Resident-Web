@@ -65,6 +65,7 @@ import BuildingManage from "../pages/buildingDirector/householdManagement/Buildi
 import ServicePaymentAccountant from "../pages/resident/servicePayment/ServicePaymentAccountant";
 import DashboardAccountant from "../pages/dashboard/DashboardAccountant";
 import ThirdPartyStatistic from "../pages/dashboard/ThirdPartyStatistic";
+import DetailHouseHoldManager from "../pages/buildingDirector/householdManagement/DetailHouseholdManager";
 export const routeArray = [
     {
         route: "/",
@@ -260,7 +261,7 @@ export const routeDirector = [
     {
         route: "/chi-tiet-thanh-vien/:id",
         routeName: "Chi tiết cư dân",
-        component: <DetailHouseHold/>,
+        component: <DetailHouseHoldManager/>,
         hidden: true,
     },
     // {

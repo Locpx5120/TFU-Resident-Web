@@ -99,7 +99,7 @@ const ResidentTab = () => {
     } else {
       console.log("Số điện thoại hợp lệ");
     }
- const SaveStr = modalMode.mode === 'add' ? 'Thêm' : "Cập nhật"
+ const SaveStr = modalMode.mode === 'add' ? 'thêm' : "cập nhật"
     try {
 
       let data = {};
@@ -110,6 +110,7 @@ const ResidentTab = () => {
 
           ...residentData,
           id: selectedResident.id,
+          dateOfBirth: residentData.birthday, // Map lại field trước khi gửi
         });
       }
       if (data.success) {
@@ -165,7 +166,9 @@ const ResidentTab = () => {
     });
     setSelectedResident({
       ...resident,
-      birthday: resident.birthday || ''
+      birthday: resident.dateOfBirth
+      ? dayjs(resident.dateOfBirth).format("YYYY-MM-DD")
+      : '', // Nếu null thì để trống
     });
     setModalOpen(true);
   };

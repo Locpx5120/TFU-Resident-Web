@@ -13,7 +13,7 @@ import * as yup from 'yup'
 // Validation functions
 const validateFullName = (name) => /^[^\d]*$/.test(name);
 const validatePhoneNumber = (phoneNumber) => /^\d+$/.test(phoneNumber);
-const validateEmail = (email) => email.includes('@') && email.endsWith('.com');
+const validateEmail = (email) => email.includes('@') && email.endsWith('.com') || email.endsWith('.vn');
 
 const ListTab = () => {
   const [page, setPage] = useState(0);
