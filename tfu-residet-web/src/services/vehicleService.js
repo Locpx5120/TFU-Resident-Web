@@ -79,3 +79,9 @@ export const getKyThuat = async (searchName='') => {
         'content-type': 'application/json',
         'buildingPermalink': Cookies.get('buildingID')}, endpointUrl.BUILDING_URL);
 }
+export const getServiceThirparty = async (id) => {
+    return await getData(`/service-contract/thirdparty/${id}`, endpointUrl.BUILDING_URL, {
+        'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),})
+}
