@@ -105,13 +105,13 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
       }else {
         return (
           <>
-            <Button
+            {(requestInfo.status !== APPROVE_REQUEST || requestInfo.status !== REJECT_REQUEST) && <Button
               onClick={() => handleSubmit(APPROVE_REQUEST)}
               variant="contained"
               color="success"
             >
               Xác nhận
-            </Button>
+            </Button>}
             <Button
               variant="outlined"
               color="secondary"
@@ -120,16 +120,45 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
             >
               Đóng
             </Button>
-            <Button
+            {(requestInfo.status !== APPROVE_REQUEST || requestInfo.status !== REJECT_REQUEST) && <Button
               onClick={() => handleSubmit(REJECT_REQUEST)}
               variant="contained"
               color="error"
             >
               Từ chối
-            </Button>
+            </Button>}
           </>
         );
       }
+    }
+
+    if (Purpose === "Gia hạn hợp đồng") {
+      return (
+        <>
+          <Button
+            onClick={() => handleSubmit(APPROVE_REQUEST)}
+            variant="contained"
+            color="success"
+          >
+            Xác nhận
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => navigate("/xem-don")}
+            sx={{ margin: "10px" }}
+          >
+            Đóng
+          </Button>
+          <Button
+            onClick={() => handleSubmit(REJECT_REQUEST)}
+            variant="contained"
+            color="error"
+          >
+            Từ chối
+          </Button>
+        </>
+      );
     }
 
     // Trường hợp còn lại chỉ hiện nút Đóng
@@ -152,4 +181,4 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
   );
 }
 
-export default HanhChinhActions;
+export default HanhChinhActions; 

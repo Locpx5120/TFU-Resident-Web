@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -10,6 +11,7 @@ import { useRequestDetail } from "../../../hooks/useRequestDetail";
 import TechnicianForm from "./TechnicianForm";
 import TechnicianActions from "./TechnicianActions";
 import HanhChinhActions from "./HanhChinhActions";
+import ContractExtensionForm from "./ContractForm";
 
 const RequestDetail = () => {
   const location = useLocation();
@@ -59,7 +61,9 @@ const RequestDetail = () => {
               handleChange={handleChange}
               kyThuats={kyThuats}
             />
-          ) : (
+            )
+              : (Purpose === "Gia hạn hợp đồng") ? (<ContractExtensionForm data={requestInfo} Purpose={Purpose} />)
+              : (
             <RegularServiceForm 
               requestInfo={requestInfo}
               Purpose={Purpose}

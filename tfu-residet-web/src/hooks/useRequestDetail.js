@@ -1,7 +1,9 @@
+
 import { useState } from "react";
 import {
   getKyThuat,
   getServiceRepair,
+  getServiceThirparty,
   memeberServiceDetail,
   updateServiceRepair,
   updateVehicle,
@@ -9,6 +11,7 @@ import {
 } from "../services/vehicleService";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
+import { getContractDetail } from "../services/thirdpartyService";
 
 export const useRequestDetail = (Purpose, paramSplit, navigate) => {
   const [requestInfo, setRequestInfo] = useState({
@@ -85,6 +88,8 @@ export const useRequestDetail = (Purpose, paramSplit, navigate) => {
         response = await memeberServiceDetail(id);
       } else if (Purpose === "Dịch vụ sửa điện nước" || Purpose === "Sửa vấn đề khác") {
         response = await getServiceRepair(id);
+      } else if (Purpose === "Gia hạn hợp đồng") {
+        response = await getServiceThirparty(id);
       } else {
         response = await vehicleServiceDetail(id);
       }
