@@ -174,10 +174,10 @@ const ThirdPartyLent = () => {
                 <Button
                     variant="contained"
                     color="success"
-                    onClick={() => handleOpenModal('add', 'Thêm dịch bên thuê dịch vụ')}
+                    onClick={() => handleOpenModal('add', 'Thêm công ty bên thuê dịch vụ')}
                     sx={{ height: '40px' }}
                 >
-                    Thêm dịch vụ bên thuê dịch vụ
+                    Thêm công ty bên thuê dịch vụ
                 </Button>
             </Box>
 
