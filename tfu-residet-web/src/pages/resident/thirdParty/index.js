@@ -67,20 +67,20 @@ const ThirdParty = () => {
     ));
 
     const modalFields = [
-        <TextField
-            fullWidth
-            label="Tên dịch vụ"
-            name="serviceId"
-            value={selectedThirdParty.serviceId}
-            onChange={(e) => handleFieldChange('serviceId', e.target.value)}
-            select
-        >
-            {optionServiceName.map(item => (
-                <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                </MenuItem>
-            ))}
-        </TextField>,
+        // <TextField
+        //     fullWidth
+        //     label="Tên dịch vụ"
+        //     name="serviceId"
+        //     value={selectedThirdParty.serviceId}
+        //     onChange={(e) => handleFieldChange('serviceId', e.target.value)}
+        //     select
+        // >
+        //     {optionServiceName.map(item => (
+        //         <MenuItem key={item.value} value={item.value}>
+        //             {item.label}
+        //         </MenuItem>
+        //     ))}
+        // </TextField>,
         <TextField
             fullWidth
             select
@@ -130,6 +130,7 @@ const ThirdParty = () => {
         try {
             const res = await extendContract({
                 ...formData,
+                serviceId: 'f517bef7-d325-487b-9f76-e66d20413634',
                 apartmentId: data[0]?.apartmentId,
             });
             if (res?.success) {
@@ -166,14 +167,14 @@ const ThirdParty = () => {
                         mx: 2,
                     }}
                 >
-                    <Button
+                    {data && data.length > 0 && <Button
                         variant="contained"
                         color="success"
                         onClick={() => handleOpenModal('add', 'Gửi đơn cho phòng hành chính')}
                         sx={{ height: '40px' }}
                     >
                         Gia hạn hợp đồng
-                    </Button>
+                    </Button>}
                 </Box>
             </Card>
             <CustomModal

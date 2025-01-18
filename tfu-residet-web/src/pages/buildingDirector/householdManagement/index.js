@@ -211,8 +211,11 @@ const HouseHold = () => {
         Swal.fire("Thành công", "Đã thêm căn hộ thành công!", "success");
         setReload(!reload);
       } else {
-
-        Swal.fire("Thất bại", "Thêm căn hộ thất bại!", "error");
+        if (data?.message) {
+          Swal.fire("Thất bại", data?.message, "error");
+        } else {
+          Swal.fire("Thất bại", "Thêm căn hộ thất bại!", "error");
+        }
       }
     } else {
       try {
@@ -224,7 +227,11 @@ const HouseHold = () => {
         if (data.success) {
           Swal.fire("Thành công", "Đã cập nhật thành công!", "success");
         } else {
-          Swal.fire("Thất bại", "Cập nhật thất bại!", "error");
+          if (data?.message) {
+            Swal.fire("Thất bại", data?.message, "error");
+          } else {
+            Swal.fire("Thất bại", "Cập nhật căn hộ thất bại!", "error");
+          }
         }
       } catch (error) {
         Swal.fire("Thất bại", "Cập nhật thất bại!", "error");
@@ -271,7 +278,11 @@ const HouseHold = () => {
           Swal.fire("Thành công", "Đã thêm cư dân thành công!", "success");
           setReload(!reload);
         } else {
-          Swal.fire("Thất bại", "Thêm cư dân thất bại!", "error");
+          if (data?.message) {
+            Swal.fire("Thất bại", data?.message, "error");
+          } else {
+            Swal.fire("Thất bại", "Thêm cư dân thất bại!", "error");
+          }
         }
       }
     } catch (error) {
@@ -453,11 +464,11 @@ const HouseHold = () => {
       .integer("Số tầng phải là số nguyên")
       .positive("Số tầng phải lớn hơn 0"),
     apartmentTypeId: yup.string().required("Vui lòng chọn loại căn hộ")
-    
+
 
 
   })
-  
+
 
   return (
     <section className="content">

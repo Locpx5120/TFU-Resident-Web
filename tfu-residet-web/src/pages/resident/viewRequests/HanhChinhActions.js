@@ -132,35 +132,6 @@ const HanhChinhActions = ({ requestInfo, handleSubmit, navigate, Purpose }) => {
       }
     }
 
-    if (Purpose === "Gia hạn hợp đồng") {
-      return (
-        <>
-          <Button
-            onClick={() => handleSubmit(APPROVE_REQUEST)}
-            variant="contained"
-            color="success"
-          >
-            Xác nhận
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => navigate("/xem-don")}
-            sx={{ margin: "10px" }}
-          >
-            Đóng
-          </Button>
-          <Button
-            onClick={() => handleSubmit(REJECT_REQUEST)}
-            variant="contained"
-            color="error"
-          >
-            Từ chối
-          </Button>
-        </>
-      );
-    }
-
     // Trường hợp còn lại chỉ hiện nút Đóng
     return (
       <Button
