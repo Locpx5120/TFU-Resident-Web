@@ -166,9 +166,7 @@ const ResidentTab = () => {
     });
     setSelectedResident({
       ...resident,
-      birthday: resident.dateOfBirth
-      ? dayjs(resident.dateOfBirth).format("YYYY-MM-DD")
-      : '', // Nếu null thì để trống
+      birthday: resident?.birthday || '', // Nếu null thì để trống
     });
     setModalOpen(true);
   };

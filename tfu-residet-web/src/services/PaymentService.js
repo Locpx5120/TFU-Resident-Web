@@ -22,3 +22,11 @@ export const getTransaction = async (body) => {
         'buildingPermalink': Cookies.get('buildingID'),
     }, endpointUrl.BUILDING_URL)
 }
+
+export const getTransactionThird = async (body) => {
+    return await postData(`/payment/get-transactions-thirty`, body, {
+        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        'content-type': 'application/json',
+        'buildingPermalink': Cookies.get('buildingID'),
+    }, endpointUrl.BUILDING_URL)
+}

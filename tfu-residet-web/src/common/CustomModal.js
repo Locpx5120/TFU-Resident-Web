@@ -23,6 +23,8 @@ const CustomModal = ({ open, handleClose, employee, handleSave, title, mode, fie
       const initialData = {};
       fields.forEach(field => {
         const fieldName = field.props.name;
+        console.log(employee[fieldName]);
+        
         if (fieldName === 'birthday' && employee[fieldName]) {
           const date = dayjs(employee[fieldName]).format('YYYY-MM-DD');
           initialData[fieldName] = date;
